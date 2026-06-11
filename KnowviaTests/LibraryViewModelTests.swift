@@ -15,8 +15,7 @@ final class LibraryViewModelTests: XCTestCase {
         defer { try? fileManager.removeItem(at: tempDir) }
 
         let pdfFile = tempDir.appendingPathComponent("test.pdf")
-        let pdfContent = "%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R>>endobj\nxref\n0 4\n0000000000 65535 f \n0000000009 00000 n \n0000000052 00000 n \n0000000101 00000 n \ntrailer<</Size 4/Root 1 0 R>>\nstartxref\n182\n%%EOF"
-        try pdfContent.write(to: pdfFile, atomically: true, encoding: .utf8)
+        try makeMinimalPDF(at: pdfFile)
 
         let container = try TestModelContext.makeInMemoryContainer()
         let context = container.mainContext
@@ -69,8 +68,7 @@ final class LibraryViewModelTests: XCTestCase {
         defer { try? fileManager.removeItem(at: tempDir) }
 
         let pdfFile = tempDir.appendingPathComponent("valid.pdf")
-        let pdfContent = "%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R>>endobj\nxref\n0 4\n0000000000 65535 f \n0000000009 00000 n \n0000000052 00000 n \n0000000101 00000 n \ntrailer<</Size 4/Root 1 0 R>>\nstartxref\n182\n%%EOF"
-        try pdfContent.write(to: pdfFile, atomically: true, encoding: .utf8)
+        try makeMinimalPDF(at: pdfFile)
 
         let unsupportedFile = tempDir.appendingPathComponent("bad.pages")
         try "content".write(to: unsupportedFile, atomically: true, encoding: .utf8)
@@ -98,5 +96,28 @@ final class LibraryViewModelTests: XCTestCase {
         )
 
         XCTAssertFalse(result)
+    }
+
+    // MARK: - Helpers
+
+    /// Creates a minimal valid PDF file at the given URL for import testing.
+    private func makeMinimalPDF(at url: URL) throws {
+        let content = """
+            %PDF-1.4
+            1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj
+            2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj
+            3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R>>endobj
+            xref
+            0 4
+            0000000000 65535 f
+            0000000009 00000 n
+            0000000052 00000 n
+            0000000101 00000 n
+            trailer<</Size 4/Root 1 0 R>>
+            startxref
+            182
+            %%EOF
+            """
+        try content.write(to: url, atomically: true, encoding: .utf8)
     }
 }

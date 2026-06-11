@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: SwiftLint
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run SwiftLint
+        run: |
+          if ! command -v swiftlint &> /dev/null; then
+            brew install swiftlint
+          fi
+          swiftlint lint --strict --quiet
+
+  build-and-test:
+    name: Build & Test (macOS ${{ matrix.macos-version }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            macos-version: "15"
+          - runner: macos-latest
+            macos-version: "latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          XCODE_PATH=$(ls -d /Applications/Xcode*.app 2>/dev/null | tail -1)
+          if [ -n "$XCODE_PATH" ]; then
+            echo "Using $XCODE_PATH"
+            sudo xcode-select -s "$XCODE_PATH"
+          fi
+          xcodebuild -version
+
+      - name: Build (Debug)
+        run: |
+          xcodebuild \
+            -project Knowvia.xcodeproj \
+            -scheme Knowvia \
+            -configuration Debug \
+            -derivedDataPath DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Test
+        run: |
+          xcodebuild \
+            -project Knowvia.xcodeproj \
+            -scheme Knowvia \
+            -configuration Debug \
+            -derivedDataPath DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            test \
+            | tee test-output.log
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output-${{ matrix.macos-version }}
+          path: test-output.log
