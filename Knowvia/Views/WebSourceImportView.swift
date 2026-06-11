@@ -46,9 +46,11 @@ struct WebSourceImportView: View {
     @State private var note = ""
     @State private var extractionMessage: String?
     @State private var errorMessage: String?
+    @State private var isFetching = false
 
     private let importService = WebSourceImportService()
     private let extractionService = WebSourceExtractionService()
+    private let fetchService = WebPageFetchService()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -88,9 +90,42 @@ struct WebSourceImportView: View {
                             .textFieldStyle(.roundedBorder)
                     }
 
-                    field("网页链接") {
-                        TextField("https://...", text: $urlString)
-                            .textFieldStyle(.roundedBorder)
+                    HStack(alignment: .bottom, spacing: 8) {
+                        VStack(alignment: .leading, spacing: 7) {
+                            Text("网页链接")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(AppTheme.slateBlue)
+                            TextField("https://...", text: $urlString)
+                                .textFieldStyle(.roundedBorder)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        Button {
+                            Task { await fetchFromURL() }
+                        } label: {
+                            HStack(spacing: 4) {
+                                if isFetching {
+                                    ProgressView()
+                                        .controlSize(.small)
+                                        .scaleEffect(0.8)
+                                } else {
+                                    Image(systemName: "arrow.down.circle")
+                                }
+                                Text(isFetching ? "获取中..." : "获取")
+                            }
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(
+                                isFetching || urlString.trimmingCharacters(in: .whitespaces).isEmpty
+                                    ? AppTheme.coolGray
+                                    : AppTheme.deepIndigo,
+                                in: RoundedRectangle(cornerRadius: 6)
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(isFetching || urlString.trimmingCharacters(in: .whitespaces).isEmpty)
                     }
 
                     HStack(alignment: .top, spacing: 12) {
@@ -143,7 +178,7 @@ struct WebSourceImportView: View {
                             }
                     }
 
-                    Text("当前版本不会自动联网抓取。你可以粘贴网页正文或 HTML，由本地规则提取后再确认保存。")
+                    Text("可以粘贴网页正文或 HTML 后点击提取；也可以输入链接后点击“获取”自动抓取。当前版本不会在后台自动联网。")
                         .font(.system(size: 11))
                         .foregroundStyle(AppTheme.tertiaryText)
                 }
@@ -173,6 +208,8 @@ struct WebSourceImportView: View {
         return text.isEmpty ? nil : Int(text)
     }
 
+    // MARK: - Actions
+
     private func importSource() {
         let yearText = publicationYearText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard yearText.isEmpty || publicationYear != nil else {
@@ -200,20 +237,49 @@ struct WebSourceImportView: View {
     private func extractPastedContent() {
         do {
             let draft = try extractionService.extract(from: excerpt)
-            if !draft.title.isEmpty {
-                title = draft.title
-            }
-            if !draft.author.isEmpty {
-                author = draft.author
-            }
-            if let publicationYear = draft.publicationYear {
-                publicationYearText = String(publicationYear)
-            }
-            excerpt = draft.excerpt
-            extractionMessage = "已提取标题、作者、年份与正文，请确认后保存。"
+            applyDraft(draft, message: "已提取标题、作者、年份与正文，请确认后保存。")
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    private func fetchFromURL() async {
+        let trimmedURL = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedURL.isEmpty else { return }
+
+        isFetching = true
+        extractionMessage = nil
+        defer { isFetching = false }
+
+        do {
+            let result = try await fetchService.fetch(urlString: trimmedURL)
+            let draft = try extractionService.extract(from: result.html)
+
+            // Only auto-fill URL if it changed (followed redirect)
+            if result.finalURL.absoluteString != trimmedURL {
+                urlString = result.finalURL.absoluteString
+            }
+
+            let redirectNote = result.finalURL.absoluteString != trimmedURL
+                ? "（已跟随重定向）" : ""
+            applyDraft(draft, message: "已获取网页内容并提取信息\(redirectNote)，请确认后保存。")
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func applyDraft(_ draft: WebSourceExtractionDraft, message: String) {
+        if !draft.title.isEmpty {
+            title = draft.title
+        }
+        if !draft.author.isEmpty {
+            author = draft.author
+        }
+        if let publicationYear = draft.publicationYear {
+            publicationYearText = String(publicationYear)
+        }
+        excerpt = draft.excerpt
+        extractionMessage = message
     }
 
     private func field<Content: View>(
