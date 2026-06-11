@@ -20,6 +20,7 @@ struct KnowledgeCardsView: View {
     @State private var calibratingCard: KnowledgeCard?
     @State private var categorizingCard: KnowledgeCard?
     @State private var pendingDeleteCard: KnowledgeCard?
+    @State private var showsReviewSession = false
     @State private var errorMessage: String?
     @State private var exportFeedback: String?
     @State private var exportErrorMessage: String?
@@ -91,6 +92,12 @@ struct KnowledgeCardsView: View {
                 saveTopics(topics, for: card)
             }
         }
+        .sheet(isPresented: $showsReviewSession) {
+            let due = CardReviewService().dueCards(in: Array(cards))
+            CardReviewSessionView(cards: due) {
+                try? modelContext.save()
+            }
+        }
         .alert("删除这张知识卡片？", isPresented: deleteBinding) {
             Button("取消", role: .cancel) {
                 pendingDeleteCard = nil
@@ -152,6 +159,21 @@ struct KnowledgeCardsView: View {
                 .disabled(filteredCards.isEmpty)
                 .opacity(filteredCards.isEmpty ? 0.45 : 1)
                 .help("导出当前列表中的知识卡片")
+
+                Button {
+                    showsReviewSession = true
+                } label: {
+                    Label("复习模式", systemImage: "brain.head.profile")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(AppTheme.softViolet)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 9)
+                        .background(AppTheme.paleLavender, in: RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(.plain)
+                .disabled(cards.isEmpty)
+                .opacity(cards.isEmpty ? 0.45 : 1)
+                .help("进入间隔复习模式，主动回忆卡片内容")
 
                 Button {
                     showsCreateCard = true

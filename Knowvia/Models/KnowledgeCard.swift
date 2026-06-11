@@ -83,6 +83,10 @@ final class KnowledgeCard {
     var isHighlighted: Bool = false
     var isUnderstood: Bool = false
     var calibrationNote: String = ""
+    var lastReviewedAt: Date?
+    var nextReviewAt: Date?
+    var reviewCount: Int = 0
+    var easeFactor: Double = 2.5
     var createdAt: Date
     var updatedAt: Date
     var createdBy: String
@@ -102,6 +106,10 @@ final class KnowledgeCard {
         isHighlighted: Bool = false,
         isUnderstood: Bool = false,
         calibrationNote: String = "",
+        lastReviewedAt: Date? = nil,
+        nextReviewAt: Date? = nil,
+        reviewCount: Int = 0,
+        easeFactor: Double = 2.5,
         createdAt: Date = Date(),
         updatedAt: Date = Date(),
         createdBy: String = "user"
@@ -120,6 +128,10 @@ final class KnowledgeCard {
         self.isHighlighted = isHighlighted
         self.isUnderstood = isUnderstood
         self.calibrationNote = calibrationNote
+        self.lastReviewedAt = lastReviewedAt
+        self.nextReviewAt = nextReviewAt
+        self.reviewCount = reviewCount
+        self.easeFactor = easeFactor
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.createdBy = createdBy
