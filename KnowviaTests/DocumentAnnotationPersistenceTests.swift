@@ -13,7 +13,7 @@ final class DocumentAnnotationPersistenceTests: XCTestCase {
             documentTitle: "Learning Notes",
             selectedText: "Feedback loops support adjustment.",
             note: "Connect this idea to deliberate practice.",
-            page: 12
+            pageNumber: 12
         )
 
         context.insert(annotation)

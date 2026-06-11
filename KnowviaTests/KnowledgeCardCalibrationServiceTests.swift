@@ -40,13 +40,13 @@ final class KnowledgePathwayGapServiceTests: XCTestCase {
     func testDetectsLocalPathwayGaps() {
         let claim = TestFactories.makeKnowledgeCard(
             title: "反馈可以支持校准",
-            cardType: .argument,
-            content: "测试观点"
+            content: "测试观点",
+            cardType: .argument
         )
         let question = TestFactories.makeKnowledgeCard(
             title: "反馈频率如何设置？",
-            cardType: .question,
-            content: "测试问题"
+            content: "测试问题",
+            cardType: .question
         )
         let pathway = TestFactories.makeKnowledgePathway(
             title: "学习反馈",
@@ -78,6 +78,7 @@ final class KnowledgePathwayGapServiceTests: XCTestCase {
         let documentID = UUID()
         let claim = TestFactories.makeKnowledgeCard(
             title: "反馈可以支持校准",
+            content: "测试内容",
             cardType: .argument,
             sourceDocumentId: documentID,
             sourceDocumentTitle: "Learning Notes",
@@ -85,6 +86,7 @@ final class KnowledgePathwayGapServiceTests: XCTestCase {
         )
         let evidence = TestFactories.makeKnowledgeCard(
             title: "实验结果支持反馈机制",
+            content: "测试内容",
             cardType: .evidence,
             sourceDocumentId: documentID,
             sourceDocumentTitle: "Learning Notes",
@@ -92,6 +94,7 @@ final class KnowledgePathwayGapServiceTests: XCTestCase {
         )
         let concept = TestFactories.makeKnowledgeCard(
             title: "反馈循环",
+            content: "测试内容",
             cardType: .concept,
             sourceDocumentId: documentID,
             sourceDocumentTitle: "Learning Notes",

@@ -8,11 +8,11 @@ final class LearningPathServiceTests: XCTestCase {
     func testBuildsTopicsWithoutInternalDraftTags() {
         let cards = [
             TestFactories.makeKnowledgeCard(
-                kind: .concept, tags: ["学习方法", "AI 草稿", "待核验"], content: "内容",
+                content: "内容", cardType: .concept, tags: ["学习方法", "AI 草稿", "待核验"],
                 sourceDocumentTitle: "测试资料"
             ),
             TestFactories.makeKnowledgeCard(
-                kind: .argument, tags: ["研究方法", "观点"], content: "内容",
+                content: "内容", cardType: .argument, tags: ["研究方法", "观点"],
                 sourceDocumentTitle: "测试资料"
             ),
         ]
@@ -23,19 +23,19 @@ final class LearningPathServiceTests: XCTestCase {
     func testBuildsFiveStepPathForSelectedTopic() {
         let cards = [
             TestFactories.makeKnowledgeCard(
-                title: "概念", cardType: .concept, tags: ["学习方法"], content: "内容",
+                title: "概念", content: "内容", cardType: .concept, tags: ["学习方法"],
                 sourceDocumentTitle: "测试资料"
             ),
             TestFactories.makeKnowledgeCard(
-                title: "观点", cardType: .argument, tags: ["学习方法"], content: "内容",
+                title: "观点", content: "内容", cardType: .argument, tags: ["学习方法"],
                 sourceDocumentTitle: "测试资料"
             ),
             TestFactories.makeKnowledgeCard(
-                title: "证据", cardType: .evidence, tags: ["学习方法"], content: "内容",
+                title: "证据", content: "内容", cardType: .evidence, tags: ["学习方法"],
                 sourceDocumentTitle: "测试资料"
             ),
             TestFactories.makeKnowledgeCard(
-                title: "其他", tags: ["其他主题"], content: "内容",
+                title: "其他", content: "内容", tags: ["其他主题"],
                 sourceDocumentTitle: "测试资料"
             ),
         ]
@@ -53,7 +53,7 @@ final class LearningPathServiceTests: XCTestCase {
     func testExportsDayCabinStyleTaskMarkdown() throws {
         let snapshot = service.snapshot(
             for: [TestFactories.makeKnowledgeCard(
-                title: "反馈循环", cardType: .concept, tags: ["学习方法"], content: "内容",
+                title: "反馈循环", content: "内容", cardType: .concept, tags: ["学习方法"],
                 sourceDocumentTitle: "测试资料"
             )],
             topic: "学习方法"

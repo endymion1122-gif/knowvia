@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import XCTest
+@testable import Knowvia
 
 /// Shared helpers for creating in-memory SwiftData containers in tests.
 

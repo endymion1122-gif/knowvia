@@ -37,7 +37,7 @@ final class AnnotationHighlightServiceTests: XCTestCase {
             documentTitle: "Notes",
             selectedText: "Knowvia",
             note: "Remember this",
-            page: 2
+            pageNumber: 2
         )
 
         let selections = service.pdfSelections(for: [annotation], in: document)

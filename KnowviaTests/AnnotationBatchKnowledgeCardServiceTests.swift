@@ -12,13 +12,13 @@ final class AnnotationBatchKnowledgeCardServiceTests: XCTestCase {
                     documentTitle: "学习材料",
                     selectedText: "反馈循环",
                     note: "反馈循环需要连接行动结果。",
-                    page: 3
+                    pageNumber: 3
                 ),
                 TestFactories.makeDocumentAnnotation(
                     documentTitle: "学习材料",
                     selectedText: "反馈循环",
                     note: "反馈循环支持下一轮调整。",
-                    page: 5
+                    pageNumber: 5
                 ),
             ]
         )

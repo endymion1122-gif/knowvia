@@ -117,6 +117,11 @@
 		200000000000000000000028 /* AIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000002B /* AIMessage.swift */; };
 		200000000000000000000029 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000002C /* AIService.swift */; };
 		20000000000000000000002A /* PromptTemplates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000002D /* PromptTemplates.swift */; };
+		20000000000000000000006F /* TestFactories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000072 /* TestFactories.swift */; };
+		200000000000000000000070 /* ModelContext+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000073 /* ModelContext+TestHelpers.swift */; };
+		200000000000000000000071 /* ReaderViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000074 /* ReaderViewModelTests.swift */; };
+		200000000000000000000072 /* LibraryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000075 /* LibraryViewModelTests.swift */; };
+		200000000000000000000073 /* AppStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000076 /* AppStateTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -243,6 +248,11 @@
 		10000000000000000000002B /* AIMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/AIMessage.swift"; sourceTree = "<group>"; };
 		10000000000000000000002C /* AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/AIService.swift"; sourceTree = "<group>"; };
 		10000000000000000000002D /* PromptTemplates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utilities/PromptTemplates.swift"; sourceTree = "<group>"; };
+		100000000000000000000072 /* TestFactories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TestHelpers/TestFactories.swift"; sourceTree = "<group>"; };
+		100000000000000000000073 /* ModelContext+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TestHelpers/ModelContext+TestHelpers.swift"; sourceTree = "<group>"; };
+		100000000000000000000074 /* ReaderViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReaderViewModelTests.swift"; sourceTree = "<group>"; };
+		100000000000000000000075 /* LibraryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryViewModelTests.swift"; sourceTree = "<group>"; };
+		100000000000000000000076 /* AppStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppStateTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -393,6 +403,11 @@
 				100000000000000000000066 /* WebSourceImportServiceTests.swift */,
 				100000000000000000000068 /* PathwaySourceFolderServiceTests.swift */,
 				10000000000000000000006A /* WebSourceExtractionServiceTests.swift */,
+				100000000000000000000072 /* TestFactories.swift */,
+				100000000000000000000073 /* ModelContext+TestHelpers.swift */,
+				100000000000000000000074 /* ReaderViewModelTests.swift */,
+				100000000000000000000075 /* LibraryViewModelTests.swift */,
+				100000000000000000000076 /* AppStateTests.swift */,
 			);
 			path = KnowviaTests;
 			sourceTree = "<group>";
@@ -621,6 +636,11 @@
 				200000000000000000000067 /* WebSourceExtractionServiceTests.swift in Sources */,
 				20000000000000000000006C /* AIKnowledgeCardDraftServiceTests.swift in Sources */,
 				20000000000000000000006E /* AIErrorRecoveryServiceTests.swift in Sources */,
+					20000000000000000000006F /* TestFactories.swift in Sources */,
+					200000000000000000000070 /* ModelContext+TestHelpers.swift in Sources */,
+					200000000000000000000071 /* ReaderViewModelTests.swift in Sources */,
+					200000000000000000000072 /* LibraryViewModelTests.swift in Sources */,
+					200000000000000000000073 /* AppStateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
