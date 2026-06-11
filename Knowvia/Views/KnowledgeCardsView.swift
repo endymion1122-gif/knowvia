@@ -63,10 +63,15 @@ struct KnowledgeCardsView: View {
             KnowledgeCardEditorView()
         }
         .sheet(item: $inspectingCard) { card in
+            let similarityService = ConceptSimilarityService()
             KnowledgeCardDetailView(
                 card: card,
                 onEdit: { editingCard = card },
-                onOpenSource: card.sourceDocumentId == nil ? nil : { openSource(for: card) }
+                onOpenSource: card.sourceDocumentId == nil ? nil : { openSource(for: card) },
+                similarCards: similarityService.findSimilar(to: card, in: Array(cards)),
+                onTapSimilarCard: { target in
+                    inspectingCard = target
+                }
             )
         }
         .sheet(item: $editingCard) { card in

@@ -128,6 +128,8 @@
 		200000000000000000000077 /* CardReviewSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000007A /* CardReviewSessionView.swift */; };
 		200000000000000000000078 /* CardReviewServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000007B /* CardReviewServiceTests.swift */; };
 		200000000000000000000079 /* ClaimEvidenceChainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000007C /* ClaimEvidenceChainView.swift */; };
+		20000000000000000000007A /* ConceptSimilarityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000007D /* ConceptSimilarityService.swift */; };
+		20000000000000000000007B /* ConceptSimilarityServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000007E /* ConceptSimilarityServiceTests.swift */; };
 		/* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -265,6 +267,8 @@
 		10000000000000000000007A /* CardReviewSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/CardReviewSessionView.swift"; sourceTree = "<group>"; };
 		10000000000000000000007B /* CardReviewServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardReviewServiceTests.swift"; sourceTree = "<group>"; };
 		10000000000000000000007C /* ClaimEvidenceChainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Components/ClaimEvidenceChainView.swift"; sourceTree = "<group>"; };
+		10000000000000000000007D /* ConceptSimilarityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/ConceptSimilarityService.swift"; sourceTree = "<group>"; };
+		10000000000000000000007E /* ConceptSimilarityServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConceptSimilarityServiceTests.swift"; sourceTree = "<group>"; };
 		/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -374,6 +378,7 @@
 				100000000000000000000070 /* AIErrorRecoveryService.swift */,
 				100000000000000000000077 /* WebPageFetchService.swift */,
 				100000000000000000000079 /* CardReviewService.swift */,
+				10000000000000000000007D /* ConceptSimilarityService.swift */,
 				100000000000000000000017 /* Assets.xcassets */,
 				100000000000000000000018 /* Knowvia.entitlements */,
 			);
@@ -420,6 +425,7 @@
 				100000000000000000000068 /* PathwaySourceFolderServiceTests.swift */,
 				10000000000000000000006A /* WebSourceExtractionServiceTests.swift */,
 				100000000000000000000078 /* WebPageFetchServiceTests.swift */,
+				10000000000000000000007E /* ConceptSimilarityServiceTests.swift */,
 				10000000000000000000007B /* CardReviewServiceTests.swift */,
 				100000000000000000000072 /* TestFactories.swift */,
 				100000000000000000000073 /* ModelContext+TestHelpers.swift */,
@@ -612,6 +618,7 @@
 				20000000000000000000006B /* AIKnowledgeCardDraftService.swift in Sources */,
 				20000000000000000000006D /* AIErrorRecoveryService.swift in Sources */,
 				200000000000000000000076 /* CardReviewService.swift in Sources */,
+				20000000000000000000007A /* ConceptSimilarityService.swift in Sources */,
 				200000000000000000000077 /* CardReviewSessionView.swift in Sources */,
 				200000000000000000000079 /* ClaimEvidenceChainView.swift in Sources */,
 				200000000000000000000074 /* WebPageFetchService.swift in Sources */,
@@ -659,6 +666,7 @@
 				20000000000000000000006C /* AIKnowledgeCardDraftServiceTests.swift in Sources */,
 				20000000000000000000006E /* AIErrorRecoveryServiceTests.swift in Sources */,
 				200000000000000000000078 /* CardReviewServiceTests.swift in Sources */,
+				20000000000000000000007B /* ConceptSimilarityServiceTests.swift in Sources */,
 				200000000000000000000075 /* WebPageFetchServiceTests.swift in Sources */,
 					20000000000000000000006F /* TestFactories.swift in Sources */,
 					200000000000000000000070 /* ModelContext+TestHelpers.swift in Sources */,

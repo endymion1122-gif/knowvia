@@ -6,6 +6,8 @@ struct KnowledgeCardDetailView: View {
     let card: KnowledgeCard
     var onEdit: (() -> Void)?
     var onOpenSource: (() -> Void)?
+    var similarCards: [SimilarCard] = []
+    var onTapSimilarCard: ((KnowledgeCard) -> Void)?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -23,6 +25,11 @@ struct KnowledgeCardDetailView: View {
 
                     Divider()
                     metadata
+
+                    if !similarCards.isEmpty {
+                        Divider()
+                        similarCardsSection
+                    }
                 }
                 .padding(20)
             }
@@ -207,6 +214,71 @@ struct KnowledgeCardDetailView: View {
                 .background(AppTheme.paleMint, in: RoundedRectangle(cornerRadius: 7))
         }
         .buttonStyle(.plain)
+    }
+
+    private var similarCardsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("相关概念")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(AppTheme.deepIndigo)
+
+            ForEach(similarCards) { similar in
+                Button {
+                    dismiss()
+                    onTapSimilarCard?(similar.card)
+                } label: {
+                    HStack(spacing: 8) {
+                        Text(similar.card.kind.title)
+                            .font(.system(size: 9, weight: .semibold))
+                            .foregroundStyle(AppTheme.softViolet)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 2)
+                            .background(AppTheme.paleLavender, in: Capsule())
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(similar.card.title)
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundStyle(AppTheme.primaryText)
+                                .lineLimit(1)
+
+                            if hasCrossPathwaySimilarCard(similar) {
+                                Text("跨路径关联")
+                                    .font(.system(size: 9))
+                                    .foregroundStyle(AppTheme.pathTeal)
+                            }
+                        }
+
+                        Spacer()
+
+                        Text(String(format: "%.0f%%", similar.score * 100))
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundStyle(AppTheme.tertiaryText)
+                    }
+                    .padding(10)
+                    .background(AppTheme.cardBackground, in: RoundedRectangle(cornerRadius: 8))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(AppTheme.coolGray.opacity(0.5), lineWidth: 1)
+                    }
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppTheme.cardBackground, in: RoundedRectangle(cornerRadius: 10))
+        .overlay {
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(AppTheme.coolGray, lineWidth: 1)
+        }
+    }
+
+    private func hasCrossPathwaySimilarCard(_ similar: SimilarCard) -> Bool {
+        let sourcePathways = Set(card.pathwayIDs)
+        let targetPathways = Set(similar.card.pathwayIDs)
+        return sourcePathways.isDisjoint(with: targetPathways)
+            && !sourcePathways.isEmpty
+            && !targetPathways.isEmpty
     }
 
     private func metadataRow(_ title: String, value: String) -> some View {
