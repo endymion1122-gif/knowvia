@@ -7,8 +7,16 @@ final class AnnotationHighlightServiceTests: XCTestCase {
     private let service = AnnotationHighlightService()
 
     func testFindsFirstTextOccurrenceForEachAnnotation() {
-        let first = makeAnnotation(selectedText: "knowledge path")
-        let second = makeAnnotation(selectedText: "cards")
+        let first = TestFactories.makeDocumentAnnotation(
+            documentTitle: "Notes",
+            selectedText: "knowledge path",
+            note: "Remember this"
+        )
+        let second = TestFactories.makeDocumentAnnotation(
+            documentTitle: "Notes",
+            selectedText: "cards",
+            note: "Remember this"
+        )
 
         let ranges = service.textRanges(
             for: [first, second],
@@ -25,7 +33,12 @@ final class AnnotationHighlightServiceTests: XCTestCase {
         let document = PDFDocument()
         document.insert(makePage(text: "Knowvia first page"), at: 0)
         document.insert(makePage(text: "Knowvia second page"), at: 1)
-        let annotation = makeAnnotation(selectedText: "Knowvia", pageNumber: 2)
+        let annotation = TestFactories.makeDocumentAnnotation(
+            documentTitle: "Notes",
+            selectedText: "Knowvia",
+            note: "Remember this",
+            page: 2
+        )
 
         let selections = service.pdfSelections(for: [annotation], in: document)
 
@@ -34,19 +47,8 @@ final class AnnotationHighlightServiceTests: XCTestCase {
         XCTAssertEqual(selections.first?.pages.first.map(document.index(for:)), 1)
     }
 
-    private func makeAnnotation(
-        selectedText: String,
-        pageNumber: Int? = nil
-    ) -> DocumentAnnotation {
-        DocumentAnnotation(
-            documentId: UUID(),
-            documentTitle: "Notes",
-            selectedText: selectedText,
-            note: "Remember this",
-            pageNumber: pageNumber
-        )
-    }
-
+    /// Specialized helper that creates a real PDFPage via AppKit rendering.
+    /// Kept locally because it depends on AppKit and is specific to PDF highlight tests.
     private func makePage(text: String) -> PDFPage {
         let view = NSView(frame: NSRect(x: 0, y: 0, width: 520, height: 720))
         let textField = NSTextField(labelWithString: text)

@@ -6,8 +6,11 @@ final class DocumentReadingProgressServiceTests: XCTestCase {
 
     func testMarksUnreadDocumentAsReadingAndPreservesCompletedState() {
         let openedAt = Date(timeIntervalSince1970: 1_700_000_000)
-        let unreadDocument = makeDocument()
-        let completedDocument = makeDocument(readingStatus: "completed")
+        let unreadDocument = TestFactories.makeDocumentItem(fileType: "pdf")
+        let completedDocument = TestFactories.makeDocumentItem(
+            fileType: "pdf",
+            readingStatus: "completed"
+        )
 
         service.markOpened(unreadDocument, at: openedAt)
         service.markOpened(completedDocument, at: openedAt)
@@ -18,8 +21,8 @@ final class DocumentReadingProgressServiceTests: XCTestCase {
     }
 
     func testStoresAndRestoresPDFProgressButIgnoresTextDocuments() {
-        let pdf = makeDocument(fileType: "pdf")
-        let markdown = makeDocument(fileType: "md")
+        let pdf = TestFactories.makeDocumentItem(fileType: "pdf")
+        let markdown = TestFactories.makeDocumentItem(fileType: "md")
 
         service.updatePDFProgress(pdf, pageNumber: 12)
         service.updatePDFProgress(markdown, pageNumber: 12)
@@ -31,7 +34,10 @@ final class DocumentReadingProgressServiceTests: XCTestCase {
     }
 
     func testTogglesCompletedState() {
-        let document = makeDocument(readingStatus: "reading")
+        let document = TestFactories.makeDocumentItem(
+            fileType: "pdf",
+            readingStatus: "reading"
+        )
 
         service.toggleCompleted(document)
         XCTAssertEqual(document.readingState, .completed)
@@ -41,25 +47,17 @@ final class DocumentReadingProgressServiceTests: XCTestCase {
     }
 
     func testSortsRecentlyOpenedDocumentsByLatestOpenTime() {
-        let older = makeDocument(lastOpenedAt: Date(timeIntervalSince1970: 100))
-        let newer = makeDocument(lastOpenedAt: Date(timeIntervalSince1970: 200))
-        let unopened = makeDocument()
+        let older = TestFactories.makeDocumentItem(
+            fileType: "pdf",
+            lastOpenedAt: Date(timeIntervalSince1970: 100)
+        )
+        let newer = TestFactories.makeDocumentItem(
+            fileType: "pdf",
+            lastOpenedAt: Date(timeIntervalSince1970: 200)
+        )
+        let unopened = TestFactories.makeDocumentItem(fileType: "pdf")
 
         XCTAssertEqual(service.recentDocuments(in: [older, unopened, newer]).map(\.id), [newer.id, older.id])
-    }
-
-    private func makeDocument(
-        fileType: String = "pdf",
-        readingStatus: String = "unread",
-        lastOpenedAt: Date? = nil
-    ) -> DocumentItem {
-        DocumentItem(
-            title: "测试资料",
-            filePath: "/tmp/knowvia-reading-progress.\(fileType)",
-            fileType: fileType,
-            readingStatus: readingStatus,
-            lastOpenedAt: lastOpenedAt
-        )
     }
 }
 

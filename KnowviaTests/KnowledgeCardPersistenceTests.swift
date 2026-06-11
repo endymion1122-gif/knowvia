@@ -5,24 +5,20 @@ import XCTest
 @MainActor
 final class KnowledgeCardPersistenceTests: XCTestCase {
     func testPersistsKnowledgeCardSourceMetadata() throws {
-        let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(
-            for: KnowledgeCard.self,
-            configurations: configuration
-        )
+        let container = try TestModelContext.makeInMemoryContainer(for: KnowledgeCard.self)
         let context = container.mainContext
         let sourceDocumentId = UUID()
         let pathwayID = UUID()
-        let card = KnowledgeCard(
+        let card = TestFactories.makeKnowledgeCard(
             title: "Feedback loop",
             content: "Deliberate practice needs immediate feedback.",
-            cardType: KnowledgeCardKind.quote.rawValue,
+            cardType: .quote,
             tags: ["practice"],
             sourceDocumentId: sourceDocumentId,
             sourceDocumentTitle: "Learning Notes",
             pageNumber: 12,
             pathwayIDs: [pathwayID],
-            calibrationStatus: KnowledgeCardCalibrationStatus.confirmed.rawValue,
+            calibrationStatus: .confirmed,
             isHighlighted: true,
             isUnderstood: true,
             calibrationNote: "已结合原文确认。"

@@ -5,19 +5,15 @@ import XCTest
 @MainActor
 final class DocumentAnnotationPersistenceTests: XCTestCase {
     func testPersistsAnnotationAnchorAndNote() throws {
-        let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(
-            for: DocumentAnnotation.self,
-            configurations: configuration
-        )
+        let container = try TestModelContext.makeInMemoryContainer(for: DocumentAnnotation.self)
         let context = container.mainContext
         let documentId = UUID()
-        let annotation = DocumentAnnotation(
+        let annotation = TestFactories.makeDocumentAnnotation(
             documentId: documentId,
             documentTitle: "Learning Notes",
             selectedText: "Feedback loops support adjustment.",
             note: "Connect this idea to deliberate practice.",
-            pageNumber: 12
+            page: 12
         )
 
         context.insert(annotation)

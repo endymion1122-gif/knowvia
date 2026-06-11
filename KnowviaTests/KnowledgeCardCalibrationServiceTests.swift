@@ -5,7 +5,7 @@ final class KnowledgeCardCalibrationServiceTests: XCTestCase {
     private let service = KnowledgeCardCalibrationService()
 
     func testTogglesMarkersAndConfirmsCard() {
-        let card = makeCard()
+        let card = TestFactories.makeKnowledgeCard(title: "反馈循环")
 
         service.toggleHighlighted(card)
         service.toggleUnderstood(card)
@@ -17,7 +17,7 @@ final class KnowledgeCardCalibrationServiceTests: XCTestCase {
     }
 
     func testUpdatesCalibrationAndTrimsNote() {
-        let card = makeCard()
+        let card = TestFactories.makeKnowledgeCard(title: "反馈循环")
 
         service.update(
             card,
@@ -32,31 +32,23 @@ final class KnowledgeCardCalibrationServiceTests: XCTestCase {
         XCTAssertFalse(card.isUnderstood)
         XCTAssertEqual(card.calibrationNote, "继续核验适用范围。")
     }
-
-    private func makeCard() -> KnowledgeCard {
-        KnowledgeCard(
-            title: "反馈循环",
-            content: "测试内容",
-            cardType: KnowledgeCardKind.concept.rawValue
-        )
-    }
 }
 
 final class KnowledgePathwayGapServiceTests: XCTestCase {
     private let service = KnowledgePathwayGapService()
 
     func testDetectsLocalPathwayGaps() {
-        let claim = KnowledgeCard(
+        let claim = TestFactories.makeKnowledgeCard(
             title: "反馈可以支持校准",
-            content: "测试观点",
-            cardType: KnowledgeCardKind.argument.rawValue
+            cardType: .argument,
+            content: "测试观点"
         )
-        let question = KnowledgeCard(
+        let question = TestFactories.makeKnowledgeCard(
             title: "反馈频率如何设置？",
-            content: "测试问题",
-            cardType: KnowledgeCardKind.question.rawValue
+            cardType: .question,
+            content: "测试问题"
         )
-        let pathway = KnowledgePathway(
+        let pathway = TestFactories.makeKnowledgePathway(
             title: "学习反馈",
             knowledgeCardIDs: [claim.id, question.id]
         )
@@ -84,32 +76,38 @@ final class KnowledgePathwayGapServiceTests: XCTestCase {
 
     func testSupportRelationAndConfirmedCardsReduceGaps() {
         let documentID = UUID()
-        let claim = makeConfirmedCard(
+        let claim = TestFactories.makeKnowledgeCard(
             title: "反馈可以支持校准",
-            kind: .argument,
-            documentID: documentID
+            cardType: .argument,
+            sourceDocumentId: documentID,
+            sourceDocumentTitle: "Learning Notes",
+            calibrationStatus: .confirmed
         )
-        let evidence = makeConfirmedCard(
+        let evidence = TestFactories.makeKnowledgeCard(
             title: "实验结果支持反馈机制",
-            kind: .evidence,
-            documentID: documentID
+            cardType: .evidence,
+            sourceDocumentId: documentID,
+            sourceDocumentTitle: "Learning Notes",
+            calibrationStatus: .confirmed
         )
-        let concept = makeConfirmedCard(
+        let concept = TestFactories.makeKnowledgeCard(
             title: "反馈循环",
-            kind: .concept,
-            documentID: documentID
+            cardType: .concept,
+            sourceDocumentId: documentID,
+            sourceDocumentTitle: "Learning Notes",
+            calibrationStatus: .confirmed
         )
-        let pathway = KnowledgePathway(
+        let pathway = TestFactories.makeKnowledgePathway(
             title: "学习反馈",
             overview: "整理反馈机制。",
             sourceDocumentIDs: [documentID],
             knowledgeCardIDs: [claim.id, evidence.id, concept.id]
         )
-        let relation = KnowledgeRelation(
+        let relation = TestFactories.makeKnowledgeRelation(
             pathwayID: pathway.id,
             sourceCardID: evidence.id,
             targetCardID: claim.id,
-            relationType: KnowledgeRelationKind.supports.rawValue
+            relationType: .supports
         )
 
         let gaps = service.gaps(
@@ -122,21 +120,19 @@ final class KnowledgePathwayGapServiceTests: XCTestCase {
     }
 
     func testDetectsSourceQualityAndPendingCandidateGaps() {
-        let source = DocumentItem(
+        let source = TestFactories.makeDocumentItem(
             title: "Web Article",
             filePath: "/tmp/web.md",
-            fileType: "md",
-            sourceKind: DocumentSourceKind.webPage.rawValue,
-            credibilityLevel: SourceCredibilityLevel.needsVerification.rawValue
+            sourceKind: .webPage,
+            credibilityLevel: .needsVerification
         )
-        let candidate = DocumentItem(
+        let candidate = TestFactories.makeDocumentItem(
             title: "Candidate",
             filePath: "/tmp/candidate.md",
-            fileType: "md",
-            sourceKind: DocumentSourceKind.externalEnrichment.rawValue,
-            credibilityLevel: SourceCredibilityLevel.needsVerification.rawValue
+            sourceKind: .externalEnrichment,
+            credibilityLevel: .needsVerification
         )
-        let pathway = KnowledgePathway(
+        let pathway = TestFactories.makeKnowledgePathway(
             title: "学习反馈",
             sourceDocumentIDs: [source.id],
             candidateDocumentIDs: [candidate.id]
@@ -156,20 +152,5 @@ final class KnowledgePathwayGapServiceTests: XCTestCase {
         XCTAssertTrue(kinds.contains(.unverifiedSources))
         XCTAssertTrue(kinds.contains(.missingAuthoritativeSources))
         XCTAssertTrue(kinds.contains(.pendingExternalCandidates))
-    }
-
-    private func makeConfirmedCard(
-        title: String,
-        kind: KnowledgeCardKind,
-        documentID: UUID
-    ) -> KnowledgeCard {
-        KnowledgeCard(
-            title: title,
-            content: "测试内容",
-            cardType: kind.rawValue,
-            sourceDocumentId: documentID,
-            sourceDocumentTitle: "Learning Notes",
-            calibrationStatus: KnowledgeCardCalibrationStatus.confirmed.rawValue
-        )
     }
 }

@@ -6,9 +6,9 @@ final class KnowledgeCardTopicServiceTests: XCTestCase {
 
     func testGroupsCardsByTopicAndIncludesUncategorizedCards() {
         let cards = [
-            makeCard(title: "概念", tags: ["学习方法"]),
-            makeCard(title: "证据", tags: ["学习方法", "研究方法"]),
-            makeCard(title: "待整理", tags: ["AI 草稿", "待核验"]),
+            TestFactories.makeKnowledgeCard(title: "概念", tags: ["学习方法"], content: "内容"),
+            TestFactories.makeKnowledgeCard(title: "证据", tags: ["学习方法", "研究方法"], content: "内容"),
+            TestFactories.makeKnowledgeCard(title: "待整理", tags: ["AI 草稿", "待核验"], content: "内容"),
         ]
 
         let groups = service.groups(in: cards)
@@ -20,18 +20,10 @@ final class KnowledgeCardTopicServiceTests: XCTestCase {
     }
 
     func testAssignsNormalizedTopicsAndPreservesReservedTags() {
-        let card = makeCard(title: "概念", tags: ["AI 草稿", "待核验", "旧主题"])
+        let card = TestFactories.makeKnowledgeCard(title: "概念", tags: ["AI 草稿", "待核验", "旧主题"], content: "内容")
 
         service.assignTopics([" 学习方法 ", "学习方法", "研究方法", ""], to: card)
 
         XCTAssertEqual(card.tags, ["AI 草稿", "待核验", "学习方法", "研究方法"])
-    }
-
-    private func makeCard(title: String, tags: [String]) -> KnowledgeCard {
-        KnowledgeCard(
-            title: title,
-            content: "内容",
-            tags: tags
-        )
     }
 }

@@ -5,15 +5,11 @@ import XCTest
 @MainActor
 final class KnowledgePathwayPersistenceTests: XCTestCase {
     func testPersistsPathwayMetadataInMemory() throws {
-        let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(
-            for: KnowledgePathway.self,
-            configurations: configuration
-        )
+        let container = try TestModelContext.makeInMemoryContainer(for: KnowledgePathway.self)
         let context = container.mainContext
         let cardID = UUID()
         let candidateID = UUID()
-        let pathway = KnowledgePathway(
+        let pathway = TestFactories.makeKnowledgePathway(
             title: "认知负荷理论",
             overview: "梳理理论结构与应用边界。",
             tags: ["学习科学", "理论"],

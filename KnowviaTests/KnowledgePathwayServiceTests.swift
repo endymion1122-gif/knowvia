@@ -5,9 +5,9 @@ final class KnowledgePathwayServiceTests: XCTestCase {
     private let service = KnowledgePathwayService()
 
     func testUpdatesDocumentAssignmentsOnBothSides() {
-        let document = makeDocument()
-        let first = KnowledgePathway(title: "认知负荷理论")
-        let second = KnowledgePathway(title: "自我调节学习")
+        let document = TestFactories.makeDocumentItem()
+        let first = TestFactories.makeKnowledgePathway(title: "认知负荷理论")
+        let second = TestFactories.makeKnowledgePathway(title: "自我调节学习")
 
         service.updateAssignments(
             for: document,
@@ -31,9 +31,9 @@ final class KnowledgePathwayServiceTests: XCTestCase {
     }
 
     func testDetachesDeletedPathwayFromDocuments() {
-        let firstDocument = makeDocument()
-        let secondDocument = makeDocument()
-        let pathway = KnowledgePathway(
+        let firstDocument = TestFactories.makeDocumentItem()
+        let secondDocument = TestFactories.makeDocumentItem()
+        let pathway = TestFactories.makeKnowledgePathway(
             title: "生成式 AI 支架",
             sourceDocumentIDs: [firstDocument.id, secondDocument.id]
         )
@@ -48,10 +48,10 @@ final class KnowledgePathwayServiceTests: XCTestCase {
     }
 
     func testUpdatesKnowledgeCardAssignmentsAndBuildsOverview() {
-        let concept = makeCard(title: "认知负荷", kind: .concept)
-        let evidence = makeCard(title: "工作记忆容量有限", kind: .evidence)
-        let question = makeCard(title: "如何控制外在负荷？", kind: .question)
-        let pathway = KnowledgePathway(title: "认知负荷理论")
+        let concept = TestFactories.makeKnowledgeCard(title: "认知负荷", cardType: .concept)
+        let evidence = TestFactories.makeKnowledgeCard(title: "工作记忆容量有限", cardType: .evidence)
+        let question = TestFactories.makeKnowledgeCard(title: "如何控制外在负荷？", cardType: .question)
+        let pathway = TestFactories.makeKnowledgePathway(title: "认知负荷理论")
 
         service.updateKnowledgeNodes(
             for: pathway,
@@ -73,8 +73,8 @@ final class KnowledgePathwayServiceTests: XCTestCase {
     }
 
     func testDetachesDeletedCardFromPathways() {
-        let card = makeCard(title: "生成效应", kind: .concept)
-        let pathway = KnowledgePathway(
+        let card = TestFactories.makeKnowledgeCard(title: "生成效应", cardType: .concept)
+        let pathway = TestFactories.makeKnowledgePathway(
             title: "深度学习策略",
             knowledgeCardIDs: [card.id]
         )
@@ -87,8 +87,8 @@ final class KnowledgePathwayServiceTests: XCTestCase {
     }
 
     func testCandidateIsSeparatedUntilConfirmed() {
-        let document = makeDocument()
-        let pathway = KnowledgePathway(title: "生成式 AI 支架")
+        let document = TestFactories.makeDocumentItem()
+        let pathway = TestFactories.makeKnowledgePathway(title: "生成式 AI 支架")
 
         service.addCandidate(document, to: pathway)
 
@@ -106,8 +106,8 @@ final class KnowledgePathwayServiceTests: XCTestCase {
     }
 
     func testRemovesCandidateWithoutAddingFormalSource() {
-        let document = makeDocument()
-        let pathway = KnowledgePathway(
+        let document = TestFactories.makeDocumentItem()
+        let pathway = TestFactories.makeKnowledgePathway(
             title: "生成式 AI 支架",
             candidateDocumentIDs: [document.id]
         )
@@ -116,21 +116,5 @@ final class KnowledgePathwayServiceTests: XCTestCase {
 
         XCTAssertTrue(pathway.candidateDocumentIDs.isEmpty)
         XCTAssertTrue(pathway.sourceDocumentIDs.isEmpty)
-    }
-
-    private func makeDocument() -> DocumentItem {
-        DocumentItem(
-            title: "Learning Notes",
-            filePath: "/tmp/notes.md",
-            fileType: "md"
-        )
-    }
-
-    private func makeCard(title: String, kind: KnowledgeCardKind) -> KnowledgeCard {
-        KnowledgeCard(
-            title: title,
-            content: "测试内容",
-            cardType: kind.rawValue
-        )
     }
 }

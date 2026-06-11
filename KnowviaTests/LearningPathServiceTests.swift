@@ -7,8 +7,14 @@ final class LearningPathServiceTests: XCTestCase {
 
     func testBuildsTopicsWithoutInternalDraftTags() {
         let cards = [
-            makeCard(kind: .concept, tags: ["学习方法", "AI 草稿", "待核验"]),
-            makeCard(kind: .argument, tags: ["研究方法", "观点"]),
+            TestFactories.makeKnowledgeCard(
+                kind: .concept, tags: ["学习方法", "AI 草稿", "待核验"], content: "内容",
+                sourceDocumentTitle: "测试资料"
+            ),
+            TestFactories.makeKnowledgeCard(
+                kind: .argument, tags: ["研究方法", "观点"], content: "内容",
+                sourceDocumentTitle: "测试资料"
+            ),
         ]
 
         XCTAssertEqual(service.availableTopics(in: cards), ["学习方法", "研究方法"])
@@ -16,10 +22,22 @@ final class LearningPathServiceTests: XCTestCase {
 
     func testBuildsFiveStepPathForSelectedTopic() {
         let cards = [
-            makeCard(title: "概念", kind: .concept, tags: ["学习方法"]),
-            makeCard(title: "观点", kind: .argument, tags: ["学习方法"]),
-            makeCard(title: "证据", kind: .evidence, tags: ["学习方法"]),
-            makeCard(title: "其他", kind: .note, tags: ["其他主题"]),
+            TestFactories.makeKnowledgeCard(
+                title: "概念", cardType: .concept, tags: ["学习方法"], content: "内容",
+                sourceDocumentTitle: "测试资料"
+            ),
+            TestFactories.makeKnowledgeCard(
+                title: "观点", cardType: .argument, tags: ["学习方法"], content: "内容",
+                sourceDocumentTitle: "测试资料"
+            ),
+            TestFactories.makeKnowledgeCard(
+                title: "证据", cardType: .evidence, tags: ["学习方法"], content: "内容",
+                sourceDocumentTitle: "测试资料"
+            ),
+            TestFactories.makeKnowledgeCard(
+                title: "其他", tags: ["其他主题"], content: "内容",
+                sourceDocumentTitle: "测试资料"
+            ),
         ]
 
         let snapshot = service.snapshot(for: cards, topic: "学习方法")
@@ -34,7 +52,10 @@ final class LearningPathServiceTests: XCTestCase {
 
     func testExportsDayCabinStyleTaskMarkdown() throws {
         let snapshot = service.snapshot(
-            for: [makeCard(title: "反馈循环", kind: .concept, tags: ["学习方法"])],
+            for: [TestFactories.makeKnowledgeCard(
+                title: "反馈循环", cardType: .concept, tags: ["学习方法"], content: "内容",
+                sourceDocumentTitle: "测试资料"
+            )],
             topic: "学习方法"
         )
 
@@ -73,19 +94,5 @@ final class LearningPathServiceTests: XCTestCase {
 
         XCTAssertEqual(reference.sourceDocumentId, sourceDocumentId)
         XCTAssertEqual(reference.pageNumber, 8)
-    }
-
-    private func makeCard(
-        title: String = "卡片",
-        kind: KnowledgeCardKind,
-        tags: [String]
-    ) -> KnowledgeCard {
-        KnowledgeCard(
-            title: title,
-            content: "内容",
-            cardType: kind.rawValue,
-            tags: tags,
-            sourceDocumentTitle: "测试资料"
-        )
     }
 }

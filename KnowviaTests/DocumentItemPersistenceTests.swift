@@ -5,25 +5,20 @@ import XCTest
 @MainActor
 final class DocumentItemPersistenceTests: XCTestCase {
     func testPersistsDocumentMetadataInMemory() throws {
-        let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(
-            for: DocumentItem.self,
-            configurations: configuration
-        )
+        let container = try TestModelContext.makeInMemoryContainer(for: DocumentItem.self)
         let context = container.mainContext
-        let document = DocumentItem(
+        let document = TestFactories.makeDocumentItem(
             title: "Research Notes",
             filePath: "/tmp/research-notes.md",
-            fileType: "md",
             tags: ["course", "methods"],
             readingStatus: "reading",
             lastReadPageNumber: 6,
-            sourceKind: DocumentSourceKind.webPage.rawValue,
+            sourceKind: .webPage,
             author: "Research Group",
             publicationYear: 2026,
             sourceURLString: "https://example.com/research",
             sourceNote: "待回到原文核验。",
-            credibilityLevel: SourceCredibilityLevel.needsVerification.rawValue,
+            credibilityLevel: .needsVerification,
             contributionNote: "补充方法背景。"
         )
 

@@ -5,23 +5,40 @@ final class KnowledgeCardSourceServiceTests: XCTestCase {
     private let service = KnowledgeCardSourceService()
 
     func testFindsLinkedDocumentAndUsesPDFPageNumber() throws {
-        let document = makeDocument(fileType: "pdf")
-        let card = makeCard(sourceDocumentId: document.id, pageNumber: 12)
+        let document = TestFactories.makeDocumentItem(fileType: "pdf")
+        let card = TestFactories.makeKnowledgeCard(
+            title: "测试卡片",
+            content: "用于验证来源跳转。",
+            sourceDocumentId: document.id,
+            pageNumber: 12
+        )
 
         XCTAssertEqual(try service.sourceDocument(for: card, in: [document]).id, document.id)
         XCTAssertEqual(service.targetPageNumber(for: card, in: document), 12)
     }
 
     func testIgnoresPageNumberForTextDocument() {
-        let document = makeDocument(fileType: "md")
-        let card = makeCard(sourceDocumentId: document.id, pageNumber: 12)
+        let document = TestFactories.makeDocumentItem(fileType: "md")
+        let card = TestFactories.makeKnowledgeCard(
+            title: "测试卡片",
+            content: "用于验证来源跳转。",
+            sourceDocumentId: document.id,
+            pageNumber: 12
+        )
 
         XCTAssertNil(service.targetPageNumber(for: card, in: document))
     }
 
     func testRejectsMissingSourceReferenceAndMissingDocument() {
-        let cardWithoutSource = makeCard()
-        let cardWithDeletedSource = makeCard(sourceDocumentId: UUID())
+        let cardWithoutSource = TestFactories.makeKnowledgeCard(
+            title: "测试卡片",
+            content: "用于验证来源跳转。"
+        )
+        let cardWithDeletedSource = TestFactories.makeKnowledgeCard(
+            title: "测试卡片",
+            content: "用于验证来源跳转。",
+            sourceDocumentId: UUID()
+        )
 
         XCTAssertThrowsError(try service.sourceDocument(for: cardWithoutSource, in: [])) { error in
             XCTAssertEqual(
@@ -35,26 +52,6 @@ final class KnowledgeCardSourceServiceTests: XCTestCase {
                 "关联资料已不在资料库中，但卡片内容仍然保留。"
             )
         }
-    }
-
-    private func makeDocument(fileType: String) -> DocumentItem {
-        DocumentItem(
-            title: "测试资料",
-            filePath: "/tmp/knowvia-source-test.\(fileType)",
-            fileType: fileType
-        )
-    }
-
-    private func makeCard(
-        sourceDocumentId: UUID? = nil,
-        pageNumber: Int? = nil
-    ) -> KnowledgeCard {
-        KnowledgeCard(
-            title: "测试卡片",
-            content: "用于验证来源跳转。",
-            sourceDocumentId: sourceDocumentId,
-            pageNumber: pageNumber
-        )
     }
 }
 

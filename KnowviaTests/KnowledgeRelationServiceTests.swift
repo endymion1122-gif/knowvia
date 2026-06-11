@@ -40,9 +40,9 @@ final class KnowledgeRelationServiceTests: XCTestCase {
     }
 
     func testBuildsClaimEvidencePairsFromSupportRelation() throws {
-        let pathway = KnowledgePathway(title: "认知负荷理论")
-        let claim = makeCard(title: "分段呈现可降低外在负荷", kind: .argument)
-        let evidence = makeCard(title: "实验组保持率更高", kind: .evidence)
+        let pathway = TestFactories.makeKnowledgePathway(title: "认知负荷理论")
+        let claim = TestFactories.makeKnowledgeCard(title: "分段呈现可降低外在负荷", cardType: .argument)
+        let evidence = TestFactories.makeKnowledgeCard(title: "实验组保持率更高", cardType: .evidence)
         let relation = try service.makeRelation(
             pathwayID: pathway.id,
             sourceCardID: evidence.id,
@@ -63,10 +63,10 @@ final class KnowledgeRelationServiceTests: XCTestCase {
     }
 
     func testFiltersRelationsByPathwayAndCard() throws {
-        let firstPathway = KnowledgePathway(title: "第一条路径")
-        let secondPathway = KnowledgePathway(title: "第二条路径")
-        let source = makeCard(title: "概念", kind: .concept)
-        let target = makeCard(title: "观点", kind: .argument)
+        let firstPathway = TestFactories.makeKnowledgePathway(title: "第一条路径")
+        let secondPathway = TestFactories.makeKnowledgePathway(title: "第二条路径")
+        let source = TestFactories.makeKnowledgeCard(title: "概念", cardType: .concept)
+        let target = TestFactories.makeKnowledgeCard(title: "观点", cardType: .argument)
         let first = try service.makeRelation(
             pathwayID: firstPathway.id,
             sourceCardID: source.id,
@@ -85,33 +85,21 @@ final class KnowledgeRelationServiceTests: XCTestCase {
         XCTAssertEqual(service.relations(for: firstPathway, in: [first, second]).map(\.id), [first.id])
         XCTAssertEqual(Set(service.relations(involving: source, in: [first, second]).map(\.id)), [first.id, second.id])
     }
-
-    private func makeCard(title: String, kind: KnowledgeCardKind) -> KnowledgeCard {
-        KnowledgeCard(
-            title: title,
-            content: "测试内容",
-            cardType: kind.rawValue
-        )
-    }
 }
 
 @MainActor
 final class KnowledgeRelationPersistenceTests: XCTestCase {
     func testPersistsRelationMetadataInMemory() throws {
-        let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(
-            for: KnowledgeRelation.self,
-            configurations: configuration
-        )
+        let container = try TestModelContext.makeInMemoryContainer(for: KnowledgeRelation.self)
         let context = container.mainContext
         let pathwayID = UUID()
         let sourceID = UUID()
         let targetID = UUID()
-        let relation = KnowledgeRelation(
+        let relation = TestFactories.makeKnowledgeRelation(
             pathwayID: pathwayID,
             sourceCardID: sourceID,
             targetCardID: targetID,
-            relationType: KnowledgeRelationKind.extends.rawValue,
+            relationType: .extends,
             note: "补充应用边界"
         )
 
