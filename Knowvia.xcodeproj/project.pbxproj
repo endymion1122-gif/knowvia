@@ -127,6 +127,7 @@
 		200000000000000000000076 /* CardReviewService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000079 /* CardReviewService.swift */; };
 		200000000000000000000077 /* CardReviewSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000007A /* CardReviewSessionView.swift */; };
 		200000000000000000000078 /* CardReviewServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000007B /* CardReviewServiceTests.swift */; };
+		200000000000000000000079 /* ClaimEvidenceChainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000007C /* ClaimEvidenceChainView.swift */; };
 		/* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -263,6 +264,7 @@
 		100000000000000000000079 /* CardReviewService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/CardReviewService.swift"; sourceTree = "<group>"; };
 		10000000000000000000007A /* CardReviewSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/CardReviewSessionView.swift"; sourceTree = "<group>"; };
 		10000000000000000000007B /* CardReviewServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardReviewServiceTests.swift"; sourceTree = "<group>"; };
+		10000000000000000000007C /* ClaimEvidenceChainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Components/ClaimEvidenceChainView.swift"; sourceTree = "<group>"; };
 		/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -323,6 +325,7 @@
 				100000000000000000000008 /* TextPreviewView.swift */,
 				100000000000000000000009 /* ComingSoonView.swift */,
 				10000000000000000000007A /* CardReviewSessionView.swift */,
+				10000000000000000000007C /* ClaimEvidenceChainView.swift */,
 				10000000000000000000000A /* InspectorView.swift */,
 				10000000000000000000001F /* ResearchConsentView.swift */,
 				100000000000000000000020 /* SettingsView.swift */,
@@ -610,6 +613,7 @@
 				20000000000000000000006D /* AIErrorRecoveryService.swift in Sources */,
 				200000000000000000000076 /* CardReviewService.swift in Sources */,
 				200000000000000000000077 /* CardReviewSessionView.swift in Sources */,
+				200000000000000000000079 /* ClaimEvidenceChainView.swift in Sources */,
 				200000000000000000000074 /* WebPageFetchService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

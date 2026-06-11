@@ -20,6 +20,7 @@ struct KnowledgePathwayDetailView: View {
     @State private var calibratingCard: KnowledgeCard?
     @State private var editingSourceDocument: DocumentItem?
     @State private var showsExternalCandidateImporter = false
+    @State private var showChainView = false
     @State private var sourceSearchText = ""
     @State private var sourceKindFilter: DocumentSourceKind?
     @State private var sourceCredibilityFilter: SourceCredibilityLevel?
@@ -986,10 +987,30 @@ struct KnowledgePathwayDetailView: View {
 
     private var claimEvidenceSection: some View {
         VStack(alignment: .leading, spacing: 11) {
-            sectionTitle("观点—证据链", symbol: "link")
+            HStack {
+                sectionTitle("观点—证据链", symbol: "link")
+                Spacer()
+                if !claimEvidencePairs.isEmpty {
+                    Button {
+                        showChainView.toggle()
+                    } label: {
+                        Label(
+                            showChainView ? "卡片视图" : "证据链视图",
+                            systemImage: showChainView ? "square.grid.2x2" : "list.bullet.indent"
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(AppTheme.softViolet)
+                }
+            }
 
-            if claimEvidencePairs.isEmpty {
-                Text("将证据节点与观点节点建立“支持”关系后，这里会形成可回溯的观点—证据链。")
+            if showChainView {
+                ClaimEvidenceChainView(pairs: claimEvidencePairs) { card in
+                    inspectingCard = card
+                }
+            } else if claimEvidencePairs.isEmpty {
+                Text("将证据节点与观点节点建立\u{201c}支持\u{201d}关系后，这里会形成可回溯的观点—证据链。")
                     .font(.system(size: 12))
                     .foregroundStyle(AppTheme.secondaryText)
             } else {

@@ -172,7 +172,8 @@ struct CardReviewSessionView: View {
 
     private func ratingButton(_ rating: ReviewRating) -> some View {
         Button {
-            reviewService.scheduleReview(currentCard!, rating: rating)
+            guard let card = currentCard else { return }
+            reviewService.scheduleReview(card, rating: rating)
             reviewedCount += 1
             onSave?()
 
