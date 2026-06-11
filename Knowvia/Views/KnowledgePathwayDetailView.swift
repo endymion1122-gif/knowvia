@@ -10,6 +10,7 @@ struct KnowledgePathwayDetailView: View {
     @Query(sort: \DocumentItem.importedAt, order: .reverse) private var documents: [DocumentItem]
     @Query(sort: \KnowledgeCard.updatedAt, order: .reverse) private var cards: [KnowledgeCard]
     @Query(sort: \KnowledgeRelation.updatedAt, order: .reverse) private var relations: [KnowledgeRelation]
+    @Query(sort: \KnowledgePathway.title) private var allPathways: [KnowledgePathway]
 
     let pathway: KnowledgePathway
 
@@ -164,6 +165,7 @@ struct KnowledgePathwayDetailView: View {
                         writingActionsSection(scrollProxy: scrollProxy)
                         relationSection
                         claimEvidenceSection
+                        relatedPathwaysSection
                         sourceSection
                             .id(sourceSectionID)
                         externalCandidateSection
@@ -1052,6 +1054,64 @@ struct KnowledgePathwayDetailView: View {
             }
         }
         .sectionCard()
+    }
+
+    private var relatedPathwaysSection: some View {
+        let service = ConceptSimilarityService()
+        let pool = Array(cards)
+        let pathwayCards = cards.filter { !$0.pathwayIDs.isEmpty && $0.pathwayIDs.contains(pathway.id) }
+        let otherCards = pool.filter { !$0.pathwayIDs.contains(pathway.id) && !$0.pathwayIDs.isEmpty }
+
+        let connections = pathwayCards.prefix(5).flatMap { card in
+            service.crossPathwaySimilar(to: card, in: otherCards, maxCount: 1)
+        }
+        let unique = Array(Set(connections.map { $0.card.id })).prefix(5)
+        guard !unique.isEmpty else { return AnyView(EmptyView()) }
+
+        return AnyView(
+            VStack(alignment: .leading, spacing: 11) {
+                sectionTitle("关联路径", symbol: "point.3.connected.trianglepath.dotted")
+                Text("以下概念卡片来自其他专题路径，可能存在跨路径知识关联。")
+                    .font(.system(size: 11))
+                    .foregroundStyle(AppTheme.pathTeal)
+
+                ForEach(connections.prefix(5)) { similar in
+                    let relatedPathwayIDs = similar.card.pathwayIDs.filter { $0 != pathway.id }
+                    Button {
+                        inspectingCard = similar.card
+                    } label: {
+                        HStack(spacing: 8) {
+                            Text(similar.card.kind.title)
+                                .font(.system(size: 9, weight: .semibold))
+                                .foregroundStyle(AppTheme.pathTeal)
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 2)
+                                .background(AppTheme.pathTeal.opacity(0.1), in: Capsule())
+
+                            Text(similar.card.title)
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundStyle(AppTheme.primaryText)
+
+                            Spacer()
+
+                            if let pid = relatedPathwayIDs.first,
+                               let pw = allPathways.first(where: { $0.id == pid }) {
+                                Text(pw.title)
+                                    .font(.system(size: 10))
+                                    .foregroundStyle(AppTheme.tertiaryText)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(AppTheme.coolGray.opacity(0.5), in: Capsule())
+                            }
+                        }
+                        .padding(8)
+                        .background(AppTheme.cardBackground, in: RoundedRectangle(cornerRadius: 8))
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .sectionCard()
+        )
     }
 
     private var nodeSection: some View {

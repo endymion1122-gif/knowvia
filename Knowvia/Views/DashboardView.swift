@@ -41,6 +41,7 @@ struct DashboardView: View {
                 LearningPathView()
                 recentDocuments
                 recentCards
+                crossPathwayConnections
             }
             .padding(28)
         }
@@ -295,5 +296,64 @@ struct DashboardView: View {
         } catch {
             sampleExperienceErrorMessage = error.localizedDescription
         }
+    }
+
+    private var crossPathwayConnections: some View {
+        let pwList = Array(pathways).filter { !$0.knowledgeCardIDs.isEmpty }
+        guard pwList.count >= 2 else { return AnyView(EmptyView()) }
+        let similarity = ConceptSimilarityService()
+        let pool = Array(cards)
+
+        struct Connection {
+            let sourceID: UUID
+            let targetID: UUID
+            let count: Int
+        }
+        var connections: [Connection] = []
+        for i in 0..<pwList.count {
+            for j in (i + 1)..<pwList.count {
+                let sourcePw = pwList[i]
+                let targetPw = pwList[j]
+                let sourceCardIDs = Set(sourcePw.knowledgeCardIDs)
+                let targetCardIDs = Set(targetPw.knowledgeCardIDs)
+                let sourceCards = pool.filter { sourceCardIDs.contains($0.id) }
+                var seen = Set<UUID>()
+                var crossCount = 0
+                for card in sourceCards.prefix(5) {
+                    let found = similarity.crossPathwaySimilar(to: card, in: pool, maxCount: 1)
+                    for f in found where targetCardIDs.contains(f.card.id) && !seen.contains(f.card.id) {
+                        seen.insert(f.card.id)
+                        crossCount += 1
+                    }
+                }
+                if crossCount > 0 {
+                    connections.append(Connection(sourceID: sourcePw.id, targetID: targetPw.id, count: crossCount))
+                }
+            }
+        }
+        guard !connections.isEmpty else { return AnyView(EmptyView()) }
+
+        return AnyView(
+            VStack(alignment: .leading, spacing: 12) {
+                Text("跨路径连接")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(AppTheme.deepIndigo)
+                ForEach(connections, id: \.sourceID) { conn in
+                    let s = pwList.first(where: { $0.id == conn.sourceID })?.title ?? ""
+                    let t = pwList.first(where: { $0.id == conn.targetID })?.title ?? ""
+                    HStack(spacing: 6) {
+                        Image(systemName: "point.3.connected.trianglepath.dotted")
+                            .font(.system(size: 11)).foregroundStyle(AppTheme.pathTeal)
+                        Text("\(s) ↔ \(t)")
+                            .font(.system(size: 12, weight: .medium)).foregroundStyle(AppTheme.primaryText)
+                        Spacer()
+                        Text("\(conn.count) 个关联").font(.system(size: 10)).foregroundStyle(AppTheme.tertiaryText)
+                        Button("查看") { appState.select(.pathways) }
+                            .buttonStyle(.plain).font(.system(size: 11, weight: .semibold)).foregroundStyle(AppTheme.softViolet)
+                    }
+                    .padding(12).background(AppTheme.cardBackground, in: RoundedRectangle(cornerRadius: 10))
+                }
+            }
+        )
     }
 }
