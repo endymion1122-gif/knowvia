@@ -165,17 +165,13 @@ struct SettingsView: View {
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(AppTheme.slateBlue)
 
-                Button {
-                    applyDeepSeekPreset()
-                } label: {
-                    Label("使用 DeepSeek 预设", systemImage: "wand.and.stars")
+                HStack(spacing: 8) {
+                    presetButton("DeepSeek") { applyPreset(AppSettings.deepSeekPreset) }
+                    presetButton("Claude") { applyPreset(AppSettings.claudePreset) }
+                    presetButton("Gemini") { applyPreset(AppSettings.geminiPreset) }
+                    presetButton("Kimi") { applyPreset(AppSettings.kimiPreset) }
+                    presetButton("Ollama") { applyPreset(AppSettings.ollamaPreset) }
                 }
-                .buttonStyle(.plain)
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(AppTheme.deepIndigo)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 7)
-                .background(AppTheme.paleMint, in: RoundedRectangle(cornerRadius: 7))
 
                 HStack(alignment: .top, spacing: 12) {
                     settingsField("Provider Name") {
@@ -453,13 +449,24 @@ struct SettingsView: View {
         }
     }
 
-    private func applyDeepSeekPreset() {
-        let preset = AppSettings.deepSeekPreset
+    private func applyPreset(_ preset: AppSettings) {
         providerName = preset.providerName
         apiEndpoint = preset.apiEndpoint
         modelName = preset.modelName
         demoModeEnabled = preset.demoModeEnabled
-        aiConfigurationMessage = "已填入 DeepSeek 预设。请输入你的 API Key 后保存并测试连接。"
+        aiConfigurationMessage = "已填入 \(preset.providerName) 预设。请输入你的 API Key 后保存并测试连接。"
+    }
+
+    private func presetButton(_ title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundStyle(AppTheme.deepIndigo)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 6)
+                .background(AppTheme.paleMint, in: RoundedRectangle(cornerRadius: 6))
+        }
+        .buttonStyle(.plain)
     }
 
     private func saveAIConfiguration() {

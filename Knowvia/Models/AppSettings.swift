@@ -39,6 +39,52 @@ struct AppSettings: Codable, Equatable {
         modelName: deepSeekDefaultModelName,
         demoModeEnabled: false
     )
+
+    // MARK: - Additional Provider Presets
+
+    static let claudeProviderName = "Anthropic Claude"
+    static let claudeAPIEndpoint = "https://api.anthropic.com/v1/messages"
+    static let claudeDefaultModelName = "claude-sonnet-4-20250514"
+
+    static let claudePreset = AppSettings(
+        providerName: claudeProviderName,
+        apiEndpoint: claudeAPIEndpoint,
+        modelName: claudeDefaultModelName,
+        demoModeEnabled: false
+    )
+
+    static let geminiProviderName = "Google Gemini"
+    static let geminiAPIEndpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+    static let geminiDefaultModelName = "gemini-2.5-flash"
+
+    static let geminiPreset = AppSettings(
+        providerName: geminiProviderName,
+        apiEndpoint: geminiAPIEndpoint,
+        modelName: geminiDefaultModelName,
+        demoModeEnabled: false
+    )
+
+    static let kimiProviderName = "Kimi (Moonshot)"
+    static let kimiAPIEndpoint = "https://api.moonshot.cn/v1/chat/completions"
+    static let kimiDefaultModelName = "moonshot-v1-8k"
+
+    static let kimiPreset = AppSettings(
+        providerName: kimiProviderName,
+        apiEndpoint: kimiAPIEndpoint,
+        modelName: kimiDefaultModelName,
+        demoModeEnabled: false
+    )
+
+    static let ollamaProviderName = "Ollama (Local)"
+    static let ollamaAPIEndpoint = "http://localhost:11434/v1/chat/completions"
+    static let ollamaDefaultModelName = "llama3"
+
+    static let ollamaPreset = AppSettings(
+        providerName: ollamaProviderName,
+        apiEndpoint: ollamaAPIEndpoint,
+        modelName: ollamaDefaultModelName,
+        demoModeEnabled: false
+    )
 }
 
 enum AppSettingsStore {
