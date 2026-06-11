@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+/* Knowvia Design System — adapted from macOS AppTheme */
+:root {
+  --deep-indigo: #2D3A8C;
+  --soft-violet: #7C6EB0;
+  --slate-blue: #5B6E9C;
+  --path-teal: #4A9C8C;
+  --soft-plum: #8B6B8C;
+  --warm-white: #FAF8F5;
+  --page-bg: #F4F1EC;
+  --card-bg: #FFFFFF;
+  --cool-gray: #D9D6D0;
+  --primary-text: #2C2C2C;
+  --secondary-text: #6B6B6B;
+  --tertiary-text: #9B9B9B;
+  --pale-lavender: #EDE8F5;
+  --pale-mint: #E8F2F0;
+}
+
+body {
+  font-family: "Noto Sans SC", "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--page-bg);
+  color: var(--primary-text);
+  margin: 0;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#root {
+  height: 100vh;
+}
