@@ -244,7 +244,9 @@ struct KnowledgePathwayMarkdownExportService {
         for document in documents {
             let attribution = document.attributionDescription.map { "｜\($0)" } ?? ""
             let url = document.sourceURLString.isEmpty ? "" : "｜\(document.sourceURLString)"
-            sections.append("- \(singleLine(document.title))（\(document.sourceType.title) / \(document.displayFileType)｜\(document.credibility.title)\(attribution)\(url)）")
+            let sourceInfo = "\(document.sourceType.title) / \(document.displayFileType)"
+                + "｜\(document.credibility.title)\(attribution)\(url)"
+            sections.append("- \(singleLine(document.title))（\(sourceInfo)）")
         }
     }
 
@@ -261,7 +263,10 @@ struct KnowledgePathwayMarkdownExportService {
         for document in documents {
             let relatedCards = cards.filter { $0.sourceDocumentId == document.id }
             sections.append(
-                "| \(tableCell(document.title)) | \(tableCell(document.sourceType.title)) | \(tableCell(document.attributionDescription ?? "-")) | \(tableCell(document.credibility.title)) | \(relatedCards.count) | \(tableCell(contribution(for: document, cards: relatedCards))) |"
+                "| \(tableCell(document.title)) | \(tableCell(document.sourceType.title)) | "
+                + "\(tableCell(document.attributionDescription ?? "-")) | "
+                + "\(tableCell(document.credibility.title)) | \(relatedCards.count) | "
+                + "\(tableCell(contribution(for: document, cards: relatedCards))) |"
             )
         }
     }

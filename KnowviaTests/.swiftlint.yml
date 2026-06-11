@@ -1,0 +1,9 @@
+# SwiftLint configuration for Knowvia test files
+# XCTest patterns commonly use force unwrapping and implicitly unwrapped optionals
+
+disabled_rules:
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - force_try
+  - non_optional_string_data_conversion
+  - static_over_final_class

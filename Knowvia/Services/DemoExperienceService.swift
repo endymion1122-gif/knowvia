@@ -21,7 +21,12 @@ struct DemoExperienceInstallResult {
 @MainActor
 struct DemoExperienceService {
     static let installedKey = "knowvia.demoExperience.installed"
-    static let sampleDocumentID = UUID(uuidString: "19B0F102-521D-4F8D-91B7-A68AC8B135C0")!
+    static let sampleDocumentID: UUID = {
+        guard let id = UUID(uuidString: "19B0F102-521D-4F8D-91B7-A68AC8B135C0") else {
+            fatalError("Invalid sample document UUID string")
+        }
+        return id
+    }()
 
     private let fileManager: FileManager
     private let importService: FileImportService
@@ -111,7 +116,7 @@ struct DemoExperienceService {
     private func sampleCards(for document: DocumentItem) -> [KnowledgeCard] {
         [
             KnowledgeCard(
-                id: UUID(uuidString: "7776C915-744E-4A0D-BD8A-67976448A2AA")!,
+                id: UUID(uuidString: "7776C915-744E-4A0D-BD8A-67976448A2AA") ?? UUID(),
                 title: "知识卡片不是摘抄仓库",
                 content: "知识卡片的价值不只是保存句子，而是把材料转化为之后仍可理解、核验和复用的知识单元。",
                 cardType: KnowledgeCardKind.concept.rawValue,
@@ -121,7 +126,7 @@ struct DemoExperienceService {
                 createdBy: "demo-experience"
             ),
             KnowledgeCard(
-                id: UUID(uuidString: "BBE2419E-4DCA-4BCD-AF1E-26C667056C33")!,
+                id: UUID(uuidString: "BBE2419E-4DCA-4BCD-AF1E-26C667056C33") ?? UUID(),
                 title: "阅读闭环需要明确的下一步",
                 content: "当阅读结果能够连接到复习、写作或行动任务时，知识才真正开始形成路径。",
                 cardType: KnowledgeCardKind.argument.rawValue,
@@ -131,7 +136,7 @@ struct DemoExperienceService {
                 createdBy: "demo-experience"
             ),
             KnowledgeCard(
-                id: UUID(uuidString: "A3F31037-635A-4E8D-8914-F0906987A71D")!,
+                id: UUID(uuidString: "A3F31037-635A-4E8D-8914-F0906987A71D") ?? UUID(),
                 title: "三类卡片形成最小知识结构",
                 content: "概念卡回答“它是什么”，观点卡回答“作者主张什么”，证据卡回答“依据在哪里”。",
                 cardType: KnowledgeCardKind.evidence.rawValue,

@@ -1,0 +1,93 @@
+# SwiftLint configuration for Knowvia macOS Demo
+# Based on the project's existing code style
+
+# --- Included/Excluded ---
+included:
+  - Knowvia
+  - KnowviaTests
+
+excluded:
+  - Knowvia/Resources
+  - prototype-web
+  - DerivedData
+  - Scripts
+
+# --- General Rules ---
+disabled_rules:
+  - trailing_whitespace
+  - multiple_closures_with_trailing_closure
+  - function_body_length
+  - file_length
+  - type_body_length
+  - todo
+  - orphaned_doc_comment
+  - opening_brace
+  - closure_parameter_position
+  - trailing_comma
+  - switch_case_on_newline
+
+# --- Opt-in Rules ---
+opt_in_rules:
+  - closure_end_indentation
+  - closure_spacing
+  - empty_count
+  - explicit_init
+  - fatal_error_message
+  - first_where
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - operator_usage_whitespace
+  - redundant_nil_coalescing
+  - vertical_parameter_alignment_on_call
+
+# --- Rule Configurations ---
+line_length:
+  warning: 160
+  error: 200
+  ignores_comments: true
+  ignores_urls: true
+
+identifier_name:
+  min_length: 2
+  max_length:
+    warning: 60
+    error: 80
+  excluded:
+    - id
+    - x
+    - y
+    - i
+    - j
+    - on
+    - vc
+    - vm
+
+type_name:
+  min_length: 3
+  max_length:
+    warning: 60
+    error: 80
+
+nesting:
+  type_level:
+    warning: 2
+    error: 4
+
+cyclomatic_complexity:
+  warning: 20
+  error: 30
+
+large_tuple:
+  warning: 3
+  error: 4
+
+# Relax some rules for test files
+force_unwrapping:
+  severity: warning
+
+force_try:
+  severity: warning
+
+# SwiftUI previews often use force_unwrapping
+implicitly_unwrapped_optional:
+  severity: warning

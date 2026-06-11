@@ -24,7 +24,10 @@ struct KnowledgeCardView: View {
 
                 Spacer()
 
-                if onOpenDetail != nil || onOpenSource != nil || onEdit != nil || onCategorize != nil || onToggleHighlighted != nil || onToggleUnderstood != nil || onConfirm != nil || onCalibrate != nil || onDelete != nil {
+                if onOpenDetail != nil || onOpenSource != nil || onEdit != nil
+                    || onCategorize != nil || onToggleHighlighted != nil
+                    || onToggleUnderstood != nil || onConfirm != nil
+                    || onCalibrate != nil || onDelete != nil {
                     Menu {
                         if let onOpenDetail {
                             Button("查看详情", systemImage: "rectangle.stack", action: onOpenDetail)

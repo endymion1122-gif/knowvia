@@ -295,11 +295,11 @@ struct TextPreviewView: View {
                 .help(selectedText.isEmpty ? "请先在正文中选择文本" : "根据选区生成可编辑知识卡片")
 
                 secondaryActionsMenu
-            }
-            .font(.system(size: 12, weight: .medium))
-            .padding(.horizontal, 20)
-            .frame(height: 54)
-            .background(AppTheme.warmWhite)
+        }
+        .font(.system(size: 12, weight: .medium))
+        .padding(.horizontal, 20)
+        .frame(height: 54)
+        .background(AppTheme.warmWhite)
             .overlay(alignment: .bottom) {
                 Rectangle().fill(AppTheme.coolGray).frame(height: 1)
             }
