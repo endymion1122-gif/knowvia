@@ -1,9 +1,17 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense, lazy } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { PDFReader } from "../components/reader/PDFReader";
 import { TextReader } from "../components/reader/TextReader";
 import { api } from "../services/api";
 import type { Document as DocType, Annotation, CardKind } from "../types";
+
+// Lazy-load PDF reader — saves ~250KB until user opens a PDF
+const PDFReader = lazy(() => import("../components/reader/PDFReader").then(m => ({ default: m.PDFReader })));
+
+const PDFLoader = () => (
+  <div className="flex-1 flex items-center justify-center bg-[var(--page-bg)]">
+    <p className="text-sm text-[var(--tertiary-text)] animate-pulse">加载 PDF 阅读器...</p>
+  </div>
+);
 
 const CARD_TYPE_OPTIONS: { value: CardKind; label: string }[] = [
   { value: "concept", label: "概念" },
@@ -169,7 +177,9 @@ export function ReaderPage() {
           <span className="text-[10px] text-[var(--path-teal)] ml-auto">{doc.file_type.toUpperCase()}</span>
         </div>
         {doc.file_type === "pdf" ? (
-          <PDFReader document={doc} onTextSelect={handleTextSelect} />
+          <Suspense fallback={<PDFLoader />}>
+            <PDFReader document={doc} onTextSelect={handleTextSelect} />
+          </Suspense>
         ) : (
           <TextReader document={doc} onTextSelect={handleTextSelect} />
         )}

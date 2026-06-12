@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
+import { OnboardingWizard } from "../components/common/OnboardingWizard";
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -28,9 +29,11 @@ export function DashboardPage() {
   return (
     <div className="p-8 max-w-5xl">
       <h2 className="text-2xl font-semibold text-[var(--deep-indigo)] mb-1">欢迎使用知径 Knowvia</h2>
-      <p className="text-sm text-[var(--secondary-text)] mb-8">
+      <p className="text-sm text-[var(--secondary-text)] mb-6">
         把资料变成可理解、可追溯、可复习、可输出的知识路径
       </p>
+
+      <OnboardingWizard />
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-3 mb-8">
