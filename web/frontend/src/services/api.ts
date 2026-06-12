@@ -46,4 +46,127 @@ export const api = {
     delete: (id: string) =>
       request<{ success: boolean }>(`/documents/${id}`, { method: "DELETE" }),
   },
+
+  cards: {
+    list: (params?: { document_id?: string; card_type?: string }) => {
+      const qs = params ? "?" + new URLSearchParams(params as any).toString() : "";
+      return request<{ cards: any[] }>(`/cards${qs}`);
+    },
+    create: (data: {
+      title: string; content: string; card_type?: string;
+      source_document_id?: string; source_document_title?: string;
+      page_number?: number; calibration_note?: string; tags?: string[];
+      ai_generated_text?: string; user_summary?: string;
+      confidence_score?: number; source_citation?: string;
+    }) =>
+      request<{ card: any }>("/cards", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    update: (id: string, data: Record<string, unknown>) =>
+      request<{ card: any }>(`/cards/${id}`, {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    delete: (id: string) =>
+      request<{ success: boolean }>(`/cards/${id}`, { method: "DELETE" }),
+  },
+
+  pathways: {
+    list: (params?: { status?: string }) => {
+      const qs = params ? "?" + new URLSearchParams(params as any).toString() : "";
+      return request<{ pathways: any[] }>(`/pathways${qs}`);
+    },
+    get: (id: string) => request<{ pathway: any }>(`/pathways/${id}`),
+    create: (data: {
+      title: string; description?: string; goal?: string;
+      existing_knowledge?: string; output_target?: string; tags?: string[];
+    }) =>
+      request<{ pathway: any }>("/pathways", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    update: (id: string, data: Record<string, unknown>) =>
+      request<{ pathway: any }>(`/pathways/${id}`, {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    delete: (id: string) =>
+      request<{ success: boolean }>(`/pathways/${id}`, { method: "DELETE" }),
+    linkDocument: (id: string, document_id: string) =>
+      request<{ success: boolean }>(`/pathways/${id}/link-document`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ document_id }),
+      }),
+    getDocuments: (id: string) =>
+      request<{ documents: any[] }>(`/pathways/${id}/documents`),
+  },
+
+  relations: {
+    list: (pathway_id: string) =>
+      request<{ relations: any[] }>(`/relations?pathway_id=${pathway_id}`),
+    create: (data: {
+      pathway_id: string; source_card_id: string; target_card_id: string;
+      relation_type: string; note?: string;
+    }) =>
+      request<{ relation: any }>("/relations", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    update: (id: string, data: Record<string, unknown>) =>
+      request<{ relation: any }>(`/relations/${id}`, {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    delete: (id: string) =>
+      request<{ success: boolean }>(`/relations/${id}`, { method: "DELETE" }),
+  },
+
+  evidences: {
+    list: (node_id: string) =>
+      request<{ evidences: any[] }>(`/evidences?node_id=${node_id}`),
+    create: (data: {
+      node_id: string; evidence_text: string; source_location?: string;
+      evidence_strength?: string; evidence_type?: string;
+    }) =>
+      request<{ evidence: any }>("/evidences", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    delete: (id: string) =>
+      request<{ success: boolean }>(`/evidences/${id}`, { method: "DELETE" }),
+  },
+
+  exports: {
+    list: (pathway_id: string) =>
+      request<{ exports: any[] }>(`/exports?pathway_id=${pathway_id}`),
+    create: (pathway_id: string, export_type: string) =>
+      request<{ export: any }>("/exports", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pathway_id, export_type }),
+      }),
+    delete: (id: string) =>
+      request<{ success: boolean }>(`/exports/${id}`, { method: "DELETE" }),
+  },
+
+  ai: {
+    explain: (data: { text: string; context?: string; apiKey?: string; endpoint?: string; model?: string }) =>
+      request<{ result: string; mode: string }>("/ai/explain", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    summarize: (data: { content: string; title?: string; apiKey?: string; endpoint?: string; model?: string }) =>
+      request<any>("/ai/summarize-document", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    extractNodes: (data: {
+      markdown_content: string; goal?: string; existing_knowledge?: string;
+      output_target?: string; apiKey?: string; endpoint?: string; model?: string;
+    }) =>
+      request<{ nodes: any[]; suggested_relations: any[]; mode: string }>("/ai/extract-nodes", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+  },
 };

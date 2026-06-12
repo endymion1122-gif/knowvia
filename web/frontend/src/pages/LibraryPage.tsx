@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import type { Document as Doc } from "../types";
 
 export function LibraryPage() {
+  const navigate = useNavigate();
   const [docs, setDocs] = useState<Doc[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -66,6 +68,7 @@ export function LibraryPage() {
                 <p className="text-sm font-medium text-[var(--primary-text)] truncate">{doc.title}</p>
                 <p className="text-[10px] text-[var(--tertiary-text)]">{doc.file_type.toUpperCase()} · {doc.reading_status}</p>
               </div>
+              <button onClick={() => navigate(`/reader/${doc.id}`)} className="text-xs text-[var(--deep-indigo)] hover:underline">打开</button>
               <button onClick={() => handleDelete(doc.id)} className="text-xs text-red-400 hover:text-red-600">删除</button>
             </div>
           ))}

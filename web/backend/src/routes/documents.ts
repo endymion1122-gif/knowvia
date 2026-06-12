@@ -5,6 +5,7 @@ import fs from "fs";
 import multer from "multer";
 import { getDb } from "../db/schema.js";
 import { AuthRequest } from "../middleware/auth.js";
+import { convertToMarkdown, isConvertible } from "../utils/document-converter.js";
 
 const router = Router();
 
@@ -43,8 +44,22 @@ router.post("/upload", upload.single("file"), (req: AuthRequest, res: Response) 
     VALUES (?, ?, ?, ?, ?)
   `).run(id, req.userId, file.originalname, fileType, file.path);
 
+  // Async: convert to Markdown for AI processing
+  const converterMessage = isConvertible(file.originalname)
+    ? "文档已上传，正在后台转换为 Markdown..."
+    : null;
+  setImmediate(async () => {
+    if (isConvertible(file.originalname)) {
+      const result = await convertToMarkdown(file.path);
+      if (result.markdown && !result.error) {
+        db.prepare("UPDATE documents SET markdown_content = ? WHERE id = ?")
+          .run(result.markdown.slice(0, 1_000_000), id); // cap at ~1MB
+      }
+    }
+  });
+
   const doc = db.prepare("SELECT * FROM documents WHERE id = ?").get(id);
-  res.json({ document: doc });
+  res.json({ document: doc, converterMessage });
 });
 
 // GET /api/documents
@@ -82,6 +97,15 @@ router.patch("/:id", (req: AuthRequest, res: Response) => {
 
   const updated = db.prepare("SELECT * FROM documents WHERE id = ?").get(req.params.id);
   res.json({ document: updated });
+});
+
+// GET /api/documents/:id/markdown — get converted markdown for AI processing
+router.get("/:id/markdown", (req: AuthRequest, res: Response) => {
+  const db = getDb();
+  const doc = db.prepare("SELECT id, markdown_content FROM documents WHERE id = ? AND user_id = ?")
+    .get(req.params.id, req.userId) as any;
+  if (!doc) { res.status(404).json({ error: "资料不存在" }); return; }
+  res.json({ markdown: doc.markdown_content || "" });
 });
 
 // DELETE /api/documents/:id

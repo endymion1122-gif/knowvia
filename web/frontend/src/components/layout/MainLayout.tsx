@@ -6,6 +6,8 @@ import { LibraryPage } from "../../pages/LibraryPage";
 import { PathwayPage } from "../../pages/PathwayPage";
 import { CardsPage } from "../../pages/CardsPage";
 import { SettingsPage } from "../../pages/SettingsPage";
+import { ReaderPage } from "../../pages/ReaderPage";
+import { InitPage } from "../../pages/InitPage";
 
 const NAV_ITEMS = [
   { path: "/", label: "首页", icon: "🏠" },
@@ -65,8 +67,11 @@ export function MainLayout() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/library" element={<LibraryPage />} />
           <Route path="/pathways" element={<PathwayPage />} />
+          <Route path="/pathway/:id" element={<PathwayPage />} />
+          <Route path="/init" element={<InitPage />} />
           <Route path="/cards" element={<CardsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/reader/:id" element={<ReaderPage />} />
         </Routes>
       </main>
     </div>
