@@ -8,12 +8,14 @@ import { CardsPage } from "../../pages/CardsPage";
 import { SettingsPage } from "../../pages/SettingsPage";
 import { ReaderPage } from "../../pages/ReaderPage";
 import { InitPage } from "../../pages/InitPage";
+import { RecallPage } from "../../pages/RecallPage";
 
 const NAV_ITEMS = [
   { path: "/", label: "首页", icon: "🏠" },
   { path: "/library", label: "资料库", icon: "📚" },
   { path: "/pathways", label: "专题路径", icon: "🔗" },
   { path: "/cards", label: "知识节点", icon: "◈" },
+  { path: "/recall", label: "主动回忆", icon: "🧠" },
   { path: "/settings", label: "设置", icon: "⚙" },
 ];
 
@@ -69,6 +71,7 @@ export function MainLayout() {
           <Route path="/pathways" element={<PathwayPage />} />
           <Route path="/pathway/:id" element={<PathwayPage />} />
           <Route path="/init" element={<InitPage />} />
+          <Route path="/recall" element={<RecallPage />} />
           <Route path="/cards" element={<CardsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/reader/:id" element={<ReaderPage />} />

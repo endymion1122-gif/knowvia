@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
+import { PathwayGraph } from "../components/pathway/PathwayGraph";
 
 const RELATION_LABELS: Record<string, string> = {
   definition: "定义", support: "支撑", oppose: "反对", cause: "因果",
@@ -27,6 +28,7 @@ export function PathwayPage() {
   const [extracting, setExtracting] = useState(false);
   const [extractResult, setExtractResult] = useState<any>(null);
   const [exporting, setExporting] = useState(false);
+  const [viewMode, setViewMode] = useState<"edit" | "graph">("edit");
 
   const [editingNode, setEditingNode] = useState<string | null>(null);
   const [editSummary, setEditSummary] = useState("");
@@ -178,6 +180,16 @@ export function PathwayPage() {
           </span>
         </div>
         <div className="flex gap-2">
+          <div className="flex bg-[var(--page-bg)] rounded-lg p-0.5 mr-1">
+            <button onClick={() => setViewMode("edit")}
+              className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${viewMode === "edit" ? "bg-white text-[var(--deep-indigo)] shadow-sm" : "text-[var(--tertiary-text)]"}`}>
+              编辑
+            </button>
+            <button onClick={() => setViewMode("graph")}
+              className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${viewMode === "graph" ? "bg-white text-[var(--deep-indigo)] shadow-sm" : "text-[var(--tertiary-text)]"}`}>
+              可视化
+            </button>
+          </div>
           <button onClick={() => handleExport("markdown_report")} disabled={exporting || nodes.length === 0}
             className="px-3 py-1.5 bg-[var(--path-teal)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
             导出报告
@@ -200,6 +212,20 @@ export function PathwayPage() {
         ))}
       </div>
 
+      {viewMode === "graph" ? (
+        <div className="space-y-4">
+          <PathwayGraph nodes={nodes} relations={relations} onNodeClick={(nodeId) => {
+            const node = nodes.find((n) => n.id === nodeId);
+            if (node) {
+              setEditingNode(node.id);
+              setEditTitle(node.title);
+              setEditType(node.card_type);
+              setEditSummary(node.user_summary || "");
+              setViewMode("edit");
+            }
+          }} />
+        </div>
+      ) : (
       <div className="grid grid-cols-3 gap-6">
         {/* Left: Documents */}
         <div className="space-y-4">
@@ -321,6 +347,7 @@ export function PathwayPage() {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }
