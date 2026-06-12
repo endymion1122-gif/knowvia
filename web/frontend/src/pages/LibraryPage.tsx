@@ -11,6 +11,11 @@ export function LibraryPage() {
   const [importUrl, setImportUrl] = useState("");
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState("");
+  const [editingDoc, setEditingDoc] = useState<string | null>(null);
+  const [editAuthor, setEditAuthor] = useState("");
+  const [editYear, setEditYear] = useState("");
+  const [editNote, setEditNote] = useState("");
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
   const loadDocs = useCallback(async () => {
     try {
@@ -44,6 +49,25 @@ export function LibraryPage() {
       await loadDocs();
     } catch (err: any) { setError(err.message); }
     finally { setImporting(false); }
+  };
+
+  const handleSaveMetadata = async (id: string) => {
+    try {
+      await api.documents.update(id, {
+        author: editAuthor,
+        publication_year: editYear ? parseInt(editYear) : null,
+        source_note: editNote,
+      });
+      setEditingDoc(null);
+      await loadDocs();
+    } catch (err: any) { setError(err.message); }
+  };
+
+  const startEdit = (doc: any) => {
+    setEditingDoc(doc.id);
+    setEditAuthor(doc.author || "");
+    setEditYear(doc.publication_year?.toString() || "");
+    setEditNote(doc.source_note || "");
   };
 
   const handleDelete = async (id: string) => {
@@ -91,19 +115,60 @@ export function LibraryPage() {
           <p className="text-sm text-[var(--secondary-text)]">还没有资料。上传 PDF、TXT 或 Markdown 文件开始。</p>
         </div>
       ) : (
-        <div className="space-y-2">
+        <>
+          <div className="flex items-center gap-2 mb-3">
+            <button onClick={() => setViewMode("list")} className={`text-xs px-2 py-1 rounded ${viewMode === "list" ? "bg-[var(--deep-indigo)] text-white" : "bg-white text-[var(--secondary-text)] border"}`}>列表</button>
+            <button onClick={() => setViewMode("grid")} className={`text-xs px-2 py-1 rounded ${viewMode === "grid" ? "bg-[var(--deep-indigo)] text-white" : "bg-white text-[var(--secondary-text)] border"}`}>网格</button>
+          </div>
+          <div className={viewMode === "grid" ? "grid grid-cols-2 md:grid-cols-3 gap-3" : "space-y-2"}>
           {docs.map((doc: any) => (
-            <div key={doc.id} className="flex items-center gap-4 bg-white p-4 rounded-lg border border-[var(--cool-gray)]">
-              <span className="text-lg">{doc.file_type === "pdf" ? "📄" : "📝"}</span>
-              <div className="flex-1 min-w-0">
+            <div key={doc.id} className={`bg-white rounded-lg border border-[var(--cool-gray)] ${viewMode === "grid" ? "p-3" : "p-4 flex items-center gap-4"}`}>
+              <span className="text-lg flex-shrink-0">{doc.file_type === "pdf" ? "📄" : doc.file_type === "md" ? "📝" : "📃"}</span>
+              <div className={`${viewMode === "grid" ? "mt-2" : "flex-1 min-w-0"}`}>
                 <p className="text-sm font-medium text-[var(--primary-text)] truncate">{doc.title}</p>
-                <p className="text-[10px] text-[var(--tertiary-text)]">{doc.file_type.toUpperCase()} · {doc.reading_status}</p>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
+                  <span className="text-[10px] text-[var(--tertiary-text)]">{doc.file_type.toUpperCase()}</span>
+                  {doc.author && <span className="text-[10px] text-[var(--slate-blue)]">✍ {doc.author}</span>}
+                  {doc.publication_year && <span className="text-[10px] text-[var(--slate-blue)]">📅 {doc.publication_year}</span>}
+                  {doc.source_url && <span className="text-[10px] text-[var(--path-teal)] truncate max-w-[120px]">🔗</span>}
+                </div>
               </div>
-              <button onClick={() => navigate(`/reader/${doc.id}`)} className="text-xs text-[var(--deep-indigo)] hover:underline">打开</button>
-              <button onClick={() => handleDelete(doc.id)} className="text-xs text-red-400 hover:text-red-600">删除</button>
+              <div className={`flex items-center gap-1 flex-shrink-0 ${viewMode === "grid" ? "mt-2 justify-end" : ""}`}>
+                <button onClick={() => navigate(`/reader/${doc.id}`)} className="text-xs text-[var(--deep-indigo)] hover:underline">打开</button>
+                <button onClick={() => startEdit(doc)} className="text-xs text-[var(--slate-blue)] hover:underline">编辑</button>
+                <button onClick={() => handleDelete(doc.id)} className="text-xs text-red-400 hover:text-red-600">删除</button>
+              </div>
+
+              {/* Inline edit form */}
+              {editingDoc === doc.id && (
+                <div className={`${viewMode === "grid" ? "col-span-full mt-2" : "mt-2"} w-full bg-[var(--page-bg)] p-3 rounded-lg border border-[var(--soft-violet)] grid grid-cols-3 gap-2`}>
+                  <div>
+                    <label className="text-[10px] text-[var(--slate-blue)]">作者</label>
+                    <input value={editAuthor} onChange={(e) => setEditAuthor(e.target.value)}
+                      className="w-full px-2 py-1 border rounded text-xs mt-0.5" placeholder="如: Sweller" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-[var(--slate-blue)]">年份</label>
+                    <input value={editYear} onChange={(e) => setEditYear(e.target.value)}
+                      className="w-full px-2 py-1 border rounded text-xs mt-0.5" placeholder="如: 1988" type="number" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-[var(--slate-blue)]">来源备注</label>
+                    <input value={editNote} onChange={(e) => setEditNote(e.target.value)}
+                      className="w-full px-2 py-1 border rounded text-xs mt-0.5" placeholder="可信度、主要贡献等" />
+                  </div>
+                  <div className="col-span-3 flex gap-2 justify-end mt-1">
+                    <button onClick={() => handleSaveMetadata(doc.id)}
+                      className="px-3 py-1 bg-[var(--deep-indigo)] text-white text-xs rounded">保存</button>
+                    <button onClick={() => setEditingDoc(null)}
+                      className="px-3 py-1 text-xs text-[var(--tertiary-text)]">取消</button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
-        </div>
+          </div>
+        </>
       )}
     </div>
   );

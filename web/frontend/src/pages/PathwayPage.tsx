@@ -5,6 +5,7 @@ import { PathwayGraph } from "../components/pathway/PathwayGraph";
 import { EvidenceChain } from "../components/pathway/EvidenceChain";
 import { ComparisonMatrix } from "../components/pathway/ComparisonMatrix";
 import { WritingChecklist } from "../components/pathway/WritingChecklist";
+import { SourceQuality } from "../components/pathway/SourceQuality";
 
 const RELATION_LABELS: Record<string, string> = {
   definition: "定义", support: "支撑", oppose: "反对", cause: "因果",
@@ -242,7 +243,7 @@ export function PathwayPage() {
           <ComparisonMatrix nodes={nodes} relations={relations} />
         </div>
       ) : viewMode === "writing" ? (
-        <div className="max-w-2xl">
+        <div className="max-w-2xl space-y-6">
           <WritingChecklist
             pathwayId={id!}
             nodes={nodes}
@@ -256,6 +257,12 @@ export function PathwayPage() {
                 setEditSummary(node.user_summary || "");
                 setViewMode("edit");
               }
+            }}
+          />
+          <SourceQuality
+            pathwayId={id!}
+            onNavigateToSource={(sourceId) => {
+              navigate(`/reader/${sourceId}`);
             }}
           />
         </div>
