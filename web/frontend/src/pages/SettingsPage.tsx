@@ -11,6 +11,8 @@ const PRESETS: { name: string; settings: Omit<AISettings, "apiKey"> }[] = [
   { name: "OpenAI", settings: { providerName: "OpenAI", apiEndpoint: "https://api.openai.com/v1/chat/completions", modelName: "gpt-4o-mini" } },
   { name: "DeepSeek", settings: { providerName: "DeepSeek", apiEndpoint: "https://api.deepseek.com/chat/completions", modelName: "deepseek-chat" } },
   { name: "Claude", settings: { providerName: "Anthropic", apiEndpoint: "https://api.anthropic.com/v1/messages", modelName: "claude-sonnet-4-20250514" } },
+  { name: "Claude Opus", settings: { providerName: "Anthropic", apiEndpoint: "https://api.anthropic.com/v1/messages", modelName: "claude-opus-4-20250514" } },
+  { name: "Claude Haiku", settings: { providerName: "Anthropic", apiEndpoint: "https://api.anthropic.com/v1/messages", modelName: "claude-haiku-4-5-20251001" } },
   { name: "Gemini", settings: { providerName: "Google", apiEndpoint: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", modelName: "gemini-2.5-flash" } },
   { name: "Ollama", settings: { providerName: "Ollama", apiEndpoint: "http://localhost:11434/v1/chat/completions", modelName: "llama3" } },
 ];

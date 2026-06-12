@@ -1,6 +1,7 @@
-import { useState, Suspense, lazy } from "react";
+import { useState, Suspense, lazy, useCallback } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore";
+import { api } from "../../services/api";
 
 // Static import for the home page (eager load)
 import { DashboardPage } from "../../pages/DashboardPage";

@@ -1,5 +1,6 @@
 import { Router, Response } from "express";
 import { AuthRequest } from "../middleware/auth.js";
+import { callAI } from "../utils/ai-provider.js";
 
 const router = Router();
 
@@ -32,26 +33,13 @@ ${text.trim()}
 2. 在上下文中的作用
 3. 是否需要用户进一步核验（标注"AI 初稿，请结合原文确认"）`;
 
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 500,
-        temperature: 0.3,
-      }),
+    const aiRes = await callAI(apiKey, endpoint, {
+      model,
+      messages: [{ role: "user", content: prompt }],
+      maxTokens: 500,
+      temperature: 0.3,
     });
-
-    if (!response.ok) {
-      const err = await response.text();
-      res.status(502).json({ error: `AI 请求失败: ${err}` });
-      return;
-    }
-
-    const data = await response.json();
-    const result = data.choices?.[0]?.message?.content || "AI 未返回有效结果";
-    res.json({ result, mode: "api" });
+    res.json({ result: aiRes.content || "AI 未返回有效结果", mode: "api" });
   } catch (e: any) {
     res.status(502).json({ error: `AI 请求异常: ${e.message}` });
   }
@@ -88,31 +76,18 @@ ${excerpt}
 
 只返回 JSON 数组，不要其他文字。`;
 
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 2000,
-        temperature: 0.3,
-        response_format: model.includes("gpt") ? { type: "json_object" } : undefined,
-      }),
+    const aiRes = await callAI(apiKey, endpoint, {
+      model,
+      messages: [{ role: "user", content: prompt }],
+      maxTokens: 2000,
+      temperature: 0.3,
+      responseFormat: model.includes("gpt") ? "json_object" : "text",
     });
-
-    if (!response.ok) {
-      const err = await response.text();
-      res.status(502).json({ error: `AI 请求失败: ${err}` });
-      return;
-    }
-
-    const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content || "[]";
+    const raw = aiRes.content || "[]";
     try {
       const concepts = JSON.parse(raw);
       res.json({ concepts: Array.isArray(concepts) ? concepts : concepts.concepts || [], mode: "api" });
     } catch {
-      // If not valid JSON, return as single concept
       res.json({ concepts: [{ type: "concept", title, content: raw }], mode: "api" });
     }
   } catch (e: any) {
@@ -184,28 +159,21 @@ ${excerpt}
 }
 只返回 JSON，不要其他文字。`;
 
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        max_tokens: 3000,
-        temperature: 0.3,
-        response_format: model.includes("gpt") ? { type: "json_object" } : undefined,
-      }),
+    const aiRes = await callAI(apiKey, endpoint, {
+      model,
+      system: systemPrompt,
+      messages: [{ role: "user", content: userPrompt }],
+      maxTokens: 3000,
+      temperature: 0.3,
+      responseFormat: model.includes("gpt") ? "json_object" : "text",
     });
 
-    if (!response.ok) {
-      res.status(502).json({ error: `AI 请求失败: HTTP ${response.status}` });
+    if (!aiRes.content) {
+      res.status(502).json({ error: "AI 返回空响应" });
       return;
     }
 
-    const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content || "{}";
+    const raw = aiRes.content;
     try {
       const parsed = JSON.parse(raw);
       res.json({
@@ -254,25 +222,15 @@ ${excerpt}
 
 只返回 JSON，不要其他文字。`;
 
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 2000,
-        temperature: 0.3,
-        response_format: model.includes("gpt") ? { type: "json_object" } : undefined,
-      }),
+    const aiRes = await callAI(apiKey, endpoint, {
+      model,
+      messages: [{ role: "user", content: prompt }],
+      maxTokens: 2000,
+      temperature: 0.3,
+      responseFormat: model.includes("gpt") ? "json_object" : "text",
     });
 
-    if (!response.ok) {
-      res.status(502).json({ error: `AI 请求失败: HTTP ${response.status}` });
-      return;
-    }
-
-    const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content || "{}";
+    const raw = aiRes.content || "{}";
     try {
       const parsed = JSON.parse(raw);
       res.json({ ...parsed, mode: "api" });

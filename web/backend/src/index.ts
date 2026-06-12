@@ -12,6 +12,7 @@ import pathwayRoutes from "./routes/pathways.js";
 import relationRoutes from "./routes/relations.js";
 import evidenceRoutes from "./routes/evidences.js";
 import exportRoutes from "./routes/exports.js";
+import searchRoutes from "./routes/search.js";
 import { getDb } from "./db/schema.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -63,6 +64,9 @@ app.use("/api/evidences", authMiddleware, evidenceRoutes);
 
 // Export routes (markdown report generation)
 app.use("/api/exports", authMiddleware, exportRoutes);
+
+// Search routes (FTS5 full-text search)
+app.use("/api/search", authMiddleware, searchRoutes);
 
 // Debug test route
 app.post("/api/ping", (_req, res) => { res.json({ pong: true }); });

@@ -121,6 +121,116 @@ router.get("/:id/documents", (req: AuthRequest, res: Response) => {
   res.json({ documents: docs });
 });
 
+// POST /api/pathways/:id/extract-all — merge AI extraction from all documents
+router.post("/:id/extract-all", async (req: AuthRequest, res: Response) => {
+  const { apiKey, endpoint, model } = req.body;
+  const db = getDb();
+
+  const pathway = db.prepare("SELECT * FROM knowledge_pathways WHERE id = ? AND user_id = ?")
+    .get(req.params.id, req.userId) as any;
+  if (!pathway) { res.status(404).json({ error: "路径不存在" }); return; }
+
+  const docIds = db.prepare("SELECT document_id FROM pathway_documents WHERE pathway_id = ?")
+    .all(req.params.id).map((r: any) => r.document_id);
+  if (docIds.length === 0) { res.status(400).json({ error: "路径中没有文档" }); return; }
+
+  // Collect markdown from all documents
+  const docs = db.prepare(`SELECT id, title, markdown_content FROM documents WHERE id IN (${docIds.map(() => "?").join(",")})`)
+    .all(...docIds) as any[];
+  const combinedMarkdown = docs
+    .map((d: any) => `## ${d.title}\n\n${d.markdown_content || ""}`)
+    .join("\n\n---\n\n")
+    .slice(0, 50000);
+
+  if (!apiKey || !endpoint || !model) {
+    // Demo mode: return simple extraction
+    const demoNodes = combinedMarkdown.split("\n").filter((l: string) => l.length > 10).slice(0, 6).map((line: string, i: number) => ({
+      title: line.replace(/^#+\s*/, "").slice(0, 50),
+      content: line.slice(0, 120),
+      card_type: ["concept","claim","concept","evidence","question","concept"][i % 6],
+      source_document_title: docs[0]?.title || "",
+    }));
+    res.json({ nodes: demoNodes, suggested_relations: [], mode: "demo", source_count: docs.length });
+    return;
+  }
+
+  try {
+    const prompt = `从以下${docs.length}份文档中提取核心知识节点：
+
+学习目标：${pathway.goal || "理解核心内容"}
+已有知识：${pathway.existing_knowledge || "无"}
+输出目标：${pathway.output_target || "形成系统理解"}
+
+${combinedMarkdown}
+
+请用 JSON 返回，每个节点标注来源文档标题：
+{
+  "nodes": [
+    {"title":"概念名","content":"解释","card_type":"concept|claim|evidence|question","importance":"high|medium|low","source_doc":"文档标题"}
+  ],
+  "suggested_relations": [
+    {"source_index":0,"target_index":1,"relation_type":"support|oppose|cause|example"}
+  ]
+}
+只返回 JSON。`;
+
+    const aiRes = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({ model, messages: [{ role: "user", content: prompt }], max_tokens: 4000, temperature: 0.3 }),
+    });
+
+    if (!aiRes.ok) {
+      const err = await aiRes.text();
+      res.status(502).json({ error: `AI 请求失败: ${err}` });
+      return;
+    }
+
+    const data = await aiRes.json();
+    const raw = data.choices?.[0]?.message?.content || "{}";
+    try {
+      const parsed = JSON.parse(raw);
+      // Auto-create cards from all extracted nodes
+      for (const node of parsed.nodes || []) {
+        const sourceDoc = docs.find((d: any) => d.title === node.source_doc);
+        if (sourceDoc) {
+          const id = require("uuid").v4();
+          db.prepare(`INSERT INTO knowledge_cards (id, user_id, title, content, card_type, source_document_id, source_document_title, ai_generated_text, confidence_score)
+            VALUES (?,?,?,?,?,?,?,?,?)`).run(
+            id, req.userId, node.title, node.content, node.card_type,
+            sourceDoc.id, sourceDoc.title, node.content, 0.8,
+          );
+          // Link to pathway
+          db.prepare("INSERT OR IGNORE INTO pathway_cards (pathway_id, card_id) VALUES (?,?)")
+            .run(req.params.id, id);
+        }
+      }
+      // Auto-create relations
+      const cards = db.prepare(`SELECT * FROM knowledge_cards WHERE id IN (SELECT card_id FROM pathway_cards WHERE pathway_id = ?)`)
+        .all(req.params.id) as any[];
+      for (const rel of parsed.suggested_relations || []) {
+        if (rel.source_index < cards.length && rel.target_index < cards.length) {
+          const rid = require("uuid").v4();
+          db.prepare(`INSERT INTO knowledge_relations (id, pathway_id, source_card_id, target_card_id, relation_type, note, ai_suggested)
+            VALUES (?,?,?,?,?,?,1)`).run(
+            rid, req.params.id, cards[rel.source_index].id, cards[rel.target_index].id, rel.relation_type, "",
+          );
+        }
+      }
+      res.json({
+        nodes: parsed.nodes || [],
+        suggested_relations: parsed.suggested_relations || [],
+        mode: "api",
+        source_count: docs.length,
+      });
+    } catch {
+      res.json({ nodes: [], suggested_relations: [], mode: "api", raw });
+    }
+  } catch (e: any) {
+    res.status(502).json({ error: `AI 请求异常: ${e.message}` });
+  }
+});
+
 // GET /api/pathways/:id/writing-readiness — analyze pathway for writing gaps
 router.get("/:id/writing-readiness", (req: AuthRequest, res: Response) => {
   const db = getDb();

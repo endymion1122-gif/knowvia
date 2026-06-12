@@ -188,6 +188,9 @@ export const api = {
       request<{ success: boolean }>(`/exports/${id}`, { method: "DELETE" }),
   },
 
+  search: (q: string) =>
+    request<{ documents: any[]; cards: any[]; annotations: any[] }>(`/search?q=${encodeURIComponent(q)}`),
+
   ai: {
     explain: (data: { text: string; context?: string; apiKey?: string; endpoint?: string; model?: string }) =>
       request<{ result: string; mode: string }>("/ai/explain", {
