@@ -4,6 +4,7 @@ import { api } from "../services/api";
 import { PathwayGraph } from "../components/pathway/PathwayGraph";
 import { EvidenceChain } from "../components/pathway/EvidenceChain";
 import { ComparisonMatrix } from "../components/pathway/ComparisonMatrix";
+import { WritingChecklist } from "../components/pathway/WritingChecklist";
 
 const RELATION_LABELS: Record<string, string> = {
   definition: "定义", support: "支撑", oppose: "反对", cause: "因果",
@@ -30,7 +31,7 @@ export function PathwayPage() {
   const [extracting, setExtracting] = useState(false);
   const [extractResult, setExtractResult] = useState<any>(null);
   const [exporting, setExporting] = useState(false);
-  const [viewMode, setViewMode] = useState<"edit" | "graph" | "evidence" | "matrix">("edit");
+  const [viewMode, setViewMode] = useState<"edit" | "graph" | "evidence" | "matrix" | "writing">("edit");
 
   const [editingNode, setEditingNode] = useState<string | null>(null);
   const [editSummary, setEditSummary] = useState("");
@@ -188,6 +189,7 @@ export function PathwayPage() {
               ["graph", "路径图"],
               ["evidence", "证据链"],
               ["matrix", "矩阵"],
+              ["writing", "写作"],
             ] as const).map(([key, label]) => (
               <button key={key}
                 onClick={() => setViewMode(key)}
@@ -238,6 +240,24 @@ export function PathwayPage() {
       ) : viewMode === "matrix" ? (
         <div className="space-y-4">
           <ComparisonMatrix nodes={nodes} relations={relations} />
+        </div>
+      ) : viewMode === "writing" ? (
+        <div className="max-w-2xl">
+          <WritingChecklist
+            pathwayId={id!}
+            nodes={nodes}
+            documents={documents}
+            onNavigateToNode={(nodeId) => {
+              const node = nodes.find((n) => n.id === nodeId);
+              if (node) {
+                setEditingNode(node.id);
+                setEditTitle(node.title);
+                setEditType(node.card_type);
+                setEditSummary(node.user_summary || "");
+                setViewMode("edit");
+              }
+            }}
+          />
         </div>
       ) : (
       <div className="grid grid-cols-3 gap-6">

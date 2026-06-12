@@ -113,6 +113,109 @@ router.get("/:id/documents", (req: AuthRequest, res: Response) => {
   res.json({ documents: docs });
 });
 
+// GET /api/pathways/:id/writing-readiness — analyze pathway for writing gaps
+router.get("/:id/writing-readiness", (req: AuthRequest, res: Response) => {
+  const db = getDb();
+  const pathway = db.prepare("SELECT * FROM knowledge_pathways WHERE id = ? AND user_id = ?")
+    .get(req.params.id, req.userId) as any;
+  if (!pathway) { res.status(404).json({ error: "路径不存在" }); return; }
+
+  // Get linked documents and their cards
+  const docIds = db.prepare("SELECT document_id FROM pathway_documents WHERE pathway_id = ?")
+    .all(req.params.id).map((r: any) => r.document_id);
+  const cards = docIds.length > 0
+    ? db.prepare(`SELECT * FROM knowledge_cards WHERE source_document_id IN (${docIds.map(() => "?").join(",")})`)
+        .all(...docIds) as any[]
+    : [];
+  const relations = db.prepare("SELECT * FROM knowledge_relations WHERE pathway_id = ?")
+    .all(req.params.id) as any[];
+  const documents = db.prepare("SELECT * FROM documents WHERE id IN (" + docIds.map(() => "?").join(",") + ")")
+    .all(...docIds) as any[];
+
+  // Count by type
+  const claims = cards.filter((c: any) => ["claim","viewpoint","argument"].includes(c.card_type));
+  const evidenceNodes = cards.filter((c: any) => c.card_type === "evidence");
+  const concepts = cards.filter((c: any) => c.card_type === "concept");
+  const questions = cards.filter((c: any) => c.card_type === "question");
+
+  // Check 1: Claims without evidence
+  const claimsNeedingEvidence = claims.filter((claim: any) => {
+    const hasEvidence = relations.some((r: any) =>
+      (r.source_card_id === claim.id || r.target_card_id === claim.id) &&
+      evidenceNodes.some((e: any) => e.id === r.source_card_id || e.id === r.target_card_id)
+    );
+    return !hasEvidence;
+  });
+
+  // Check 2: Sources missing metadata (not properly citable)
+  const uncitableSources = documents.filter((d: any) =>
+    !d.author?.trim() || !d.publication_year
+  );
+
+  // Check 3: Unresolved questions
+  const unresolvedQuestions = questions.filter((q: any) => !q.user_confirmed);
+
+  // Check 4: Unconfirmed cards (not yet reviewed by user)
+  const unconfirmedCards = cards.filter((c: any) => !c.user_confirmed);
+
+  // Readiness score
+  const totalChecks = 4;
+  let passedChecks = 0;
+  if (claimsNeedingEvidence.length === 0) passedChecks++;
+  if (uncitableSources.length === 0) passedChecks++;
+  if (unresolvedQuestions.length === 0) passedChecks++;
+  if (unconfirmedCards.length === 0 || cards.length === 0) passedChecks++;
+  const readinessScore = cards.length > 0 ? Math.round((passedChecks / totalChecks) * 100) : 0;
+
+  res.json({
+    pathway_id: req.params.id,
+    readiness_score: readinessScore,
+    total_cards: cards.length,
+    total_claims: claims.length,
+    total_evidence: evidenceNodes.length,
+    total_sources: documents.length,
+    checks: {
+      evidence_coverage: {
+        passed: claimsNeedingEvidence.length === 0,
+        label: "观点有证据支撑",
+        detail: claimsNeedingEvidence.length > 0
+          ? `${claimsNeedingEvidence.length} 个观点缺少证据支撑`
+          : "所有观点都有证据支撑",
+        affected_ids: claimsNeedingEvidence.map((c: any) => c.id),
+      },
+      source_citability: {
+        passed: uncitableSources.length === 0,
+        label: "来源可引用",
+        detail: uncitableSources.length > 0
+          ? `${uncitableSources.length} 个来源缺少作者或年份`
+          : "所有来源都完整可引用",
+        affected_ids: uncitableSources.map((d: any) => d.id),
+      },
+      questions_resolved: {
+        passed: unresolvedQuestions.length === 0,
+        label: "问题已处理",
+        detail: unresolvedQuestions.length > 0
+          ? `${unresolvedQuestions.length} 个问题尚未确认`
+          : "所有问题已确认或没有待处理问题",
+        affected_ids: unresolvedQuestions.map((q: any) => q.id),
+      },
+      cards_confirmed: {
+        passed: unconfirmedCards.length === 0 || cards.length === 0,
+        label: "节点已校准",
+        detail: unconfirmedCards.length > 0
+          ? `${unconfirmedCards.length} 个节点尚未用户确认`
+          : "所有节点已确认",
+        affected_ids: unconfirmedCards.map((c: any) => c.id),
+      },
+    },
+    summary: readinessScore >= 75
+      ? "写作准备度良好，可以开始撰写综述"
+      : readinessScore >= 50
+        ? "还有一些缺口需要补充后再开始写作"
+        : "建议先补充证据和元数据再考虑写作",
+  });
+});
+
 function formatPathway(row: any) {
   if (!row) return null;
   return {

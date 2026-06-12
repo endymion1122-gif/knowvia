@@ -119,6 +119,8 @@ export const api = {
       }),
     getDocuments: (id: string) =>
       request<{ documents: any[] }>(`/pathways/${id}/documents`),
+    getWritingReadiness: (id: string) =>
+      request<any>(`/pathways/${id}/writing-readiness`),
   },
 
   relations: {
