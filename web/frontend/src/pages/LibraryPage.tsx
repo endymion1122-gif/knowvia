@@ -8,6 +8,8 @@ export function LibraryPage() {
   const [docs, setDocs] = useState<Doc[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [importUrl, setImportUrl] = useState("");
+  const [importing, setImporting] = useState(false);
   const [error, setError] = useState("");
 
   const loadDocs = useCallback(async () => {
@@ -32,6 +34,18 @@ export function LibraryPage() {
     finally { setUploading(false); }
   };
 
+  const handleImportUrl = async () => {
+    if (!importUrl.trim()) return;
+    setImporting(true);
+    setError("");
+    try {
+      await api.documents.importUrl(importUrl.trim());
+      setImportUrl("");
+      await loadDocs();
+    } catch (err: any) { setError(err.message); }
+    finally { setImporting(false); }
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm("确定删除这份资料？")) return;
     try { await api.documents.delete(id); await loadDocs(); }
@@ -43,12 +57,29 @@ export function LibraryPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-semibold text-[var(--deep-indigo)]">资料库</h2>
-          <p className="text-xs text-[var(--tertiary-text)] mt-1">支持 PDF、TXT、Markdown</p>
+          <p className="text-xs text-[var(--tertiary-text)] mt-1">支持 PDF、Word、PPT、TXT、Markdown、网页链接</p>
         </div>
-        <label className={`px-4 py-2 bg-[var(--deep-indigo)] text-white rounded-lg text-sm font-semibold cursor-pointer hover:opacity-90 transition-colors ${uploading ? "opacity-50" : ""}`}>
-          {uploading ? "导入中..." : "导入资料"}
-          <input type="file" accept=".pdf,.txt,.md,.markdown" onChange={handleUpload} className="hidden" disabled={uploading} />
-        </label>
+        <div className="flex items-center gap-2">
+          <input
+            type="url"
+            value={importUrl}
+            onChange={(e) => setImportUrl(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleImportUrl()}
+            placeholder="输入网页 URL..."
+            className="w-48 px-3 py-2 border border-[var(--cool-gray)] rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-[var(--soft-violet)]"
+          />
+          <button
+            onClick={handleImportUrl}
+            disabled={importing || !importUrl.trim()}
+            className="px-3 py-2 bg-[var(--path-teal)] text-white rounded-lg text-xs font-semibold hover:opacity-90 disabled:opacity-40 whitespace-nowrap"
+          >
+            {importing ? "导入中..." : "导入网页"}
+          </button>
+          <label className={`px-4 py-2 bg-[var(--deep-indigo)] text-white rounded-lg text-sm font-semibold cursor-pointer hover:opacity-90 transition-colors ${uploading ? "opacity-50" : ""}`}>
+            {uploading ? "上传中..." : "上传文件"}
+            <input type="file" accept=".pdf,.txt,.md,.markdown,.docx,.pptx" onChange={handleUpload} className="hidden" disabled={uploading} />
+          </label>
+        </div>
       </div>
 
       {error && <p className="text-sm text-red-500 mb-4">{error}</p>}

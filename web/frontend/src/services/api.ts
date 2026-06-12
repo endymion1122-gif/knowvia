@@ -45,6 +45,25 @@ export const api = {
       }),
     delete: (id: string) =>
       request<{ success: boolean }>(`/documents/${id}`, { method: "DELETE" }),
+    getMarkdown: (id: string) =>
+      request<{ markdown: string }>(`/documents/${id}/markdown`),
+    importUrl: (url: string) =>
+      request<{ document: any }>("/documents/import-url", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      }),
+  },
+
+  annotations: {
+    list: (document_id: string) =>
+      request<{ annotations: any[] }>(`/annotations?document_id=${document_id}`),
+    create: (data: { document_id: string; selected_text: string; note?: string; page_number?: number }) =>
+      request<{ annotation: any }>("/annotations", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    delete: (id: string) =>
+      request<{ success: boolean }>(`/annotations/${id}`, { method: "DELETE" }),
   },
 
   cards: {
@@ -135,6 +154,24 @@ export const api = {
       }),
     delete: (id: string) =>
       request<{ success: boolean }>(`/evidences/${id}`, { method: "DELETE" }),
+  },
+
+  annotations: {
+    list: (document_id: string) =>
+      request<{ annotations: any[] }>(`/annotations?document_id=${document_id}`),
+    create: (data: { document_id: string; selected_text: string; note?: string; page_number?: number }) =>
+      request<{ annotation: any }>("/annotations", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    delete: (id: string) =>
+      request<{ success: boolean }>(`/annotations/${id}`, { method: "DELETE" }),
+  },
+
+  documents: {
+    ...api.documents,
+    getMarkdown: (id: string) =>
+      request<{ markdown: string }>(`/documents/${id}/markdown`),
   },
 
   exports: {

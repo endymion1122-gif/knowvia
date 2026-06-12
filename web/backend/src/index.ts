@@ -22,6 +22,18 @@ const app = express();
 app.use(cors({ origin: ["http://localhost:5173", "http://localhost:3000"], credentials: true }));
 app.use(express.json({ limit: "10mb" }));
 
+// Request logging
+app.use((req, _res, next) => {
+  const start = Date.now();
+  _res.on("finish", () => {
+    const ms = Date.now() - start;
+    if (req.path.startsWith("/api")) {
+      console.log(`${req.method} ${req.path} ${_res.statusCode} ${ms}ms`);
+    }
+  });
+  next();
+});
+
 // Serve uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
@@ -54,6 +66,12 @@ app.use("/api/exports", authMiddleware, exportRoutes);
 
 // Debug test route
 app.post("/api/ping", (_req, res) => { res.json({ pong: true }); });
+
+// Error handling middleware
+app.use((err: any, _req: any, res: any, _next: any) => {
+  console.error("Unhandled error:", err);
+  res.status(500).json({ error: "服务器内部错误" });
+});
 
 // Serve frontend in production
 const frontendDist = path.join(__dirname, "..", "..", "frontend", "dist");

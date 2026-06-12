@@ -41,18 +41,13 @@ export function ReaderPage() {
   const [cardCreating, setCardCreating] = useState(false);
   const [cardCreated, setCardCreated] = useState(false);
 
-  const token = localStorage.getItem("token");
-
   const loadAnnotations = useCallback(async () => {
     if (!id) return;
-    const res = await fetch(`/api/annotations?document_id=${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (res.ok) {
-      const { annotations } = await res.json();
+    try {
+      const { annotations } = await api.annotations.list(id);
       setAnnotations(annotations);
-    }
-  }, [id, token]);
+    } catch {}
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -72,26 +67,20 @@ export function ReaderPage() {
 
   const handleAddAnnotation = async () => {
     if (!selectedText.trim() || !id) return;
-    const res = await fetch("/api/annotations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ document_id: id, selected_text: selectedText, note, page_number: selectedPage }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      setAnnotations((prev) => [...prev, data.annotation]);
+    try {
+      const { annotation } = await api.annotations.create({
+        document_id: id, selected_text: selectedText, note, page_number: selectedPage,
+      });
+      setAnnotations((prev) => [...prev, annotation]);
       setNote("");
-    }
+    } catch {}
   };
 
   const handleDeleteAnnotation = async (annId: string) => {
-    const res = await fetch(`/api/annotations/${annId}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (res.ok) {
+    try {
+      await api.annotations.delete(annId);
       setAnnotations((prev) => prev.filter((a) => a.id !== annId));
-    }
+    } catch {}
   };
 
   const handleStartCard = (ann: Annotation) => {
@@ -130,21 +119,12 @@ export function ReaderPage() {
     if (!selectedText.trim()) return;
     setAiLoading(true);
     try {
-      const aiSettings = getAISettings();
-      const res = await fetch("/api/ai/explain", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
-          text: selectedText,
-          context: doc?.title || "",
-          apiKey: aiSettings.apiKey,
-          endpoint: aiSettings.apiEndpoint,
-          model: aiSettings.modelName,
-        }),
+      const ai = getAISettings();
+      const data = await api.ai.explain({
+        text: selectedText, context: doc?.title || "",
+        apiKey: ai.apiKey, endpoint: ai.apiEndpoint, model: ai.modelName,
       });
-      const data = await res.json();
-      if (res.ok) setAiResult(data.mode === "demo" ? `[Demo AI] ${data.result}` : data.result);
-      else setAiResult("错误: " + (data.error || "请求失败"));
+      setAiResult(data.mode === "demo" ? `[Demo AI] ${data.result}` : data.result);
     } catch (e: any) {
       setAiResult("AI 请求失败: " + e.message);
     } finally { setAiLoading(false); }
@@ -154,34 +134,23 @@ export function ReaderPage() {
     if (!doc) return;
     setSummaryLoading(true);
     try {
-      // Fetch document content
-      const fileName = doc.file_path.split("/").pop();
       let content = "";
       if (doc.file_type === "txt" || doc.file_type === "md") {
-        const fileRes = await fetch(`/uploads/${fileName}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (fileRes.ok) content = await fileRes.text();
+        try {
+          const { markdown } = await api.documents.getMarkdown(doc.id);
+          content = markdown || doc.title;
+        } catch {
+          content = doc.title;
+        }
       } else {
-        // PDF — can't extract text easily from client; send title-based summary
-        content = `[PDF 文件] ${doc.title}`;
+        content = `[${doc.file_type.toUpperCase()}] ${doc.title}`;
       }
-
-      const aiSettings = getAISettings();
-      const res = await fetch("/api/ai/summarize-document", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
-          content: content.slice(0, 10000),
-          title: doc.title,
-          apiKey: aiSettings.apiKey,
-          endpoint: aiSettings.apiEndpoint,
-          model: aiSettings.modelName,
-        }),
+      const ai = getAISettings();
+      const data = await api.ai.summarize({
+        content: content.slice(0, 10000), title: doc.title,
+        apiKey: ai.apiKey, endpoint: ai.apiEndpoint, model: ai.modelName,
       });
-      const data = await res.json();
-      if (res.ok) setDocSummary({ ...data, mode: data.mode || "api" });
-      else setDocSummary({ error: data.error || "请求失败" });
+      setDocSummary({ ...data, mode: data.mode || "api" });
     } catch (e: any) {
       setDocSummary({ error: "AI 请求失败: " + e.message });
     } finally { setSummaryLoading(false); }
