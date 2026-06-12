@@ -100,11 +100,19 @@ router.post("/import-url", async (req: AuthRequest, res: Response) => {
   }
 });
 
-// GET /api/documents
+// GET /api/documents (with pagination)
 router.get("/", (req: AuthRequest, res: Response) => {
   const db = getDb();
-  const docs = db.prepare("SELECT * FROM documents WHERE user_id = ? ORDER BY updated_at DESC").all(req.userId);
-  res.json({ documents: docs });
+  const { page, limit } = req.query;
+  const pageNum = Math.max(1, parseInt(page as string) || 1);
+  const pageSize = Math.min(100, Math.max(1, parseInt(limit as string) || 50));
+  const total = (db.prepare("SELECT COUNT(*) as c FROM documents WHERE user_id = ?").get(req.userId) as any).c;
+  const docs = db.prepare("SELECT * FROM documents WHERE user_id = ? ORDER BY updated_at DESC LIMIT ? OFFSET ?")
+    .all(req.userId, pageSize, (pageNum - 1) * pageSize);
+  res.json({
+    documents: docs,
+    pagination: { page: pageNum, limit: pageSize, total, totalPages: Math.ceil(total / pageSize) },
+  });
 });
 
 // PATCH /api/documents/:id

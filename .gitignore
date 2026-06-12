@@ -74,3 +74,5 @@ iOSInjectionProject/
 # --- Playgrounds ---
 timeline.xctimeline
 playground.xcworkspace
+test.db*
+*.db-wal

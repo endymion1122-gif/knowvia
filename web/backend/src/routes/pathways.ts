@@ -28,16 +28,24 @@ router.post("/", (req: AuthRequest, res: Response) => {
   res.status(201).json({ pathway: formatPathway(pathway) });
 });
 
-// GET /api/pathways — list user's pathways
+// GET /api/pathways — list user's pathways (with pagination)
 router.get("/", (req: AuthRequest, res: Response) => {
   const db = getDb();
-  const { status } = req.query;
-  let sql = "SELECT * FROM knowledge_pathways WHERE user_id = ?";
+  const { status, page, limit } = req.query;
+  const pageNum = Math.max(1, parseInt(page as string) || 1);
+  const pageSize = Math.min(100, Math.max(1, parseInt(limit as string) || 50));
+
+  let where = "WHERE user_id = ?";
   const params: any[] = [req.userId];
-  if (status) { sql += " AND status = ?"; params.push(status); }
-  sql += " ORDER BY updated_at DESC";
-  const rows = db.prepare(sql).all(...params);
-  res.json({ pathways: (rows as any[]).map(formatPathway) });
+  if (status) { where += " AND status = ?"; params.push(status); }
+
+  const total = (db.prepare(`SELECT COUNT(*) as c FROM knowledge_pathways ${where}`).get(...params) as any).c;
+  const rows = db.prepare(`SELECT * FROM knowledge_pathways ${where} ORDER BY updated_at DESC LIMIT ? OFFSET ?`)
+    .all(...params, pageSize, (pageNum - 1) * pageSize);
+  res.json({
+    pathways: (rows as any[]).map(formatPathway),
+    pagination: { page: pageNum, limit: pageSize, total, totalPages: Math.ceil(total / pageSize) },
+  });
 });
 
 // GET /api/pathways/:id — get pathway detail
@@ -213,6 +221,65 @@ router.get("/:id/writing-readiness", (req: AuthRequest, res: Response) => {
       : readinessScore >= 50
         ? "还有一些缺口需要补充后再开始写作"
         : "建议先补充证据和元数据再考虑写作",
+  });
+});
+
+// GET /api/pathways/:id/source-quality — source metadata overview
+router.get("/:id/source-quality", (req: AuthRequest, res: Response) => {
+  const db = getDb();
+  const pathway = db.prepare("SELECT id FROM knowledge_pathways WHERE id = ? AND user_id = ?")
+    .get(req.params.id, req.userId);
+  if (!pathway) { res.status(404).json({ error: "路径不存在" }); return; }
+
+  const docIds = db.prepare("SELECT document_id FROM pathway_documents WHERE pathway_id = ?")
+    .all(req.params.id).map((r: any) => r.document_id);
+  const docs = docIds.length > 0
+    ? db.prepare(`SELECT * FROM documents WHERE id IN (${docIds.map(() => "?").join(",")})`).all(...docIds) as any[]
+    : [];
+
+  const total = docs.length;
+  const complete = docs.filter((d: any) => d.author?.trim() && d.publication_year).length;
+  const missingAuthor = docs.filter((d: any) => !d.author?.trim()).length;
+  const missingYear = docs.filter((d: any) => !d.publication_year).length;
+  const missingBoth = docs.filter((d: any) => !d.author?.trim() && !d.publication_year).length;
+  const hasNote = docs.filter((d: any) => d.source_note?.trim()).length;
+  const hasUrl = docs.filter((d: any) => d.source_url?.trim()).length;
+
+  // Authority assessment: sources with author+year+url are "citable"
+  const citable = docs.filter((d: any) => d.author?.trim() && d.publication_year && d.source_url?.trim()).length;
+
+  const suggestions = docs
+    .filter((d: any) => !d.author?.trim() || !d.publication_year)
+    .map((d: any) => ({
+      id: d.id,
+      title: d.title,
+      missing_fields: [
+        !d.author?.trim() ? "作者" : null,
+        !d.publication_year ? "年份" : null,
+        !d.source_url?.trim() ? "链接" : null,
+      ].filter(Boolean),
+      suggestion: !d.author?.trim() && !d.publication_year
+        ? "请补全作者和年份信息以便引用"
+        : !d.author?.trim()
+          ? "请补充作者信息"
+          : "请补充出版年份",
+    }));
+
+  res.json({
+    pathway_id: req.params.id,
+    total_sources: total,
+    metadata_completeness: total > 0 ? Math.round((complete / total) * 100) : 0,
+    breakdown: {
+      complete, missingAuthor, missingYear, missingBoth,
+      hasNote, hasUrl, citable,
+    },
+    authority_ratio: total > 0 ? Math.round((citable / total) * 100) : 0,
+    suggestions,
+    summary: total === 0
+      ? "暂无来源资料"
+      : complete === total
+        ? "所有来源元数据完整，可以放心引用"
+        : `${missingBoth} 个来源缺少作者和年份，${missingAuthor} 个缺少作者，${missingYear} 个缺少年份`,
   });
 });
 

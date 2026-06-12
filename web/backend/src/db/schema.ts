@@ -3,19 +3,25 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DB_PATH = path.join(__dirname, "..", "..", "knowvia.db");
+const DB_PATH = process.env.KNOWVIA_DB_PATH || path.join(__dirname, "..", "..", "knowvia.db");
 
 let db: Database.Database;
 
 export function getDb(): Database.Database {
-  if (!db) {
-    db = new Database(DB_PATH);
+  const currentPath = process.env.KNOWVIA_DB_PATH || path.join(__dirname, "..", "..", "knowvia.db");
+  if (!db || db.name !== currentPath) {
+    if (db) db.close();
+    db = new Database(currentPath);
     db.pragma("journal_mode = WAL");
     db.pragma("foreign_keys = ON");
     initSchema(db);
     runMigrations(db);
   }
   return db;
+}
+
+export function closeDb() {
+  if (db) { db.close(); db = undefined as any; }
 }
 
 function runMigrations(db: Database.Database) {
