@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: ./web/backend
+    container_name: knowvia-api
+    ports:
+      - "3001:3001"
+    volumes:
+      - knowvia_data:/app/uploads
+      - ./web/backend/knowvia.db:/app/knowvia.db
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - JWT_SECRET=${JWT_SECRET:-knowvia-dev-secret-change-in-production}
+    restart: unless-stopped
+
+  frontend:
+    build: ./web/frontend
+    container_name: knowvia-web
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  knowvia_data:

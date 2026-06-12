@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import { PathwayGraph } from "../components/pathway/PathwayGraph";
+import { EvidenceChain } from "../components/pathway/EvidenceChain";
+import { ComparisonMatrix } from "../components/pathway/ComparisonMatrix";
 
 const RELATION_LABELS: Record<string, string> = {
   definition: "定义", support: "支撑", oppose: "反对", cause: "因果",
@@ -28,7 +30,7 @@ export function PathwayPage() {
   const [extracting, setExtracting] = useState(false);
   const [extractResult, setExtractResult] = useState<any>(null);
   const [exporting, setExporting] = useState(false);
-  const [viewMode, setViewMode] = useState<"edit" | "graph">("edit");
+  const [viewMode, setViewMode] = useState<"edit" | "graph" | "evidence" | "matrix">("edit");
 
   const [editingNode, setEditingNode] = useState<string | null>(null);
   const [editSummary, setEditSummary] = useState("");
@@ -181,14 +183,18 @@ export function PathwayPage() {
         </div>
         <div className="flex gap-2">
           <div className="flex bg-[var(--page-bg)] rounded-lg p-0.5 mr-1">
-            <button onClick={() => setViewMode("edit")}
-              className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${viewMode === "edit" ? "bg-white text-[var(--deep-indigo)] shadow-sm" : "text-[var(--tertiary-text)]"}`}>
-              编辑
-            </button>
-            <button onClick={() => setViewMode("graph")}
-              className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${viewMode === "graph" ? "bg-white text-[var(--deep-indigo)] shadow-sm" : "text-[var(--tertiary-text)]"}`}>
-              可视化
-            </button>
+            {([
+              ["edit", "编辑"],
+              ["graph", "路径图"],
+              ["evidence", "证据链"],
+              ["matrix", "矩阵"],
+            ] as const).map(([key, label]) => (
+              <button key={key}
+                onClick={() => setViewMode(key)}
+                className={`px-2 py-1 rounded-md text-xs font-semibold transition-colors ${viewMode === key ? "bg-white text-[var(--deep-indigo)] shadow-sm" : "text-[var(--tertiary-text)]"}`}>
+                {label}
+              </button>
+            ))}
           </div>
           <button onClick={() => handleExport("markdown_report")} disabled={exporting || nodes.length === 0}
             className="px-3 py-1.5 bg-[var(--path-teal)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
@@ -224,6 +230,14 @@ export function PathwayPage() {
               setViewMode("edit");
             }
           }} />
+        </div>
+      ) : viewMode === "evidence" ? (
+        <div className="space-y-4">
+          <EvidenceChain nodes={nodes} relations={relations} />
+        </div>
+      ) : viewMode === "matrix" ? (
+        <div className="space-y-4">
+          <ComparisonMatrix nodes={nodes} relations={relations} />
         </div>
       ) : (
       <div className="grid grid-cols-3 gap-6">

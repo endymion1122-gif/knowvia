@@ -1,14 +1,24 @@
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore";
+
+// Static import for the home page (eager load)
 import { DashboardPage } from "../../pages/DashboardPage";
-import { LibraryPage } from "../../pages/LibraryPage";
-import { PathwayPage } from "../../pages/PathwayPage";
-import { CardsPage } from "../../pages/CardsPage";
-import { SettingsPage } from "../../pages/SettingsPage";
-import { ReaderPage } from "../../pages/ReaderPage";
-import { InitPage } from "../../pages/InitPage";
-import { RecallPage } from "../../pages/RecallPage";
+
+// Lazy-loaded pages for code splitting
+const LibraryPage = lazy(() => import("../../pages/LibraryPage").then(m => ({ default: m.LibraryPage })));
+const PathwayPage = lazy(() => import("../../pages/PathwayPage").then(m => ({ default: m.PathwayPage })));
+const CardsPage = lazy(() => import("../../pages/CardsPage").then(m => ({ default: m.CardsPage })));
+const SettingsPage = lazy(() => import("../../pages/SettingsPage").then(m => ({ default: m.SettingsPage })));
+const ReaderPage = lazy(() => import("../../pages/ReaderPage").then(m => ({ default: m.ReaderPage })));
+const InitPage = lazy(() => import("../../pages/InitPage").then(m => ({ default: m.InitPage })));
+const RecallPage = lazy(() => import("../../pages/RecallPage").then(m => ({ default: m.RecallPage })));
+
+const PageLoader = () => (
+  <div className="flex items-center justify-center h-full">
+    <div className="text-sm text-[var(--tertiary-text)] animate-pulse">加载中...</div>
+  </div>
+);
 
 const NAV_ITEMS = [
   { path: "/", label: "首页", icon: "🏠" },
@@ -26,7 +36,6 @@ export function MainLayout() {
 
   return (
     <div className="flex h-screen bg-[var(--page-bg)]">
-      {/* Sidebar */}
       <aside className="w-56 flex-shrink-0 bg-[var(--warm-white)] border-r border-[var(--cool-gray)] flex flex-col">
         <div className="p-5">
           <h1 className="text-lg font-semibold text-[var(--deep-indigo)]">知径 Knowvia</h1>
@@ -63,19 +72,20 @@ export function MainLayout() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 overflow-auto">
-        <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/library" element={<LibraryPage />} />
-          <Route path="/pathways" element={<PathwayPage />} />
-          <Route path="/pathway/:id" element={<PathwayPage />} />
-          <Route path="/init" element={<InitPage />} />
-          <Route path="/recall" element={<RecallPage />} />
-          <Route path="/cards" element={<CardsPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/reader/:id" element={<ReaderPage />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/library" element={<LibraryPage />} />
+            <Route path="/pathways" element={<PathwayPage />} />
+            <Route path="/pathway/:id" element={<PathwayPage />} />
+            <Route path="/init" element={<InitPage />} />
+            <Route path="/recall" element={<RecallPage />} />
+            <Route path="/cards" element={<CardsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/reader/:id" element={<ReaderPage />} />
+          </Routes>
+        </Suspense>
       </main>
     </div>
   );
