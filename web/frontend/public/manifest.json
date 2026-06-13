@@ -1,0 +1,12 @@
+{
+  "name": "知径 Knowvia",
+  "short_name": "Knowvia",
+  "description": "AI 支持型有效笔记与知识路径建构系统",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f7f4",
+  "theme_color": "#312e81",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

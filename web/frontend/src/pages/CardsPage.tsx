@@ -26,6 +26,7 @@ export function CardsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState<string>("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const loadCards = useCallback(async () => {
     try {
@@ -42,8 +43,39 @@ export function CardsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("确定删除这张卡片？")) return;
-    try { await api.cards.delete(id); await loadCards(); }
+    try { await api.cards.delete(id); setCards(prev => prev.filter(c => c.id !== id)); }
     catch (err: any) { setError(err.message); }
+  };
+
+  const handleBatchDelete = async () => {
+    if (selected.size === 0) return;
+    if (!confirm(`确定删除选中的 ${selected.size} 张卡片？`)) return;
+    try { await api.cards.batchDelete(Array.from(selected)); setSelected(new Set()); await loadCards(); }
+    catch (err: any) { setError(err.message); }
+  };
+
+  const handleBatchExport = async () => {
+    if (selected.size === 0) return;
+    try {
+      const { markdown } = await api.cards.batchExport(Array.from(selected));
+      const blob = new Blob([markdown], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a"); a.href = url; a.download = "cards-export.md"; a.click();
+      URL.revokeObjectURL(url);
+    } catch (err: any) { setError(err.message); }
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    if (selected.size === cards.length) { setSelected(new Set()); }
+    else { setSelected(new Set(cards.map(c => c.id))); }
   };
 
   const handleStatus = async (card: KnowledgeCard, status: string) => {
@@ -85,6 +117,15 @@ export function CardsPage() {
 
       {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
 
+      {selected.size > 0 && (
+        <div className="flex items-center gap-2 mb-3 bg-[var(--pale-lavender)] p-2 rounded-lg">
+          <span className="text-xs text-[var(--deep-indigo)]">已选 {selected.size} 张</span>
+          <button onClick={handleBatchExport} className="px-2 py-1 bg-[var(--path-teal)] text-white text-xs rounded">导出</button>
+          <button onClick={handleBatchDelete} className="px-2 py-1 bg-red-500 text-white text-xs rounded">删除</button>
+          <button onClick={() => setSelected(new Set())} className="px-2 py-1 text-xs text-[var(--tertiary-text)]">取消选择</button>
+        </div>
+      )}
+
       {loading ? (
         <p className="text-sm text-[var(--tertiary-text)]">加载中...</p>
       ) : cards.length === 0 ? (
@@ -96,9 +137,14 @@ export function CardsPage() {
         </div>
       ) : (
         <div className="space-y-2">
+          <div className="flex items-center gap-2 mb-1">
+            <input type="checkbox" checked={selected.size === cards.length && cards.length > 0} onChange={toggleAll} className="w-3.5 h-3.5" />
+            <span className="text-[10px] text-[var(--tertiary-text)]">全选</span>
+          </div>
           {cards.map((card) => (
             <div key={card.id} className="bg-white p-4 rounded-lg border border-[var(--cool-gray)]">
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <input type="checkbox" checked={selected.has(card.id)} onChange={() => toggleSelect(card.id)} className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${TYPE_COLORS[card.card_type] || "bg-gray-100"}`}>

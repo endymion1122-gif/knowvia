@@ -60,6 +60,10 @@ function runMigrations(db: Database.Database) {
     );
   `);
 
+  // Migration 7: share_token for pathway sharing
+  migrateColumn(db, "knowledge_pathways", "share_token", "TEXT DEFAULT ''");
+  migrateColumn(db, "knowledge_pathways", "is_public", "INTEGER DEFAULT 0");
+
   // Migration 6: exports table
   db.exec(`
     CREATE TABLE IF NOT EXISTS exports (

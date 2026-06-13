@@ -116,6 +116,45 @@ router.delete("/:id", (req: AuthRequest, res: Response) => {
   res.json({ success: true });
 });
 
+// POST /api/cards/batch-delete — delete multiple cards at once
+router.post("/batch-delete", (req: AuthRequest, res: Response) => {
+  const { ids } = req.body;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    res.status(400).json({ error: "请提供要删除的卡片 ID 列表" });
+    return;
+  }
+  const db = getDb();
+  const placeholders = ids.map(() => "?").join(",");
+  db.prepare(`DELETE FROM knowledge_cards WHERE id IN (${placeholders}) AND user_id = ?`)
+    .run(...ids, req.userId);
+  res.json({ success: true, deleted: ids.length });
+});
+
+// POST /api/cards/batch-export — export selected cards as markdown
+router.post("/batch-export", (req: AuthRequest, res: Response) => {
+  const { ids } = req.body;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    res.status(400).json({ error: "请提供要导出的卡片 ID 列表" });
+    return;
+  }
+  const db = getDb();
+  const placeholders = ids.map(() => "?").join(",");
+  const cards = db.prepare(`SELECT * FROM knowledge_cards WHERE id IN (${placeholders}) AND user_id = ?`)
+    .all(...ids, req.userId) as any[];
+
+  let md = "# 批量导出知识卡片\n\n";
+  md += `导出时间：${new Date().toLocaleString("zh-CN")}\n\n---\n\n`;
+  for (const c of cards) {
+    md += `## ${c.title}\n`;
+    md += `- 类型：${c.card_type}\n`;
+    md += `- AI 生成：${c.ai_generated_text || c.content}\n`;
+    if (c.user_summary) md += `- 我的理解：${c.user_summary}\n`;
+    if (c.source_document_title) md += `- 来源：${c.source_document_title} p.${c.page_number || "?"}\n`;
+    md += "\n";
+  }
+  res.json({ markdown: md, count: cards.length });
+});
+
 function safeJsonParse(s: string, fallback: any) {
   try { return JSON.parse(s); } catch { return fallback; }
 }

@@ -52,6 +52,11 @@ export const api = {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
       }),
+    importYouTube: (url: string) =>
+      request<{ document: any; hasTranscript: boolean }>("/documents/import-youtube", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      }),
   },
 
   annotations: {
@@ -89,6 +94,16 @@ export const api = {
       }),
     delete: (id: string) =>
       request<{ success: boolean }>(`/cards/${id}`, { method: "DELETE" }),
+    batchDelete: (ids: string[]) =>
+      request<{ success: boolean; deleted: number }>("/cards/batch-delete", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      }),
+    batchExport: (ids: string[]) =>
+      request<{ markdown: string; count: number }>("/cards/batch-export", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      }),
   },
 
   pathways: {
@@ -121,6 +136,10 @@ export const api = {
       request<{ documents: any[] }>(`/pathways/${id}/documents`),
     getWritingReadiness: (id: string) =>
       request<any>(`/pathways/${id}/writing-readiness`),
+    share: (id: string) =>
+      request<{ shared: boolean; share_url: string | null; share_token: string }>(`/pathways/${id}/share`, { method: "POST" }),
+    getShared: (token: string) =>
+      request<{ pathway: any; cards: any[]; relations: any[]; documents: any[] }>(`/share/${token}`),
   },
 
   relations: {

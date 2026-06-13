@@ -83,6 +83,24 @@ router.patch("/:id", (req: AuthRequest, res: Response) => {
   res.json({ pathway: formatPathway(updated) });
 });
 
+// POST /api/pathways/:id/share — toggle sharing
+router.post("/:id/share", (req: AuthRequest, res: Response) => {
+  const db = getDb();
+  const pathway = db.prepare("SELECT * FROM knowledge_pathways WHERE id = ? AND user_id = ?")
+    .get(req.params.id, req.userId) as any;
+  if (!pathway) { res.status(404).json({ error: "路径不存在" }); return; }
+
+  const token = pathway.share_token || require("uuid").v4().replace(/-/g, "").slice(0, 12);
+  const isPublic = pathway.is_public ? 0 : 1;
+  db.prepare("UPDATE knowledge_pathways SET share_token = ?, is_public = ? WHERE id = ?")
+    .run(token, isPublic, req.params.id);
+  res.json({
+    shared: !!isPublic,
+    share_url: isPublic ? `/share/${token}` : null,
+    share_token: token,
+  });
+});
+
 // DELETE /api/pathways/:id
 router.delete("/:id", (req: AuthRequest, res: Response) => {
   const db = getDb();

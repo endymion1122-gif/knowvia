@@ -32,6 +32,8 @@ export function PathwayPage() {
   const [extracting, setExtracting] = useState(false);
   const [extractResult, setExtractResult] = useState<any>(null);
   const [exporting, setExporting] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"edit" | "graph" | "evidence" | "matrix" | "writing">("edit");
 
   const [editingNode, setEditingNode] = useState<string | null>(null);
@@ -155,6 +157,21 @@ export function PathwayPage() {
     await loadData();
   };
 
+  const handleShare = async () => {
+    if (!id) return;
+    setSharing(true);
+    try {
+      const result = await api.pathways.share(id);
+      setShareUrl(result.shared ? result.share_url : null);
+      if (result.shared && result.share_url) {
+        const fullUrl = window.location.origin + "/api" + result.share_url;
+        await navigator.clipboard.writeText(fullUrl);
+        alert("分享链接已复制到剪贴板！");
+      }
+    } catch (e: any) { alert("分享失败: " + e.message); }
+    finally { setSharing(false); }
+  };
+
   const handleExport = async (type: string) => {
     if (!id) return;
     setExporting(true);
@@ -206,6 +223,10 @@ export function PathwayPage() {
           <button onClick={() => handleExport("summary_outline")} disabled={exporting || nodes.length === 0}
             className="px-3 py-1.5 bg-[var(--slate-blue)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
             导出提纲
+          </button>
+          <button onClick={handleShare} disabled={sharing}
+            className={`px-3 py-1.5 text-xs font-semibold rounded ${shareUrl ? "bg-green-100 text-green-700" : "bg-[var(--pale-mint)] text-[var(--path-teal)] hover:opacity-90"} disabled:opacity-40`}>
+            {sharing ? "..." : shareUrl ? "✓ 已分享" : "分享"}
           </button>
         </div>
       </div>

@@ -41,6 +41,35 @@ app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 // Auth routes (no middleware)
 app.use("/api/auth", authRoutes);
 
+// Public share view (no auth required)
+app.get("/api/share/:token", (req, res) => {
+  const db = getDb();
+  const pathway = db.prepare("SELECT * FROM knowledge_pathways WHERE share_token = ? AND is_public = 1")
+    .get(req.params.token) as any;
+  if (!pathway) { res.status(404).json({ error: "分享链接无效或已关闭" }); return; }
+
+  const cards = db.prepare(`
+    SELECT c.* FROM knowledge_cards c
+    JOIN pathway_cards pc ON pc.card_id = c.id
+    WHERE pc.pathway_id = ?
+  `).all(pathway.id);
+  const relations = db.prepare("SELECT * FROM knowledge_relations WHERE pathway_id = ?").all(pathway.id);
+  const docIds = db.prepare("SELECT document_id FROM pathway_documents WHERE pathway_id = ?")
+    .all(pathway.id).map((r: any) => r.document_id);
+  const documents = docIds.length > 0
+    ? db.prepare(`SELECT id, title, author, publication_year, source_url FROM documents WHERE id IN (${docIds.map(() => "?").join(",")})`).all(...docIds)
+    : [];
+
+  res.json({
+    pathway: { ...pathway, tags: safeJson(pathway.tags) },
+    cards,
+    relations,
+    documents,
+  });
+});
+
+function safeJson(s: string) { try { return JSON.parse(s); } catch { return []; } }
+
 // Protected routes
 app.use("/api/documents", authMiddleware, documentRoutes);
 
