@@ -3,6 +3,8 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import { authMiddleware } from "./middleware/auth.js";
+import { apiRateLimit, authRateLimit } from "./middleware/rateLimit.js";
+import { securityHeaders } from "./middleware/security.js";
 import authRoutes from "./routes/auth.js";
 import documentRoutes from "./routes/documents.js";
 import aiRoutes from "./routes/ai.js";
@@ -21,6 +23,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 app.use(cors({ origin: ["http://localhost:5173", "http://localhost:3000"], credentials: true }));
+app.use(securityHeaders);
 app.use(express.json({ limit: "10mb" }));
 
 // Request logging
@@ -38,8 +41,20 @@ app.use((req, _res, next) => {
 // Serve uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
-// Auth routes (no middleware)
-app.use("/api/auth", authRoutes);
+// Health check (no auth, no rate limit)
+app.get("/api/health", (_req, res) => {
+  const db = getDb();
+  const stats = {
+    users: (db.prepare("SELECT COUNT(*) as c FROM users").get() as any).c,
+    documents: (db.prepare("SELECT COUNT(*) as c FROM documents").get() as any).c,
+    cards: (db.prepare("SELECT COUNT(*) as c FROM knowledge_cards").get() as any).c,
+    pathways: (db.prepare("SELECT COUNT(*) as c FROM knowledge_pathways").get() as any).c,
+  };
+  res.json({ status: "healthy", uptime: process.uptime(), memory: process.memoryUsage().heapUsed, stats });
+});
+
+// Auth routes (rate limited)
+app.use("/api/auth", authRateLimit, authRoutes);
 
 // Public share view (no auth required)
 app.get("/api/share/:token", (req, res) => {
@@ -70,32 +85,32 @@ app.get("/api/share/:token", (req, res) => {
 
 function safeJson(s: string) { try { return JSON.parse(s); } catch { return []; } }
 
-// Protected routes
-app.use("/api/documents", authMiddleware, documentRoutes);
+// Protected routes (rate limited)
+app.use("/api/documents", apiRateLimit, authMiddleware, documentRoutes);
 
 // AI routes (explain, extract-concepts)
-app.use("/api/ai", authMiddleware, aiRoutes);
+app.use("/api/ai", apiRateLimit, authMiddleware, aiRoutes);
 
 // Annotation routes (CRUD)
-app.use("/api/annotations", authMiddleware, annotationRoutes);
+app.use("/api/annotations", apiRateLimit, authMiddleware, annotationRoutes);
 
 // Knowledge card routes (CRUD)
-app.use("/api/cards", authMiddleware, cardRoutes);
+app.use("/api/cards", apiRateLimit, authMiddleware, cardRoutes);
 
 // Knowledge pathway routes (goal priming + CRUD)
-app.use("/api/pathways", authMiddleware, pathwayRoutes);
+app.use("/api/pathways", apiRateLimit, authMiddleware, pathwayRoutes);
 
 // Relation routes (node connections)
-app.use("/api/relations", authMiddleware, relationRoutes);
+app.use("/api/relations", apiRateLimit, authMiddleware, relationRoutes);
 
 // Evidence routes (source tracing)
-app.use("/api/evidences", authMiddleware, evidenceRoutes);
+app.use("/api/evidences", apiRateLimit, authMiddleware, evidenceRoutes);
 
 // Export routes (markdown report generation)
-app.use("/api/exports", authMiddleware, exportRoutes);
+app.use("/api/exports", apiRateLimit, authMiddleware, exportRoutes);
 
 // Search routes (FTS5 full-text search)
-app.use("/api/search", authMiddleware, searchRoutes);
+app.use("/api/search", apiRateLimit, authMiddleware, searchRoutes);
 
 // Debug test route
 app.post("/api/ping", (_req, res) => { res.json({ pong: true }); });

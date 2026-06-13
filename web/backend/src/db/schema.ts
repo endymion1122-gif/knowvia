@@ -64,6 +64,20 @@ function runMigrations(db: Database.Database) {
   migrateColumn(db, "knowledge_pathways", "share_token", "TEXT DEFAULT ''");
   migrateColumn(db, "knowledge_pathways", "is_public", "INTEGER DEFAULT 0");
 
+  // Migration 8: performance indexes
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_documents_user ON documents(user_id);
+    CREATE INDEX IF NOT EXISTS idx_cards_user ON knowledge_cards(user_id);
+    CREATE INDEX IF NOT EXISTS idx_cards_doc ON knowledge_cards(source_document_id);
+    CREATE INDEX IF NOT EXISTS idx_cards_type ON knowledge_cards(card_type);
+    CREATE INDEX IF NOT EXISTS idx_annotations_doc ON annotations(document_id);
+    CREATE INDEX IF NOT EXISTS idx_annotations_user ON annotations(user_id);
+    CREATE INDEX IF NOT EXISTS idx_relations_pathway ON knowledge_relations(pathway_id);
+    CREATE INDEX IF NOT EXISTS idx_pathway_cards_pw ON pathway_cards(pathway_id);
+    CREATE INDEX IF NOT EXISTS idx_pathway_docs_pw ON pathway_documents(pathway_id);
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_pathways_share ON knowledge_pathways(share_token) WHERE share_token != '';
+  `);
+
   // Migration 6: exports table
   db.exec(`
     CREATE TABLE IF NOT EXISTS exports (
