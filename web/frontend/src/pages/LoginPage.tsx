@@ -37,10 +37,7 @@ export function LoginPage({ isRegister }: { isRegister?: boolean }) {
         <div className="relative z-10 flex flex-col justify-between p-14 w-full">
           <div>
             <div className="flex items-center gap-3 mb-10">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold"
-                style={{ background: "linear-gradient(135deg, #21C7C2, #4B4FC4)" }}>
-                知
-              </div>
+              <img src="/logo.png" alt="Knowvia" className="w-10 h-10 rounded-xl object-contain bg-white/10 p-1" />
               <div>
                 <div className="text-xl font-bold text-white tracking-tight leading-none">知径 Knowvia</div>
                 <div className="text-xs text-white/50 mt-1">Knowledge Pathway System</div>
@@ -73,8 +70,7 @@ export function LoginPage({ isRegister }: { isRegister?: boolean }) {
         <div className="w-full max-w-[400px]">
           <div className="lg:hidden text-center mb-10">
             <div className="flex items-center justify-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold"
-                style={{ background: "linear-gradient(135deg, #21C7C2, #4B4FC4)" }}>知</div>
+              <img src="/logo.png" alt="Knowvia" className="w-10 h-10 rounded-xl object-contain" />
             </div>
             <div className="text-xl font-bold text-[var(--brand-indigo)] tracking-tight">知径 Knowvia</div>
             <p className="text-sm text-[var(--text-tertiary)] mt-1">Knowledge Pathway System</p>

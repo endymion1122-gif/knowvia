@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import { useAuthStore } from "../stores/authStore";
 import { OnboardingWizard } from "../components/common/OnboardingWizard";
+import { StatCard } from "../components/common/Card";
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -26,11 +27,6 @@ export function DashboardPage() {
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
-  const statCards = [
-    { label: "知识路径", value: stats.pathways, icon: "🔗", color: "from-[var(--brand-indigo)] to-[var(--text-secondary)]", bg: "bg-[var(--primary-100)]", path: "/pathways" },
-    { label: "学习资料", value: stats.documents, icon: "📚", color: "from-[var(--brand-teal)] to-[#5DB8A8]", bg: "bg-[var(--teal-100)]", path: "/library" },
-    { label: "知识卡片", value: stats.cards, icon: "◈", color: "from-[var(--brand-violet)] to-[#9B8EF8]", bg: "bg-[var(--primary-100)]", path: "/cards" },
-  ];
 
   return (
     <div className="p-6 md:p-10 max-w-5xl mx-auto">
@@ -50,23 +46,9 @@ export function DashboardPage() {
       {/* Stats */}
       {!loading && (
         <div className="grid grid-cols-3 gap-4 mb-10">
-          {statCards.map((s) => (
-            <button
-              key={s.label}
-              onClick={() => navigate(s.path)}
-              className="group bg-white rounded-2xl p-5 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--border-default)] transition-all duration-200 text-left"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <span className="text-2xl">{s.icon}</span>
-                <span className="text-3xl font-bold text-[var(--text-primary)] tabular-nums">
-                  {s.value}
-                </span>
-              </div>
-              <p className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">
-                {s.label}
-              </p>
-            </button>
-          ))}
+          <StatCard label="学习路径" value={stats.pathways} icon="🔗" variant="indigo" onClick={() => navigate("/pathways")} />
+          <StatCard label="资料库" value={stats.documents} icon="📚" variant="teal" onClick={() => navigate("/library")} />
+          <StatCard label="知识卡片" value={stats.cards} icon="◈" variant="violet" onClick={() => navigate("/cards")} />
         </div>
       )}
 

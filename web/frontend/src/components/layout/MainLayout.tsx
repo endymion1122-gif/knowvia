@@ -23,10 +23,10 @@ const PageLoader = () => (
 
 const NAV_ITEMS = [
   { path: "/", label: "首页", icon: "🏠" },
+  { path: "/pathways", label: "学习路径", icon: "🔗" },
   { path: "/library", label: "资料库", icon: "📚" },
-  { path: "/pathways", label: "专题路径", icon: "🔗" },
-  { path: "/cards", label: "知识节点", icon: "◈" },
-  { path: "/recall", label: "主动回忆", icon: "🧠" },
+  { path: "/cards", label: "卡片库", icon: "◈" },
+  { path: "/recall", label: "复习计划", icon: "🧠" },
   { path: "/settings", label: "设置", icon: "⚙" },
 ];
 
@@ -42,8 +42,7 @@ export function MainLayout() {
     <>
       <div className="px-5 pt-7 pb-5">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-bold"
-            style={{ background: "linear-gradient(135deg, #0EC2C7, #3B6CF8)" }}>知</div>
+          <img src="/logo.png" alt="知径 Knowvia" className="w-8 h-8 rounded-lg object-contain" />
           <div>
             <h1 className="text-sm font-bold text-[var(--text-primary)] tracking-tight leading-none">知径</h1>
             <p className="text-[10px] text-[var(--text-tertiary)] leading-none mt-0.5">Knowvia</p>
