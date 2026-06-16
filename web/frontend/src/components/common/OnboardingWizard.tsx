@@ -19,7 +19,7 @@ export function OnboardingWizard() {
 
   return (
     <div className="bg-white rounded-2xl border border-[var(--border-light)] shadow-[var(--shadow-md)] p-6 mb-8 overflow-hidden relative">
-      <div className="absolute top-0 left-0 right-0 h-1 bg-[var(--cool-gray-light)]">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-[var(--border-light)]">
         <div
           className="h-full bg-gradient-to-r from-[var(--brand-indigo)] to-[var(--brand-violet)] transition-all duration-500 rounded-r"
           style={{ width: `${((current + 1) / STEPS.length) * 100}%` }}
@@ -37,7 +37,7 @@ export function OnboardingWizard() {
       <div className="flex items-center gap-3 mb-6">
         {STEPS.map((_, i) => (
           <button key={i} onClick={() => setCurrent(i)}
-            className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${i <= current ? "bg-[var(--brand-violet)]" : "bg-[var(--cool-gray-light)]"}`}
+            className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${i <= current ? "bg-[var(--brand-violet)]" : "bg-[var(--border-light)]"}`}
           />
         ))}
       </div>

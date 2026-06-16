@@ -292,33 +292,33 @@ export function PathwayPage() {
       ) : (
       <div className="grid grid-cols-3 gap-6">
         {/* Left: Documents */}
-        <div className="space-y-4">
-          <div className="bg-white p-4 rounded-lg border border-[var(--border-default)]">
-            <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3">📄 学习资料</h3>
+        <div className="space-y-3">
+          <Card padding="md">
+            <h3 className="text-[16px] font-semibold text-[var(--text-primary)] mb-3">学习资料</h3>
             {documents.length === 0 ? (
-              <p className="text-xs text-[var(--text-tertiary)] mb-3">还没有添加资料</p>
+              <p className="text-[13px] text-[var(--text-tertiary)] mb-3">还没有添加资料</p>
             ) : (
               <div className="space-y-1 mb-3">
                 {documents.map((d: any) => (
-                  <div key={d.id} className="text-xs p-2 bg-[var(--bg-page)] rounded flex items-center justify-between">
-                    <span className="truncate">{d.title}</span>
-                    <button onClick={() => navigate(`/reader/${d.id}`)} className="text-[10px] text-[var(--brand-violet)] hover:underline ml-1 flex-shrink-0">查看</button>
+                  <div key={d.id} className="flex items-center justify-between p-2 bg-[var(--bg-page)] rounded-xl">
+                    <span className="text-[13px] text-[var(--text-primary)] truncate">{d.title}</span>
+                    <button onClick={() => navigate(`/reader/${d.id}`)} className="text-[11px] text-[var(--brand-violet)] hover:underline flex-shrink-0 ml-2">查看</button>
                   </div>
                 ))}
               </div>
             )}
-            <label className={`block w-full py-1.5 text-center text-xs font-semibold rounded cursor-pointer ${uploading ? "bg-gray-200 text-gray-400" : "bg-[var(--brand-indigo)] text-white hover:opacity-90"}`}>
+            <label className={`block w-full h-9 flex items-center justify-center rounded-xl text-[13px] font-medium cursor-pointer transition-colors ${uploading ? "bg-[var(--border-light)] text-[var(--text-muted)]" : "bg-[var(--brand-indigo)] text-white hover:bg-[var(--primary-700)]"}`}>
               {uploading ? "上传中..." : "上传资料"}
               <input type="file" accept=".pdf,.txt,.md,.docx,.pptx" onChange={handleUpload} className="hidden" disabled={uploading} />
             </label>
-          </div>
+          </Card>
           <button onClick={handleExtract} disabled={extracting || documents.length === 0}
-            className="w-full py-2 bg-[var(--brand-violet)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
-            {extracting ? "AI 提取中..." : "🤖 AI 提取知识节点"}
+            className="w-full h-10 bg-[var(--brand-violet)] text-white rounded-xl text-[13px] font-semibold hover:bg-[var(--primary-400)] disabled:opacity-40 transition-colors shadow-[var(--shadow-card)]">
+            {extracting ? "AI 提取中..." : "AI 提取知识节点"}
           </button>
           {extractResult && (
-            <p className="text-[10px] text-[var(--text-tertiary)]">
-              提取了 {extractResult.nodes?.length || 0} 个节点和 {extractResult.suggested_relations?.length || 0} 个关系
+            <p className="text-[11px] text-[var(--text-tertiary)] px-1">
+              提取 {extractResult.nodes?.length || 0} 节点 · {extractResult.suggested_relations?.length || 0} 关系
               {extractResult.mode === "demo" ? " (Demo)" : ""}
             </p>
           )}
@@ -326,43 +326,43 @@ export function PathwayPage() {
 
         {/* Center: Nodes */}
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-[var(--text-primary)]">🧩 知识节点 ({nodes.length})</h3>
+          <h3 className="text-[16px] font-semibold text-[var(--text-primary)]">知识节点 ({nodes.length})</h3>
           {nodes.length === 0 ? (
-            <p className="text-xs text-[var(--text-tertiary)]">上传资料后点击「AI 提取知识节点」</p>
+            <p className="text-[13px] text-[var(--text-tertiary)]">上传资料后点击「AI 提取知识节点」</p>
           ) : (
             nodes.map((node) => (
-              <div key={node.id} className="bg-white p-3 rounded-lg border border-[var(--border-default)] text-xs">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--primary-100)] text-[var(--brand-indigo)] font-semibold">{node.card_type}</span>
-                  <span className="text-[10px] text-[var(--text-tertiary)]">
-                    {node.user_confirmed ? "✓ 已确认" : "待确认"} · 置信度 {Math.round((node.confidence_score || 0.8) * 100)}%
+              <Card key={node.id} padding="sm">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] px-2 py-0.5 rounded-lg bg-[var(--primary-100)] text-[var(--primary-600)] font-semibold">{node.card_type}</span>
+                  <span className="text-[11px] text-[var(--text-tertiary)]">
+                    {node.user_confirmed ? "✓ 已确认" : "待确认"} · {Math.round((node.confidence_score || 0.8) * 100)}%
                   </span>
                 </div>
                 {editingNode === node.id ? (
                   <div className="space-y-1.5">
-                    <input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} className="w-full px-2 py-1 border rounded text-xs" />
-                    <select value={editType} onChange={(e) => setEditType(e.target.value)} className="w-full px-2 py-1 border rounded text-xs">
-                      {["concept","claim","evidence","question","summary","reflection","note"].map(t => (<option key={t} value={t}>{t}</option>))}
+                    <input value={editTitle} onChange={e => setEditTitle(e.target.value)} className="w-full px-2.5 py-1.5 bg-[var(--bg-page)] border border-[var(--border-default)] rounded-xl text-[13px] focus:outline-none focus:border-[var(--brand-violet)]" />
+                    <select value={editType} onChange={e => setEditType(e.target.value)} className="w-full px-2.5 py-1.5 bg-[var(--bg-page)] border border-[var(--border-default)] rounded-xl text-[13px] focus:outline-none focus:border-[var(--brand-violet)]">
+                      {["concept","claim","evidence","question","summary","reflection","note"].map(t => <option key={t} value={t}>{t}</option>)}
                     </select>
-                    <textarea value={editSummary} onChange={(e) => setEditSummary(e.target.value)} placeholder="用你自己的话转述..." className="w-full px-2 py-1 border rounded text-xs h-14 resize-none" />
-                    <div className="flex gap-1">
-                      <button onClick={() => handleSaveNode(node.id)} className="flex-1 py-1 bg-[var(--brand-indigo)] text-white rounded text-xs">保存</button>
-                      <button onClick={() => setEditingNode(null)} className="px-2 py-1 text-xs text-[var(--text-tertiary)]">取消</button>
+                    <textarea value={editSummary} onChange={e => setEditSummary(e.target.value)} placeholder="用你自己的话转述..." className="w-full px-2.5 py-1.5 bg-[var(--bg-page)] border border-[var(--border-default)] rounded-xl text-[13px] h-14 resize-none focus:outline-none focus:border-[var(--brand-violet)]" />
+                    <div className="flex gap-1.5">
+                      <button onClick={() => handleSaveNode(node.id)} className="flex-1 h-8 bg-[var(--brand-indigo)] text-white rounded-xl text-[12px] font-medium hover:bg-[var(--primary-700)] transition-colors">保存</button>
+                      <button onClick={() => setEditingNode(null)} className="px-3 h-8 text-[12px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors">取消</button>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <p className="font-medium text-[var(--text-primary)]">{node.title}</p>
-                    <p className="text-[var(--text-secondary)] mt-0.5 line-clamp-2">{node.ai_generated_text || node.content}</p>
-                    {node.user_summary && <p className="text-[var(--brand-violet)] mt-1 italic">💬 {node.user_summary}</p>}
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-[10px] text-[var(--text-tertiary)]">{node.source_citation || `p.${node.page_number || "?"}`}</span>
+                    <p className="text-[15px] font-semibold text-[var(--text-primary)]">{node.title}</p>
+                    <p className="text-[13px] text-[var(--text-secondary)] mt-0.5 line-clamp-2">{node.ai_generated_text || node.content}</p>
+                    {node.user_summary && <p className="text-[13px] text-[var(--brand-violet)] mt-1 italic">💬 {node.user_summary}</p>}
+                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[var(--border-light)]">
+                      <span className="text-[11px] text-[var(--text-tertiary)]">{node.source_citation || `p.${node.page_number || "?"}`}</span>
                       <button onClick={() => { setEditingNode(node.id); setEditTitle(node.title); setEditType(node.card_type); setEditSummary(node.user_summary || ""); }}
-                        className="text-[10px] text-[var(--brand-teal)] hover:underline">编辑转述</button>
+                        className="text-[11px] text-[var(--brand-teal)] hover:text-[var(--teal-600)] font-medium transition-colors">编辑转述</button>
                     </div>
                   </>
                 )}
-              </div>
+              </Card>
             ))
           )}
         </div>
@@ -370,41 +370,41 @@ export function PathwayPage() {
         {/* Right: Relations */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-[var(--text-primary)]">🔗 知识关系 ({relations.length})</h3>
-            <button onClick={() => setShowAddRelation(!showAddRelation)} className="text-[10px] text-[var(--brand-teal)] hover:underline">+ 添加</button>
+            <h3 className="text-[16px] font-semibold text-[var(--text-primary)]">知识关系 ({relations.length})</h3>
+            <button onClick={() => setShowAddRelation(!showAddRelation)} className="text-[11px] text-[var(--brand-teal)] hover:text-[var(--teal-600)] font-medium transition-colors">+ 添加</button>
           </div>
           {showAddRelation && (
-            <div className="bg-white p-3 rounded-lg border border-[var(--brand-teal)] text-xs space-y-1.5">
-              <select value={relSource} onChange={(e) => setRelSource(e.target.value)} className="w-full px-2 py-1 border rounded text-xs">
+            <Card padding="sm" className="border-[var(--brand-teal)]! space-y-2">
+              <select value={relSource} onChange={e => setRelSource(e.target.value)} className="w-full px-2.5 py-1.5 bg-[var(--bg-page)] border border-[var(--border-default)] rounded-xl text-[13px] focus:outline-none focus:border-[var(--brand-violet)]">
                 <option value="">源节点</option>
-                {nodes.map((n) => <option key={n.id} value={n.id}>{n.title}</option>)}
+                {nodes.map(n => <option key={n.id} value={n.id}>{n.title}</option>)}
               </select>
-              <select value={relType} onChange={(e) => setRelType(e.target.value)} className="w-full px-2 py-1 border rounded text-xs">
-                {Object.entries(RELATION_LABELS).map(([k, v]) => (<option key={k} value={k}>{v} ({k})</option>))}
+              <select value={relType} onChange={e => setRelType(e.target.value)} className="w-full px-2.5 py-1.5 bg-[var(--bg-page)] border border-[var(--border-default)] rounded-xl text-[13px] focus:outline-none focus:border-[var(--brand-violet)]">
+                {Object.entries(RELATION_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
-              <select value={relTarget} onChange={(e) => setRelTarget(e.target.value)} className="w-full px-2 py-1 border rounded text-xs">
+              <select value={relTarget} onChange={e => setRelTarget(e.target.value)} className="w-full px-2.5 py-1.5 bg-[var(--bg-page)] border border-[var(--border-default)] rounded-xl text-[13px] focus:outline-none focus:border-[var(--brand-violet)]">
                 <option value="">目标节点</option>
-                {nodes.map((n) => <option key={n.id} value={n.id}>{n.title}</option>)}
+                {nodes.map(n => <option key={n.id} value={n.id}>{n.title}</option>)}
               </select>
               <button onClick={handleAddRelation} disabled={!relSource || !relTarget}
-                className="w-full py-1 bg-[var(--brand-teal)] text-white rounded text-xs disabled:opacity-40">创建关系</button>
-            </div>
+                className="w-full h-8 bg-[var(--brand-teal)] text-white rounded-xl text-[12px] font-medium hover:bg-[var(--teal-600)] disabled:opacity-40 transition-colors">创建关系</button>
+            </Card>
           )}
           {relations.length === 0 ? (
-            <p className="text-xs text-[var(--text-tertiary)]">AI 提取后会自动建议关系，也可以手动添加</p>
+            <p className="text-[13px] text-[var(--text-tertiary)]">AI 提取后会自动建议关系</p>
           ) : (
             relations.map((rel) => {
-              const src = nodes.find((n) => n.id === rel.source_card_id);
-              const tgt = nodes.find((n) => n.id === rel.target_card_id);
+              const src = nodes.find(n => n.id === rel.source_card_id);
+              const tgt = nodes.find(n => n.id === rel.target_card_id);
               return (
-                <div key={rel.id} className="bg-white p-2 rounded-lg border border-[var(--border-default)] text-xs flex items-center justify-between">
+                <div key={rel.id} className="bg-white rounded-xl border border-[var(--border-default)] shadow-[var(--shadow-xs)] p-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                    <span className="font-medium truncate">{src?.title || "?"}</span>
-                    <span className="text-[10px] px-1 py-0.5 bg-[var(--teal-100)] rounded text-[var(--brand-teal)] flex-shrink-0">{RELATION_LABELS[rel.relation_type] || rel.relation_type}</span>
-                    <span className="font-medium truncate">{tgt?.title || "?"}</span>
+                    <span className="text-[13px] font-medium text-[var(--text-primary)] truncate">{src?.title || "?"}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 bg-[var(--teal-100)] rounded-lg text-[var(--teal-600)] font-medium flex-shrink-0">{RELATION_LABELS[rel.relation_type] || rel.relation_type}</span>
+                    <span className="text-[13px] font-medium text-[var(--text-primary)] truncate">{tgt?.title || "?"}</span>
                   </div>
                   <button onClick={async () => { await api.relations.delete(rel.id); await loadData(); }}
-                    className="text-[10px] text-[var(--text-tertiary)] hover:text-red-500 ml-1 flex-shrink-0">✕</button>
+                    className="text-[11px] text-[var(--text-tertiary)] hover:text-[var(--error)] ml-1 flex-shrink-0 transition-colors">✕</button>
                 </div>
               );
             })
