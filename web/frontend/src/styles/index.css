@@ -1,78 +1,117 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════
-   Knowvia Design System v3 — macOS Brand
-   Colors extracted from official brand guide
+   Knowvia Design System — macOS Academic AI
+   Based on official VI & UI design analysis
    ═══════════════════════════════════════════ */
 
 :root {
-  /* ── Brand Core (from 品牌指南.png) ── */
-  --brand-navy: #0B1A5E;
-  --brand-blue: #3B6CF8;
-  --brand-cyan: #0EC2C7;
-  --brand-violet: #6B4EF8;
-  --brand-navy-dark: #060E3A;
+  /* ── Brand Core ── */
+  --brand-indigo: #1B1E3F;
+  --brand-violet: #7B6BFF;
+  --brand-teal: #21C7C2;
+
+  /* ── Primary Scale ── */
+  --primary-900: #10143A;
+  --primary-800: #1B1E3F;
+  --primary-700: #252B63;
+  --primary-600: #373A78;
+  --primary-500: #4B4FC4;
+  --primary-400: #6B63F6;
+  --primary-300: #7B6BFF;
+  --primary-200: #AFA7FF;
+  --primary-100: #EFECFF;
+  --primary-50: #F6F3FF;
+
+  /* ── Teal Scale ── */
+  --teal-600: #10A8A6;
+  --teal-500: #21C7C2;
+  --teal-400: #33D6D1;
+  --teal-300: #73E0DE;
+  --teal-100: #E6FBFA;
+  --teal-50: #F0FEFD;
 
   /* ── Surfaces ── */
-  --page-bg: #F5F6FA;
-  --card-bg: #FFFFFF;
-  --sidebar-bg: #FAFBFF;
-  --input-bg: #F1F3F8;
-
-  /* ── Borders ── */
-  --border-light: #E8EAF2;
-  --border-default: #DDE0EA;
+  --bg-app: #FAFAFB;
+  --bg-page: #FBFCFF;
+  --bg-sidebar: #F8F9FD;
+  --bg-card: #FFFFFF;
+  --bg-soft: #F9FAFF;
+  --bg-selected: #F0ECFF;
+  --bg-input: #FFFFFF;
 
   /* ── Text ── */
-  --text-primary: #131633;
-  --text-secondary: #5B5F7B;
-  --text-tertiary: #9094AE;
-  --text-placeholder: #B8BBD0;
+  --text-primary: #14183F;
+  --text-secondary: #4D557A;
+  --text-tertiary: #7A82A6;
+  --text-placeholder: #A6ACC4;
+  --text-muted: #C0C5D8;
   --text-inverse: #FFFFFF;
 
+  /* ── Borders ── */
+  --border-default: #E6E8EF;
+  --border-light: #EEF0F6;
+  --border-strong: #D8DCEB;
+  --divider: #EAECF3;
+
   /* ── Semantic ── */
-  --surface-lavender: #F3F1FF;
-  --surface-mint: #EDFAFA;
-  --surface-amber: #FFF9F0;
-  --surface-rose: #FFF4F4;
-  --success: #0FA87A;
-  --warning: #E5982C;
-  --danger: #E04848;
+  --success: #21C7C2;
+  --success-bg: #E6FBFA;
+  --warning: #F6C34A;
+  --warning-bg: #FFF7DF;
+  --error: #FF5A6A;
+  --error-bg: #FFF0F2;
+  --info: #4DA3FF;
+  --info-bg: #EEF6FF;
 
   /* ── Shadows ── */
-  --shadow-xs: 0 1px 2px rgba(11,26,94,0.04);
-  --shadow-sm: 0 2px 8px rgba(11,26,94,0.06);
-  --shadow-md: 0 4px 16px rgba(11,26,94,0.08);
-  --shadow-lg: 0 8px 32px rgba(11,26,94,0.10);
-  --shadow-xl: 0 16px 48px rgba(11,26,94,0.12);
+  --shadow-card: 0 4px 12px rgba(27,30,63,0.04), 0 1px 3px rgba(27,30,63,0.04);
+  --shadow-floating: 0 12px 32px rgba(27,30,63,0.08), 0 2px 6px rgba(27,30,63,0.06);
+  --shadow-popover: 0 20px 48px rgba(27,30,63,0.12), 0 4px 12px rgba(27,30,63,0.08);
+  --shadow-glow-violet: 0 0 0 6px rgba(123,107,255,0.12), 0 0 24px rgba(123,107,255,0.24);
+  --shadow-glow-teal: 0 0 0 8px rgba(33,199,194,0.14), 0 0 28px rgba(33,199,194,0.28);
 
   /* ── Radius ── */
+  --radius-xs: 6px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  /* ── Layout ── */
+  --sidebar-width: 240px;
+  --right-panel-width: 288px;
+  --topbar-height: 64px;
+  --content-padding-x: 32px;
+
+  /* ── Typography ── */
+  --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "New York", Georgia, "Times New Roman", serif;
+  --text-page-title: 28px;
+  --text-section-title: 16px;
+  --text-card-title: 15px;
+  --text-body: 13px;
+  --text-caption: 12px;
+  --text-micro: 11px;
 
   /* ── Transitions ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --duration-fast: 150ms;
   --duration-normal: 250ms;
-  --duration-slow: 400ms;
 }
 
 /* ── Base ── */
 body {
-  font-family: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", sans-serif;
-  background: var(--page-bg);
+  font-family: var(--font-ui);
+  background: var(--bg-app);
   color: var(--text-primary);
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.01em;
-  font-size: 14px;
+  font-size: var(--text-body);
   line-height: 1.5;
 }
-
 #root { min-height: 100vh; }
 
 /* ── Scrollbar ── */
@@ -82,11 +121,7 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 
 /* ── Focus ── */
-*:focus-visible {
-  outline: 2px solid var(--brand-blue);
-  outline-offset: 2px;
-  border-radius: 3px;
-}
+*:focus-visible { outline: 2px solid var(--brand-violet); outline-offset: 2px; border-radius: 3px; }
 
 /* ── Selection ── */
-::selection { background: rgba(59,108,248,0.15); color: var(--text-primary); }
+::selection { background: var(--primary-100); color: var(--text-primary); }

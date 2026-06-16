@@ -59,8 +59,8 @@ export function MainLayout() {
               onClick={() => { navigate(item.path); closeSidebar(); }}
               className={`w-full text-left px-3 py-2.5 rounded-xl text-[13px] transition-all duration-200 flex items-center gap-3 ${
                 active
-                  ? "bg-[var(--surface-lavender)] text-[var(--brand-navy)] font-semibold"
-                  : "text-[var(--text-secondary)] hover:bg-[var(--input-bg)] hover:text-[var(--text-primary)]"
+                  ? "bg-[var(--primary-100)] text-[var(--brand-indigo)] font-semibold"
+                  : "text-[var(--text-secondary)] hover:bg-[var(--bg-input)] hover:text-[var(--text-primary)]"
               }`}
             >
               <span className="text-base flex-shrink-0 w-5 text-center">{item.icon}</span>
@@ -69,7 +69,7 @@ export function MainLayout() {
           );
         })}
       </nav>
-      <div className="p-3 mx-3 mb-3 mt-2 rounded-xl bg-[var(--input-bg)]">
+      <div className="p-3 mx-3 mb-3 mt-2 rounded-xl bg-[var(--bg-input)]">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0"
             style={{ background: "linear-gradient(135deg, #3B6CF8, #6B4EF8)" }}>
@@ -78,16 +78,16 @@ export function MainLayout() {
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium text-[var(--text-primary)] truncate">{user?.username}</p>
           </div>
-          <button onClick={logout} className="text-[10px] text-[var(--text-tertiary)] hover:text-[var(--danger)] transition-colors flex-shrink-0" title="退出登录">⏻</button>
+          <button onClick={logout} className="text-[10px] text-[var(--text-tertiary)] hover:text-[var(--error)] transition-colors flex-shrink-0" title="退出登录">⏻</button>
         </div>
       </div>
     </>
   );
 
   return (
-    <div className="flex h-screen bg-[var(--page-bg)]">
+    <div className="flex h-screen bg-[var(--bg-page)]">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-56 flex-shrink-0 bg-[var(--sidebar-bg)] border-r border-[var(--border-light)] flex-col">
+      <aside className="hidden md:flex w-56 flex-shrink-0 bg-[var(--bg-sidebar)] border-r border-[var(--border-light)] flex-col">
         {sidebarContent}
       </aside>
 
@@ -95,16 +95,16 @@ export function MainLayout() {
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black/30" onClick={closeSidebar} />
-          <aside className="absolute left-0 top-0 bottom-0 w-56 bg-[var(--sidebar-bg)] flex flex-col z-10 shadow-xl">
+          <aside className="absolute left-0 top-0 bottom-0 w-56 bg-[var(--bg-sidebar)] flex flex-col z-10 shadow-xl">
             {sidebarContent}
           </aside>
         </div>
       )}
 
       {/* Mobile header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[var(--sidebar-bg)] border-b border-[var(--border-light)] px-3 py-2 flex items-center gap-3">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[var(--bg-sidebar)] border-b border-[var(--border-light)] px-3 py-2 flex items-center gap-3">
         <button onClick={() => setSidebarOpen(true)} className="text-lg">☰</button>
-        <h1 className="text-sm font-semibold text-[var(--brand-navy)]">知径 Knowvia</h1>
+        <h1 className="text-sm font-semibold text-[var(--brand-indigo)]">知径 Knowvia</h1>
       </div>
 
       <main className="flex-1 overflow-auto pt-10 md:pt-0">

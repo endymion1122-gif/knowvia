@@ -122,14 +122,14 @@ export function PathwayGraph({ nodes, relations, onNodeClick }: PathwayGraphProp
 
   if (nodes.length === 0) {
     return (
-      <div className="h-96 flex items-center justify-center bg-[var(--page-bg)] rounded-lg border border-dashed border-[var(--border-default)]">
+      <div className="h-96 flex items-center justify-center bg-[var(--bg-page)] rounded-lg border border-dashed border-[var(--border-default)]">
         <p className="text-sm text-[var(--text-tertiary)]">暂无节点数据。上传资料并提取节点后可查看知识路径图。</p>
       </div>
     );
   }
 
   return (
-    <div className="h-[600px] w-full rounded-lg border border-[var(--border-default)] overflow-hidden bg-[var(--page-bg)]">
+    <div className="h-[600px] w-full rounded-lg border border-[var(--border-default)] overflow-hidden bg-[var(--bg-page)]">
       <ReactFlow
         nodes={flowNodes}
         edges={flowEdges}

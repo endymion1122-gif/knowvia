@@ -8,7 +8,7 @@ import type { Document as DocType, Annotation, CardKind } from "../types";
 const PDFReader = lazy(() => import("../components/reader/PDFReader").then(m => ({ default: m.PDFReader })));
 
 const PDFLoader = () => (
-  <div className="flex-1 flex items-center justify-center bg-[var(--page-bg)]">
+  <div className="flex-1 flex items-center justify-center bg-[var(--bg-page)]">
     <p className="text-sm text-[var(--text-tertiary)] animate-pulse">加载 PDF 阅读器...</p>
   </div>
 );
@@ -170,11 +170,11 @@ export function ReaderPage() {
     <div className="flex h-full">
       {/* Reader */}
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="flex items-center gap-3 px-4 py-2 bg-[var(--sidebar-bg)] border-b border-[var(--border-default)]">
+        <div className="flex items-center gap-3 px-4 py-2 bg-[var(--bg-sidebar)] border-b border-[var(--border-default)]">
           <button onClick={() => navigate("/library")} className="text-xs text-[var(--brand-violet)] hover:underline">← 资料库</button>
           <span className="text-xs text-[var(--text-tertiary)]">|</span>
           <span className="text-sm font-medium text-[var(--text-primary)] truncate">{doc.title}</span>
-          <span className="text-[10px] text-[var(--brand-cyan)] ml-auto">{doc.file_type.toUpperCase()}</span>
+          <span className="text-[10px] text-[var(--brand-teal)] ml-auto">{doc.file_type.toUpperCase()}</span>
         </div>
         {doc.file_type === "pdf" ? (
           <Suspense fallback={<PDFLoader />}>
@@ -186,13 +186,13 @@ export function ReaderPage() {
       </div>
 
       {/* Inspector Sidebar */}
-      <aside className="w-80 flex-shrink-0 bg-[var(--sidebar-bg)] border-l border-[var(--border-default)] overflow-auto">
+      <aside className="w-80 flex-shrink-0 bg-[var(--bg-sidebar)] border-l border-[var(--border-default)] overflow-auto">
         <div className="p-4 space-y-4">
           {selectedText ? (
             <>
               <div>
                 <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] mb-2">已选文本 {selectedPage > 0 && `（第 ${selectedPage} 页）`}</h4>
-                <p className="text-xs text-[var(--text-secondary)] bg-[var(--page-bg)] p-2 rounded border max-h-24 overflow-auto">{selectedText}</p>
+                <p className="text-xs text-[var(--text-secondary)] bg-[var(--bg-page)] p-2 rounded border max-h-24 overflow-auto">{selectedText}</p>
               </div>
 
               <div>
@@ -209,11 +209,11 @@ export function ReaderPage() {
               <div>
                 <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] mb-2">AI 概念解释</h4>
                 <button onClick={handleAIAnalyze} disabled={aiLoading}
-                  className="w-full py-1.5 bg-[var(--brand-navy)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-50">
+                  className="w-full py-1.5 bg-[var(--brand-indigo)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-50">
                   {aiLoading ? "分析中..." : "解释选中概念"}
                 </button>
                 {aiResult && (
-                  <div className="mt-2 text-xs text-[var(--text-secondary)] bg-[var(--surface-lavender)] p-2 rounded max-h-40 overflow-auto whitespace-pre-wrap">
+                  <div className="mt-2 text-xs text-[var(--text-secondary)] bg-[var(--primary-100)] p-2 rounded max-h-40 overflow-auto whitespace-pre-wrap">
                     {aiResult}
                   </div>
                 )}
@@ -231,18 +231,18 @@ export function ReaderPage() {
             <button
               onClick={handleSummarize}
               disabled={summaryLoading}
-              className="w-full py-1.5 bg-[var(--brand-cyan)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-50"
+              className="w-full py-1.5 bg-[var(--brand-teal)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-50"
             >
               {summaryLoading ? "分析中..." : "分析本文档"}
             </button>
             {docSummary && !docSummary.error && (
-              <div className="mt-2 text-xs space-y-2 bg-[var(--page-bg)] p-3 rounded border max-h-64 overflow-auto">
+              <div className="mt-2 text-xs space-y-2 bg-[var(--bg-page)] p-3 rounded border max-h-64 overflow-auto">
                 <p className="text-[var(--text-primary)] leading-relaxed">{docSummary.summary}</p>
                 <div className="flex gap-1 flex-wrap">
-                  <span className="text-[10px] px-1.5 py-0.5 bg-[var(--surface-lavender)] rounded text-[var(--brand-navy)]">
+                  <span className="text-[10px] px-1.5 py-0.5 bg-[var(--primary-100)] rounded text-[var(--brand-indigo)]">
                     结构：{docSummary.structure_type}
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.5 bg-[var(--surface-mint)] rounded text-[var(--brand-cyan)]">
+                  <span className="text-[10px] px-1.5 py-0.5 bg-[var(--teal-100)] rounded text-[var(--brand-teal)]">
                     推荐视图：{docSummary.recommended_view}
                   </span>
                   {docSummary.mode === "demo" && (
@@ -272,7 +272,7 @@ export function ReaderPage() {
                           }
                           alert("已全部转为知识卡片，可在「知识节点」页面查看。");
                         }}
-                        className="text-[10px] text-[var(--brand-cyan)] hover:underline"
+                        className="text-[10px] text-[var(--brand-teal)] hover:underline"
                       >
                         全部转为卡片
                       </button>
@@ -295,7 +295,7 @@ export function ReaderPage() {
                               alert("已转为知识卡片");
                             } catch (e: any) { alert("创建失败: " + e.message); }
                           }}
-                          className="text-[10px] text-[var(--brand-cyan)] hover:underline opacity-0 group-hover/item:opacity-100 flex-shrink-0"
+                          className="text-[10px] text-[var(--brand-teal)] hover:underline opacity-0 group-hover/item:opacity-100 flex-shrink-0"
                         >
                           +卡片
                         </button>
@@ -320,7 +320,7 @@ export function ReaderPage() {
               <div className="space-y-2">
                 {annotations.map((a) => (
                   <div key={a.id}>
-                    <div className="text-xs p-2 bg-[var(--page-bg)] rounded border group">
+                    <div className="text-xs p-2 bg-[var(--bg-page)] rounded border group">
                       <div className="flex items-start justify-between gap-1">
                         <p className="text-[var(--text-secondary)] line-clamp-2 flex-1">"{a.selected_text}"</p>
                         <button
@@ -338,7 +338,7 @@ export function ReaderPage() {
                         ) : <span />}
                         <button
                           onClick={() => handleStartCard(a)}
-                          className="text-[10px] text-[var(--brand-cyan)] hover:text-[var(--brand-navy)] opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="text-[10px] text-[var(--brand-teal)] hover:text-[var(--brand-indigo)] opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           + 转为卡片
                         </button>
@@ -347,9 +347,9 @@ export function ReaderPage() {
 
                     {/* Inline card creation form */}
                     {cardTargetAnn?.id === a.id && (
-                      <div className="mt-1 p-2 bg-[var(--surface-mint)] rounded border border-[var(--brand-cyan)] text-xs">
+                      <div className="mt-1 p-2 bg-[var(--teal-100)] rounded border border-[var(--brand-teal)] text-xs">
                         {cardCreated ? (
-                          <p className="text-[var(--brand-cyan)] text-center">✓ 卡片已创建</p>
+                          <p className="text-[var(--brand-teal)] text-center">✓ 卡片已创建</p>
                         ) : (
                           <>
                             <label className="text-[10px] font-semibold text-[var(--text-secondary)]">卡片类型</label>
@@ -377,7 +377,7 @@ export function ReaderPage() {
                               <button
                                 onClick={handleCreateCard}
                                 disabled={cardCreating || !cardParaphrase.trim()}
-                                className="flex-1 py-1 bg-[var(--brand-navy)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40"
+                                className="flex-1 py-1 bg-[var(--brand-indigo)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40"
                               >
                                 {cardCreating ? "创建中..." : "创建知识卡片"}
                               </button>

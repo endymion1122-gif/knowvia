@@ -21,7 +21,7 @@ export function OnboardingWizard() {
     <div className="bg-white rounded-2xl border border-[var(--border-light)] shadow-[var(--shadow-md)] p-6 mb-8 overflow-hidden relative">
       <div className="absolute top-0 left-0 right-0 h-1 bg-[var(--cool-gray-light)]">
         <div
-          className="h-full bg-gradient-to-r from-[var(--brand-navy)] to-[var(--brand-violet)] transition-all duration-500 rounded-r"
+          className="h-full bg-gradient-to-r from-[var(--brand-indigo)] to-[var(--brand-violet)] transition-all duration-500 rounded-r"
           style={{ width: `${((current + 1) / STEPS.length) * 100}%` }}
         />
       </div>
@@ -43,7 +43,7 @@ export function OnboardingWizard() {
       </div>
 
       <div className="flex items-start gap-5">
-        <div className="w-14 h-14 rounded-2xl bg-[var(--surface-lavender)] flex items-center justify-center text-2xl flex-shrink-0">
+        <div className="w-14 h-14 rounded-2xl bg-[var(--primary-100)] flex items-center justify-center text-2xl flex-shrink-0">
           {STEPS[current].icon}
         </div>
         <div className="flex-1">
@@ -60,18 +60,18 @@ export function OnboardingWizard() {
         <div className="flex gap-2">
           {current < STEPS.length - 1 ? (
             <button onClick={() => setCurrent(c => c + 1)}
-              className="px-5 py-2 bg-[var(--brand-violet)] hover:bg-[var(--brand-navy)] text-white rounded-xl text-xs font-semibold transition-all duration-200 shadow-[var(--shadow-sm)]">
+              className="px-5 py-2 bg-[var(--brand-violet)] hover:bg-[var(--brand-indigo)] text-white rounded-xl text-xs font-semibold transition-all duration-200 shadow-[var(--shadow-sm)]">
               下一步
             </button>
           ) : (
             <button onClick={() => { finish(); if (STEPS[current].action) navigate(STEPS[current].action!.path); }}
-              className="px-5 py-2 bg-[var(--brand-navy)] hover:bg-[var(--brand-navy-hover)] text-white rounded-xl text-xs font-semibold transition-all duration-200 shadow-[var(--shadow-sm)]">
+              className="px-5 py-2 bg-[var(--brand-indigo)] hover:bg-[var(--primary-700)] text-white rounded-xl text-xs font-semibold transition-all duration-200 shadow-[var(--shadow-sm)]">
               开始使用
             </button>
           )}
           {STEPS[current].action && (
             <button onClick={() => { finish(); navigate(STEPS[current].action!.path); }}
-              className="px-4 py-2 text-xs text-[var(--brand-violet)] hover:text-[var(--brand-navy)] font-medium transition-colors">
+              className="px-4 py-2 text-xs text-[var(--brand-violet)] hover:text-[var(--brand-indigo)] font-medium transition-colors">
               直接前往 →
             </button>
           )}

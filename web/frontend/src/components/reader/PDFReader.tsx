@@ -27,12 +27,12 @@ export function PDFReader({ document: doc, onTextSelect }: PDFReaderProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}
-      <div className="flex items-center gap-4 px-4 py-2 bg-[var(--sidebar-bg)] border-b border-[var(--border-default)]">
+      <div className="flex items-center gap-4 px-4 py-2 bg-[var(--bg-sidebar)] border-b border-[var(--border-default)]">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
             disabled={pageNumber <= 1}
-            className="px-2 py-1 text-xs bg-white border border-[var(--border-default)] rounded hover:bg-[var(--page-bg)] disabled:opacity-30"
+            className="px-2 py-1 text-xs bg-white border border-[var(--border-default)] rounded hover:bg-[var(--bg-page)] disabled:opacity-30"
           >
             ‹
           </button>
@@ -50,7 +50,7 @@ export function PDFReader({ document: doc, onTextSelect }: PDFReaderProps) {
           <button
             onClick={() => setPageNumber((p) => Math.min(numPages, p + 1))}
             disabled={pageNumber >= numPages}
-            className="px-2 py-1 text-xs bg-white border border-[var(--border-default)] rounded hover:bg-[var(--page-bg)] disabled:opacity-30"
+            className="px-2 py-1 text-xs bg-white border border-[var(--border-default)] rounded hover:bg-[var(--bg-page)] disabled:opacity-30"
           >
             ›
           </button>

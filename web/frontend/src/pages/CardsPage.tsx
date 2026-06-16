@@ -89,7 +89,7 @@ export function CardsPage() {
     <div className="p-8 max-w-5xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-[var(--brand-navy)]">知识节点</h2>
+          <h2 className="text-2xl font-semibold text-[var(--brand-indigo)]">知识节点</h2>
           <p className="text-xs text-[var(--text-tertiary)] mt-1">
             概念 · 观点 · 证据 · 反思 — 知识路径的基本构成单元
           </p>
@@ -100,7 +100,7 @@ export function CardsPage() {
       <div className="flex gap-1.5 mb-4 flex-wrap">
         <button
           onClick={() => setFilter("")}
-          className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${!filter ? "bg-[var(--brand-navy)] text-white" : "bg-white text-[var(--text-secondary)] border"}`}
+          className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${!filter ? "bg-[var(--brand-indigo)] text-white" : "bg-white text-[var(--text-secondary)] border"}`}
         >
           全部
         </button>
@@ -108,7 +108,7 @@ export function CardsPage() {
           <button
             key={t}
             onClick={() => setFilter(t === filter ? "" : t)}
-            className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${filter === t ? "bg-[var(--brand-navy)] text-white" : "bg-white text-[var(--text-secondary)] border"}`}
+            className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${filter === t ? "bg-[var(--brand-indigo)] text-white" : "bg-white text-[var(--text-secondary)] border"}`}
           >
             {TYPE_LABELS[t] || t}
           </button>
@@ -118,9 +118,9 @@ export function CardsPage() {
       {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
 
       {selected.size > 0 && (
-        <div className="flex items-center gap-2 mb-3 bg-[var(--surface-lavender)] p-2 rounded-lg">
-          <span className="text-xs text-[var(--brand-navy)]">已选 {selected.size} 张</span>
-          <button onClick={handleBatchExport} className="px-2 py-1 bg-[var(--brand-cyan)] text-white text-xs rounded">导出</button>
+        <div className="flex items-center gap-2 mb-3 bg-[var(--primary-100)] p-2 rounded-lg">
+          <span className="text-xs text-[var(--brand-indigo)]">已选 {selected.size} 张</span>
+          <button onClick={handleBatchExport} className="px-2 py-1 bg-[var(--brand-teal)] text-white text-xs rounded">导出</button>
           <button onClick={handleBatchDelete} className="px-2 py-1 bg-red-500 text-white text-xs rounded">删除</button>
           <button onClick={() => setSelected(new Set())} className="px-2 py-1 text-xs text-[var(--text-tertiary)]">取消选择</button>
         </div>
@@ -162,7 +162,7 @@ export function CardsPage() {
                   {card.source_document_title && (
                     <button
                       onClick={() => card.source_document_id && navigate(`/reader/${card.source_document_id}`)}
-                      className="text-[10px] text-[var(--brand-cyan)] hover:underline mt-1 block"
+                      className="text-[10px] text-[var(--brand-teal)] hover:underline mt-1 block"
                     >
                       📄 {card.source_document_title} {card.page_number ? `p.${card.page_number}` : ""}
                     </button>

@@ -27,9 +27,9 @@ export function DashboardPage() {
   }, []);
 
   const statCards = [
-    { label: "知识路径", value: stats.pathways, icon: "🔗", color: "from-[var(--brand-navy)] to-[var(--text-secondary)]", bg: "bg-[var(--surface-lavender)]", path: "/pathways" },
-    { label: "学习资料", value: stats.documents, icon: "📚", color: "from-[var(--brand-cyan)] to-[#5DB8A8]", bg: "bg-[var(--surface-mint)]", path: "/library" },
-    { label: "知识卡片", value: stats.cards, icon: "◈", color: "from-[var(--brand-violet)] to-[#9B8EF8]", bg: "bg-[var(--surface-lavender)]", path: "/cards" },
+    { label: "知识路径", value: stats.pathways, icon: "🔗", color: "from-[var(--brand-indigo)] to-[var(--text-secondary)]", bg: "bg-[var(--primary-100)]", path: "/pathways" },
+    { label: "学习资料", value: stats.documents, icon: "📚", color: "from-[var(--brand-teal)] to-[#5DB8A8]", bg: "bg-[var(--teal-100)]", path: "/library" },
+    { label: "知识卡片", value: stats.cards, icon: "◈", color: "from-[var(--brand-violet)] to-[#9B8EF8]", bg: "bg-[var(--primary-100)]", path: "/cards" },
   ];
 
   return (
@@ -80,7 +80,7 @@ export function DashboardPage() {
             onClick={() => navigate("/init")}
             className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--brand-violet)]/30 transition-all duration-200 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-[var(--surface-lavender)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-[var(--primary-100)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
               🎯
             </div>
             <div className="text-left">
@@ -91,9 +91,9 @@ export function DashboardPage() {
 
           <button
             onClick={() => navigate("/library")}
-            className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--brand-cyan)]/30 transition-all duration-200 group"
+            className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--brand-teal)]/30 transition-all duration-200 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-[var(--surface-mint)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-[var(--teal-100)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
               📚
             </div>
             <div className="text-left">
@@ -106,7 +106,7 @@ export function DashboardPage() {
             onClick={() => navigate("/recall")}
             className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--brand-violet)]/30 transition-all duration-200 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-[var(--surface-amber)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-[var(--warning-bg)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
               🧠
             </div>
             <div className="text-left">
@@ -119,7 +119,7 @@ export function DashboardPage() {
             onClick={() => navigate("/settings")}
             className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--text-secondary)]/30 transition-all duration-200 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-[var(--input-bg)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-[var(--bg-input)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
               ⚡
             </div>
             <div className="text-left">
@@ -139,7 +139,7 @@ export function DashboardPage() {
             </h3>
             <button
               onClick={() => navigate("/pathways")}
-              className="text-xs text-[var(--brand-violet)] hover:text-[var(--brand-navy)] font-medium transition-colors"
+              className="text-xs text-[var(--brand-violet)] hover:text-[var(--brand-indigo)] font-medium transition-colors"
             >
               查看全部 →
             </button>
@@ -151,11 +151,11 @@ export function DashboardPage() {
                 onClick={() => navigate(`/pathway/${p.id}`)}
                 className="flex items-center gap-4 bg-white rounded-2xl p-4 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] transition-all duration-200 text-left group"
               >
-                <div className="w-9 h-9 rounded-xl bg-[var(--surface-lavender)] flex items-center justify-center text-sm flex-shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-[var(--primary-100)] flex items-center justify-center text-sm flex-shrink-0">
                   🔗
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--brand-navy)] transition-colors">
+                  <p className="text-sm font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--brand-indigo)] transition-colors">
                     {p.title}
                   </p>
                   <p className="text-xs text-[var(--text-tertiary)] mt-0.5 truncate">
@@ -181,7 +181,7 @@ export function DashboardPage() {
           </p>
           <button
             onClick={() => navigate("/init")}
-            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-[var(--brand-navy)] text-white rounded-xl text-sm font-semibold hover:bg-[var(--brand-navy-hover)] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] transition-all duration-200"
+            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-[var(--brand-indigo)] text-white rounded-xl text-sm font-semibold hover:bg-[var(--primary-700)] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] transition-all duration-200"
           >
             🎯 创建第一条路径
           </button>

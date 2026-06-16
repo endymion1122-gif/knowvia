@@ -45,7 +45,7 @@ export function EvidenceChain({ nodes, relations, evidences = [] }: EvidenceChai
 
   if (claims.length === 0) {
     return (
-      <div className="h-96 flex items-center justify-center bg-[var(--page-bg)] rounded-lg border border-dashed border-[var(--border-default)]">
+      <div className="h-96 flex items-center justify-center bg-[var(--bg-page)] rounded-lg border border-dashed border-[var(--border-default)]">
         <p className="text-sm text-[var(--text-tertiary)]">暂无观点节点，无法生成证据链。请先提取节点并标记观点和证据类型。</p>
       </div>
     );
@@ -58,7 +58,7 @@ export function EvidenceChain({ nodes, relations, evidences = [] }: EvidenceChai
           key={claim.id}
           className={`bg-white rounded-xl border-2 transition-all ${
             selectedClaim === claim.id
-              ? "border-[var(--brand-navy)] shadow-md"
+              ? "border-[var(--brand-indigo)] shadow-md"
               : "border-[var(--border-default)]"
           }`}
           onClick={() => setSelectedClaim(selectedClaim === claim.id ? null : claim.id)}
@@ -85,7 +85,7 @@ export function EvidenceChain({ nodes, relations, evidences = [] }: EvidenceChai
 
           {/* Evidence items (expanded) */}
           {selectedClaim === claim.id && (
-            <div className="border-t border-[var(--border-default)] p-4 space-y-3 bg-[var(--page-bg)] rounded-b-xl">
+            <div className="border-t border-[var(--border-default)] p-4 space-y-3 bg-[var(--bg-page)] rounded-b-xl">
               {links.length === 0 ? (
                 <p className="text-xs text-[var(--text-tertiary)]">暂无关联证据。在节点编辑器中为此观点添加证据。</p>
               ) : (
@@ -95,7 +95,7 @@ export function EvidenceChain({ nodes, relations, evidences = [] }: EvidenceChai
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <div className="w-2 h-2 rounded-full bg-[var(--brand-violet)]" />
                       <div className="w-8 h-0.5 bg-[var(--border-default)]" />
-                      <span className="text-[9px] px-1 py-0.5 bg-[var(--surface-lavender)] rounded text-[var(--brand-navy)]">
+                      <span className="text-[9px] px-1 py-0.5 bg-[var(--primary-100)] rounded text-[var(--brand-indigo)]">
                         {link.relation.relation_type}
                       </span>
                       <div className="w-8 h-0.5 bg-[var(--border-default)]" />

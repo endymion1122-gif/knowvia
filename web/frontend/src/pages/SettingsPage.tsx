@@ -37,12 +37,12 @@ export function SettingsPage() {
 
   return (
     <div className="p-8 max-w-3xl">
-      <h2 className="text-2xl font-semibold text-[var(--brand-navy)] mb-1">设置</h2>
+      <h2 className="text-2xl font-semibold text-[var(--brand-indigo)] mb-1">设置</h2>
       <p className="text-xs text-[var(--text-tertiary)] mb-8">配置 AI 服务和账户信息</p>
 
       {/* AI Configuration */}
       <div className="bg-white p-6 rounded-xl border border-[var(--border-default)] mb-6">
-        <h3 className="font-semibold text-sm text-[var(--brand-navy)] mb-4">AI 服务配置</h3>
+        <h3 className="font-semibold text-sm text-[var(--brand-indigo)] mb-4">AI 服务配置</h3>
 
         {/* Presets */}
         <div className="flex flex-wrap gap-2 mb-4">
@@ -50,7 +50,7 @@ export function SettingsPage() {
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="px-3 py-1.5 bg-[var(--surface-mint)] text-[var(--brand-navy)] rounded-md text-xs font-semibold hover:bg-[var(--brand-cyan)] hover:text-white transition-colors"
+              className="px-3 py-1.5 bg-[var(--teal-100)] text-[var(--brand-indigo)] rounded-md text-xs font-semibold hover:bg-[var(--brand-teal)] hover:text-white transition-colors"
             >
               {p.name}
             </button>
@@ -61,29 +61,29 @@ export function SettingsPage() {
           <div>
             <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Provider Name</label>
             <input type="text" value={settings.providerName} onChange={(e) => setSettings((s) => ({ ...s, providerName: e.target.value }))}
-              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]" />
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-indigo)]" />
           </div>
           <div>
             <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Model Name</label>
             <input type="text" value={settings.modelName} onChange={(e) => setSettings((s) => ({ ...s, modelName: e.target.value }))}
-              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]" />
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-indigo)]" />
           </div>
           <div>
             <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">API Endpoint</label>
             <input type="text" value={settings.apiEndpoint} onChange={(e) => setSettings((s) => ({ ...s, apiEndpoint: e.target.value }))}
-              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]" />
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-indigo)]" />
           </div>
           <div>
             <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">API Key</label>
             <input type="password" value={settings.apiKey} onChange={(e) => setSettings((s) => ({ ...s, apiKey: e.target.value }))}
-              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]" placeholder="sk-... 或留空使用内置 Demo" />
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-indigo)]" placeholder="sk-... 或留空使用内置 Demo" />
           </div>
-          {saved && <p className="text-xs text-[var(--brand-cyan)]">✓ 已保存</p>}
+          {saved && <p className="text-xs text-[var(--brand-teal)]">✓ 已保存</p>}
         </div>
       </div>
 
       {/* Research Note */}
-      <div className="bg-[var(--surface-lavender)] p-4 rounded-lg">
+      <div className="bg-[var(--primary-100)] p-4 rounded-lg">
         <p className="text-[11px] text-[var(--text-secondary)]">
           知径 Knowvia 研究原型 v0.1。所有数据存储于本地服务器。AI 调用通过你配置的 API Key 完成，系统不会记录 API Key。
         </p>

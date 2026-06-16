@@ -33,7 +33,7 @@ export function InitPage() {
   return (
     <div className="p-8 max-w-2xl mx-auto">
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-[var(--brand-navy)] mb-1">开启知识路径</h2>
+        <h2 className="text-2xl font-semibold text-[var(--brand-indigo)] mb-1">开启知识路径</h2>
         <p className="text-xs text-[var(--text-tertiary)]">
           回答以下问题，帮助 AI 更好地理解你的学习目标
         </p>
@@ -50,7 +50,7 @@ export function InitPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="例如：认知负荷理论学习路径"
-            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]"
+            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-indigo)]"
           />
         </div>
 
@@ -63,7 +63,7 @@ export function InitPage() {
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
             placeholder="说明你的学习动机和目标..."
-            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]"
+            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--brand-indigo)]"
           />
         </div>
 
@@ -76,7 +76,7 @@ export function InitPage() {
             value={existingKnowledge}
             onChange={(e) => setExistingKnowledge(e.target.value)}
             placeholder="你目前对这个主题的了解..."
-            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]"
+            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--brand-indigo)]"
           />
         </div>
 
@@ -89,7 +89,7 @@ export function InitPage() {
             value={outputTarget}
             onChange={(e) => setOutputTarget(e.target.value)}
             placeholder="例如：完成3000字综述、准备课堂汇报、撰写研究计划..."
-            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]"
+            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--brand-indigo)]"
           />
         </div>
 
@@ -99,7 +99,7 @@ export function InitPage() {
           <button
             onClick={handleCreate}
             disabled={creating || !title.trim()}
-            className="flex-1 py-2.5 bg-[var(--brand-navy)] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
+            className="flex-1 py-2.5 bg-[var(--brand-indigo)] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
           >
             {creating ? "创建中..." : "创建路径，开始学习"}
           </button>
@@ -113,7 +113,7 @@ export function InitPage() {
       </div>
 
       {/* Hint */}
-      <div className="mt-4 bg-[var(--surface-lavender)] p-4 rounded-lg">
+      <div className="mt-4 bg-[var(--primary-100)] p-4 rounded-lg">
         <p className="text-[11px] text-[var(--text-secondary)]">
           这些信息将帮助 AI 更精准地从资料中提取与你的学习目标相关的概念、观点和证据。
           你也可以跳过详细填写，直接创建路径后上传资料。

@@ -75,7 +75,7 @@ export function RecallPage() {
   if (!started) {
     return (
       <div className="p-8 max-w-2xl mx-auto">
-        <h2 className="text-2xl font-semibold text-[var(--brand-navy)] mb-1">主动回忆练习</h2>
+        <h2 className="text-2xl font-semibold text-[var(--brand-indigo)] mb-1">主动回忆练习</h2>
         <p className="text-xs text-[var(--text-tertiary)] mb-6">
           选择一个知识路径，尝试用自己的话回忆每个节点的内容。这是最有效的学习策略之一。
         </p>
@@ -97,7 +97,7 @@ export function RecallPage() {
               <button
                 onClick={startRecall}
                 disabled={!selectedPathway || loading}
-                className="w-full py-2.5 bg-[var(--brand-navy)] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40"
+                className="w-full py-2.5 bg-[var(--brand-indigo)] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40"
               >
                 {loading ? "加载中..." : "开始回忆练习"}
               </button>
@@ -116,7 +116,7 @@ export function RecallPage() {
     <div className="p-8 max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-[var(--brand-navy)]">主动回忆</h2>
+          <h2 className="text-2xl font-semibold text-[var(--brand-indigo)]">主动回忆</h2>
           <p className="text-xs text-[var(--text-tertiary)]">
             进度：{items.filter((i) => i.revealed).length}/{items.length} · 正确：{score}
           </p>
@@ -129,7 +129,7 @@ export function RecallPage() {
         {items.map((item, idx) => (
           <div key={item.card.id} className="bg-white p-4 rounded-xl border border-[var(--border-default)]">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--surface-lavender)] text-[var(--brand-navy)] font-semibold">
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--primary-100)] text-[var(--brand-indigo)] font-semibold">
                 {item.card.card_type}
               </span>
               <span className="text-sm font-medium text-[var(--text-primary)]">{item.card.title}</span>
@@ -166,7 +166,7 @@ export function RecallPage() {
               </div>
             ) : (
               <div className="space-y-1">
-                <div className="bg-[var(--page-bg)] p-3 rounded-lg">
+                <div className="bg-[var(--bg-page)] p-3 rounded-lg">
                   <p className="text-xs text-[var(--text-secondary)]">📝 <strong>正确答案：</strong>{item.card.user_summary || item.card.content}</p>
                   {item.card.ai_generated_text && item.card.ai_generated_text !== item.card.content && (
                     <p className="text-[10px] text-[var(--text-tertiary)] mt-1">AI 原文：{item.card.ai_generated_text}</p>
@@ -177,7 +177,7 @@ export function RecallPage() {
                 )}
                 <button onClick={() => {
                   setItems((prev) => prev.map((it, i) => i === idx ? { ...it, revealed: false } : it));
-                }} className="text-[10px] text-[var(--brand-cyan)] hover:underline">
+                }} className="text-[10px] text-[var(--brand-teal)] hover:underline">
                   再试一次
                 </button>
               </div>
@@ -187,8 +187,8 @@ export function RecallPage() {
       </div>
 
       {items.every((i) => i.revealed) && (
-        <div className="mt-6 bg-[var(--surface-mint)] p-4 rounded-xl text-center">
-          <p className="text-sm font-semibold text-[var(--brand-cyan)]">
+        <div className="mt-6 bg-[var(--teal-100)] p-4 rounded-xl text-center">
+          <p className="text-sm font-semibold text-[var(--brand-teal)]">
             🎉 练习完成！得分：{score}/{items.length}
           </p>
           <p className="text-xs text-[var(--text-secondary)] mt-1">
@@ -198,7 +198,7 @@ export function RecallPage() {
           </p>
           <div className="flex gap-2 justify-center mt-3">
             <button onClick={() => startRecall()}
-              className="px-4 py-1.5 bg-[var(--brand-cyan)] text-white text-xs font-semibold rounded hover:opacity-90">
+              className="px-4 py-1.5 bg-[var(--brand-teal)] text-white text-xs font-semibold rounded hover:opacity-90">
               再来一轮
             </button>
             <button onClick={() => { setStarted(false); setItems([]); }}

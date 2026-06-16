@@ -80,7 +80,7 @@ export function LibraryPage() {
     <div className="p-8 max-w-5xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-[var(--brand-navy)]">资料库</h2>
+          <h2 className="text-2xl font-semibold text-[var(--brand-indigo)]">资料库</h2>
           <p className="text-xs text-[var(--text-tertiary)] mt-1">支持 PDF、Word、PPT、TXT、Markdown、网页链接</p>
         </div>
         <div className="flex items-center gap-2">
@@ -95,11 +95,11 @@ export function LibraryPage() {
           <button
             onClick={handleImportUrl}
             disabled={importing || !importUrl.trim()}
-            className="px-3 py-2 bg-[var(--brand-cyan)] text-white rounded-lg text-xs font-semibold hover:opacity-90 disabled:opacity-40 whitespace-nowrap"
+            className="px-3 py-2 bg-[var(--brand-teal)] text-white rounded-lg text-xs font-semibold hover:opacity-90 disabled:opacity-40 whitespace-nowrap"
           >
             {importing ? "导入中..." : "导入网页"}
           </button>
-          <label className={`px-4 py-2 bg-[var(--brand-navy)] text-white rounded-lg text-sm font-semibold cursor-pointer hover:opacity-90 transition-colors ${uploading ? "opacity-50" : ""}`}>
+          <label className={`px-4 py-2 bg-[var(--brand-indigo)] text-white rounded-lg text-sm font-semibold cursor-pointer hover:opacity-90 transition-colors ${uploading ? "opacity-50" : ""}`}>
             {uploading ? "上传中..." : "上传文件"}
             <input type="file" accept=".pdf,.txt,.md,.markdown,.docx,.pptx" onChange={handleUpload} className="hidden" disabled={uploading} />
           </label>
@@ -117,8 +117,8 @@ export function LibraryPage() {
       ) : (
         <>
           <div className="flex items-center gap-2 mb-3">
-            <button onClick={() => setViewMode("list")} className={`text-xs px-2 py-1 rounded ${viewMode === "list" ? "bg-[var(--brand-navy)] text-white" : "bg-white text-[var(--text-secondary)] border"}`}>列表</button>
-            <button onClick={() => setViewMode("grid")} className={`text-xs px-2 py-1 rounded ${viewMode === "grid" ? "bg-[var(--brand-navy)] text-white" : "bg-white text-[var(--text-secondary)] border"}`}>网格</button>
+            <button onClick={() => setViewMode("list")} className={`text-xs px-2 py-1 rounded ${viewMode === "list" ? "bg-[var(--brand-indigo)] text-white" : "bg-white text-[var(--text-secondary)] border"}`}>列表</button>
+            <button onClick={() => setViewMode("grid")} className={`text-xs px-2 py-1 rounded ${viewMode === "grid" ? "bg-[var(--brand-indigo)] text-white" : "bg-white text-[var(--text-secondary)] border"}`}>网格</button>
           </div>
           <div className={viewMode === "grid" ? "grid grid-cols-2 md:grid-cols-3 gap-3" : "space-y-2"}>
           {docs.map((doc: any) => (
@@ -130,18 +130,18 @@ export function LibraryPage() {
                   <span className="text-[10px] text-[var(--text-tertiary)]">{doc.file_type.toUpperCase()}</span>
                   {doc.author && <span className="text-[10px] text-[var(--text-secondary)]">✍ {doc.author}</span>}
                   {doc.publication_year && <span className="text-[10px] text-[var(--text-secondary)]">📅 {doc.publication_year}</span>}
-                  {doc.source_url && <span className="text-[10px] text-[var(--brand-cyan)] truncate max-w-[120px]">🔗</span>}
+                  {doc.source_url && <span className="text-[10px] text-[var(--brand-teal)] truncate max-w-[120px]">🔗</span>}
                 </div>
               </div>
               <div className={`flex items-center gap-1 flex-shrink-0 ${viewMode === "grid" ? "mt-2 justify-end" : ""}`}>
-                <button onClick={() => navigate(`/reader/${doc.id}`)} className="text-xs text-[var(--brand-navy)] hover:underline">打开</button>
+                <button onClick={() => navigate(`/reader/${doc.id}`)} className="text-xs text-[var(--brand-indigo)] hover:underline">打开</button>
                 <button onClick={() => startEdit(doc)} className="text-xs text-[var(--text-secondary)] hover:underline">编辑</button>
                 <button onClick={() => handleDelete(doc.id)} className="text-xs text-red-400 hover:text-red-600">删除</button>
               </div>
 
               {/* Inline edit form */}
               {editingDoc === doc.id && (
-                <div className={`${viewMode === "grid" ? "col-span-full mt-2" : "mt-2"} w-full bg-[var(--page-bg)] p-3 rounded-lg border border-[var(--brand-violet)] grid grid-cols-3 gap-2`}>
+                <div className={`${viewMode === "grid" ? "col-span-full mt-2" : "mt-2"} w-full bg-[var(--bg-page)] p-3 rounded-lg border border-[var(--brand-violet)] grid grid-cols-3 gap-2`}>
                   <div>
                     <label className="text-[10px] text-[var(--text-secondary)]">作者</label>
                     <input value={editAuthor} onChange={(e) => setEditAuthor(e.target.value)}
@@ -159,7 +159,7 @@ export function LibraryPage() {
                   </div>
                   <div className="col-span-3 flex gap-2 justify-end mt-1">
                     <button onClick={() => handleSaveMetadata(doc.id)}
-                      className="px-3 py-1 bg-[var(--brand-navy)] text-white text-xs rounded">保存</button>
+                      className="px-3 py-1 bg-[var(--brand-indigo)] text-white text-xs rounded">保存</button>
                     <button onClick={() => setEditingDoc(null)}
                       className="px-3 py-1 text-xs text-[var(--text-tertiary)]">取消</button>
                   </div>

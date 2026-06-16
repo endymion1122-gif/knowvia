@@ -22,15 +22,15 @@ export function LoginPage({ isRegister }: { isRegister?: boolean }) {
   };
 
   return (
-    <div className="min-h-screen flex bg-[var(--page-bg)]">
+    <div className="min-h-screen flex bg-[var(--bg-page)]">
       {/* Left: Brand panel with gradient */}
       <div className="hidden lg:flex w-[520px] flex-shrink-0 relative overflow-hidden"
-        style={{ background: "linear-gradient(160deg, #0B1A5E 0%, #162D8B 30%, #3B6CF8 65%, #6B4EF8 100%)" }}>
+        style={{ background: "linear-gradient(160deg, #1B1E3F 0%, #373A78 40%, #7B6BFF 100%)" }}>
         {/* Glow orbs */}
         <div className="absolute top-[-20%] right-[-15%] w-[500px] h-[500px] rounded-full opacity-20"
-          style={{ background: "radial-gradient(circle, #0EC2C7 0%, transparent 70%)" }} />
+          style={{ background: "radial-gradient(circle, #21C7C2 0%, transparent 70%)" }} />
         <div className="absolute bottom-[-10%] left-[-10%] w-[350px] h-[350px] rounded-full opacity-15"
-          style={{ background: "radial-gradient(circle, #6B4EF8 0%, transparent 70%)" }} />
+          style={{ background: "radial-gradient(circle, #7B6BFF 0%, transparent 70%)" }} />
         <div className="absolute top-[35%] left-[30%] w-[200px] h-[200px] rounded-full opacity-10"
           style={{ background: "radial-gradient(circle, #FFFFFF 0%, transparent 70%)" }} />
 
@@ -38,7 +38,7 @@ export function LoginPage({ isRegister }: { isRegister?: boolean }) {
           <div>
             <div className="flex items-center gap-3 mb-10">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold"
-                style={{ background: "linear-gradient(135deg, #0EC2C7, #3B6CF8)" }}>
+                style={{ background: "linear-gradient(135deg, #21C7C2, #4B4FC4)" }}>
                 知
               </div>
               <div>
@@ -74,9 +74,9 @@ export function LoginPage({ isRegister }: { isRegister?: boolean }) {
           <div className="lg:hidden text-center mb-10">
             <div className="flex items-center justify-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold"
-                style={{ background: "linear-gradient(135deg, #0EC2C7, #3B6CF8)" }}>知</div>
+                style={{ background: "linear-gradient(135deg, #21C7C2, #4B4FC4)" }}>知</div>
             </div>
-            <div className="text-xl font-bold text-[var(--brand-navy)] tracking-tight">知径 Knowvia</div>
+            <div className="text-xl font-bold text-[var(--brand-indigo)] tracking-tight">知径 Knowvia</div>
             <p className="text-sm text-[var(--text-tertiary)] mt-1">Knowledge Pathway System</p>
           </div>
 
@@ -96,7 +96,7 @@ export function LoginPage({ isRegister }: { isRegister?: boolean }) {
                   用户名
                 </label>
                 <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}
-                  className="w-full h-12 px-4 bg-[var(--input-bg)] border-2 border-transparent rounded-xl text-sm placeholder:text-[var(--text-placeholder)] focus:outline-none focus:border-[var(--brand-blue)] focus:bg-white transition-all duration-200"
+                  className="w-full h-12 px-4 bg-[var(--bg-input)] border-2 border-transparent rounded-xl text-sm placeholder:text-[var(--text-placeholder)] focus:outline-none focus:border-[var(--primary-400)] focus:bg-white transition-all duration-200"
                   placeholder="输入用户名" required autoFocus />
               </div>
 
@@ -105,19 +105,19 @@ export function LoginPage({ isRegister }: { isRegister?: boolean }) {
                   密码
                 </label>
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-12 px-4 bg-[var(--input-bg)] border-2 border-transparent rounded-xl text-sm placeholder:text-[var(--text-placeholder)] focus:outline-none focus:border-[var(--brand-blue)] focus:bg-white transition-all duration-200"
+                  className="w-full h-12 px-4 bg-[var(--bg-input)] border-2 border-transparent rounded-xl text-sm placeholder:text-[var(--text-placeholder)] focus:outline-none focus:border-[var(--primary-400)] focus:bg-white transition-all duration-200"
                   placeholder="至少 6 位字符" required minLength={6} />
               </div>
 
               {error && (
-                <div className="bg-[var(--surface-rose)] text-[var(--danger)] text-xs px-4 py-3 rounded-xl flex items-center gap-2 font-medium">
+                <div className="bg-[var(--error-bg)] text-[var(--error)] text-xs px-4 py-3 rounded-xl flex items-center gap-2 font-medium">
                   <span className="text-base">⚠</span> {error}
                 </div>
               )}
 
               <button type="submit" disabled={loading}
                 className="w-full h-12 rounded-xl text-sm font-bold text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
-                style={{ background: "linear-gradient(135deg, #3B6CF8 0%, #6B4EF8 100%)" }}>
+                style={{ background: "linear-gradient(135deg, #4B4FC4 0%, #7B6BFF 100%)" }}>
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -131,7 +131,7 @@ export function LoginPage({ isRegister }: { isRegister?: boolean }) {
               <p className="text-sm text-[var(--text-tertiary)]">
                 {isRegister ? "已有账户？" : "还没有账户？"}
                 <a href={isRegister ? "/login" : "/register"}
-                  className="ml-1 text-[var(--brand-blue)] hover:text-[var(--brand-violet)] font-semibold transition-colors">
+                  className="ml-1 text-[var(--primary-400)] hover:text-[var(--brand-violet)] font-semibold transition-colors">
                   {isRegister ? "登录" : "创建账户"}
                 </a>
               </p>

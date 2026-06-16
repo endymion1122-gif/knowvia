@@ -111,7 +111,7 @@ export function WritingChecklist({ pathwayId, nodes, documents, onNavigateToNode
               checked={check.passed || doneItems.has(key)}
               onChange={() => !check.passed && toggleDone(key)}
               disabled={check.passed}
-              className="w-3.5 h-3.5 accent-[var(--brand-cyan)]"
+              className="w-3.5 h-3.5 accent-[var(--brand-teal)]"
             />
             <div className="flex-1 min-w-0">
               <p className="font-medium text-[var(--text-primary)]">{check.label}</p>

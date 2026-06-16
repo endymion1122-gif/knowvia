@@ -23,7 +23,7 @@ export function ComparisonMatrix({ nodes, relations }: ComparisonMatrixProps) {
   const allNodes = [...concepts, ...claims, ...evidence];
   if (allNodes.length < 2) {
     return (
-      <div className="h-96 flex items-center justify-center bg-[var(--page-bg)] rounded-lg border border-dashed border-[var(--border-default)]">
+      <div className="h-96 flex items-center justify-center bg-[var(--bg-page)] rounded-lg border border-dashed border-[var(--border-default)]">
         <p className="text-sm text-[var(--text-tertiary)]">节点数量不足。需要至少 2 个节点才能生成比较矩阵。</p>
       </div>
     );
@@ -47,8 +47,8 @@ export function ComparisonMatrix({ nodes, relations }: ComparisonMatrixProps) {
     <div className="overflow-x-auto">
       <table className="w-full text-xs border-collapse bg-white rounded-lg overflow-hidden border border-[var(--border-default)]">
         <thead>
-          <tr className="bg-[var(--surface-lavender)]">
-            <th className="text-left p-3 font-semibold text-[var(--brand-navy)] border-b border-[var(--border-default)] sticky left-0 bg-[var(--surface-lavender)]">
+          <tr className="bg-[var(--primary-100)]">
+            <th className="text-left p-3 font-semibold text-[var(--brand-indigo)] border-b border-[var(--border-default)] sticky left-0 bg-[var(--primary-100)]">
               节点
             </th>
             {dimensions.map((dim) => (
@@ -65,7 +65,7 @@ export function ComparisonMatrix({ nodes, relations }: ComparisonMatrixProps) {
           {allNodes.map((node) => {
             const rels = nodeRelations[node.id] || [];
             return (
-              <tr key={node.id} className="border-b border-[var(--border-default)] hover:bg-[var(--page-bg)] transition-colors">
+              <tr key={node.id} className="border-b border-[var(--border-default)] hover:bg-[var(--bg-page)] transition-colors">
                 <td className="p-3 sticky left-0 bg-white border-r border-[var(--border-default)]">
                   <div className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0"
@@ -86,7 +86,7 @@ export function ComparisonMatrix({ nodes, relations }: ComparisonMatrixProps) {
                 {dimensions.includes("证据支持") && (
                   <td className="p-3">
                     {node.card_type === "evidence"
-                      ? <span className="text-[10px] text-[var(--brand-cyan)]">✓ 证据节点</span>
+                      ? <span className="text-[10px] text-[var(--brand-teal)]">✓ 证据节点</span>
                       : <span className="text-[10px] text-[var(--text-tertiary)]">—</span>}
                   </td>
                 )}
