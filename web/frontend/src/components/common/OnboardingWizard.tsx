@@ -1,105 +1,77 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface Step {
-  title: string;
-  desc: string;
-  icon: string;
-  action?: { label: string; path: string };
-}
+interface Step { title: string; desc: string; icon: string; action?: { label: string; path: string } }
 
 const STEPS: Step[] = [
-  {
-    title: "创建知识路径",
-    desc: "设定学习目标，告诉 AI 你想学什么、已经知道什么、想输出什么。这是有效学习的第一步。",
-    icon: "🎯",
-    action: { label: "开始创建", path: "/init" },
-  },
-  {
-    title: "上传学习资料",
-    desc: "支持 PDF、Word、PPT、Markdown 和网页链接。AI 会自动将文档转换为结构化内容。",
-    icon: "📚",
-    action: { label: "上传资料", path: "/library" },
-  },
-  {
-    title: "AI 提取 + 你校准",
-    desc: "AI 从资料中提取概念、观点和证据。你用自己的话转述、确认、建立关系。知识才能真正内化。",
-    icon: "🤖",
-    action: { label: "查看路径", path: "/pathways" },
-  },
+  { title: "设定学习目标", desc: "告诉 AI 你想学什么、已经知道什么、想输出什么。这是有效学习的第一步。", icon: "🎯", action: { label: "开始创建", path: "/init" } },
+  { title: "上传学习资料", desc: "支持 PDF、Word、PPT、Markdown 和网页链接。AI 会自动处理格式转换。", icon: "📚", action: { label: "上传资料", path: "/library" } },
+  { title: "AI 提取 · 你校准", desc: "AI 提取概念、观点和证据。你用自己的话转述、确认、建立关系。知识才能真正内化。", icon: "🤖", action: { label: "查看路径", path: "/pathways" } },
 ];
 
 export function OnboardingWizard() {
   const [current, setCurrent] = useState(0);
   const [dismissed, setDismissed] = useState(() => localStorage.getItem("onboarding_done") === "true");
   const navigate = useNavigate();
-
-  const finish = () => {
-    localStorage.setItem("onboarding_done", "true");
-    setDismissed(true);
-  };
-
   if (dismissed) return null;
 
+  const finish = () => { localStorage.setItem("onboarding_done", "true"); setDismissed(true); };
+
   return (
-    <div className="bg-white p-6 rounded-xl border-2 border-[var(--soft-violet)] shadow-lg mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-[var(--deep-indigo)]">
-          👋 欢迎使用知径 Knowvia — 3 步上手
-        </h3>
-        <button onClick={finish} className="text-xs text-[var(--tertiary-text)] hover:text-red-500">跳过</button>
+    <div className="bg-white rounded-2xl border border-[var(--border-subtle)] shadow-[var(--shadow-md)] p-6 mb-8 overflow-hidden relative">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-[var(--cool-gray-light)]">
+        <div
+          className="h-full bg-gradient-to-r from-[var(--deep-indigo)] to-[var(--soft-violet)] transition-all duration-500 rounded-r"
+          style={{ width: `${((current + 1) / STEPS.length) * 100}%` }}
+        />
       </div>
 
-      {/* Step indicators */}
-      <div className="flex gap-2 mb-5">
+      <div className="flex items-center justify-between mb-6 pt-2">
+        <div className="flex items-center gap-2">
+          <span className="text-lg">👋</span>
+          <h3 className="text-sm font-semibold text-[var(--primary-text)]">3 步上手知径</h3>
+        </div>
+        <button onClick={finish} className="text-xs text-[var(--tertiary-text)] hover:text-[var(--danger-red)] transition-colors">跳过引导</button>
+      </div>
+
+      <div className="flex items-center gap-3 mb-6">
         {STEPS.map((_, i) => (
-          <div
-            key={i}
-            className={`flex-1 h-1 rounded-full transition-colors ${i <= current ? "bg-[var(--soft-violet)]" : "bg-gray-200"}`}
+          <button key={i} onClick={() => setCurrent(i)}
+            className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${i <= current ? "bg-[var(--soft-violet)]" : "bg-[var(--cool-gray-light)]"}`}
           />
         ))}
       </div>
 
-      {/* Current step */}
-      <div className="text-center py-4">
-        <div className="text-4xl mb-3">{STEPS[current].icon}</div>
-        <h4 className="text-lg font-semibold text-[var(--primary-text)] mb-2">{STEPS[current].title}</h4>
-        <p className="text-sm text-[var(--secondary-text)] max-w-md mx-auto leading-relaxed">{STEPS[current].desc}</p>
+      <div className="flex items-start gap-5">
+        <div className="w-14 h-14 rounded-2xl bg-[var(--pale-lavender)] flex items-center justify-center text-2xl flex-shrink-0">
+          {STEPS[current].icon}
+        </div>
+        <div className="flex-1">
+          <h4 className="text-base font-semibold text-[var(--primary-text)] mb-1">{STEPS[current].title}</h4>
+          <p className="text-sm text-[var(--secondary-text)] leading-relaxed">{STEPS[current].desc}</p>
+        </div>
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center justify-between mt-4">
-        <button
-          onClick={() => setCurrent((c) => Math.max(0, c - 1))}
-          disabled={current === 0}
-          className="text-xs text-[var(--tertiary-text)] hover:text-[var(--primary-text)] disabled:opacity-30"
-        >
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-[var(--border-subtle)]">
+        <button onClick={() => setCurrent(c => Math.max(0, c - 1))} disabled={current === 0}
+          className="text-xs text-[var(--tertiary-text)] hover:text-[var(--primary-text)] disabled:opacity-30 transition-colors">
           ← 上一步
         </button>
         <div className="flex gap-2">
           {current < STEPS.length - 1 ? (
-            <button
-              onClick={() => setCurrent((c) => c + 1)}
-              className="px-4 py-1.5 bg-[var(--soft-violet)] text-white text-xs font-semibold rounded hover:opacity-90"
-            >
+            <button onClick={() => setCurrent(c => c + 1)}
+              className="px-5 py-2 bg-[var(--soft-violet)] hover:bg-[var(--deep-indigo)] text-white rounded-xl text-xs font-semibold transition-all duration-200 shadow-[var(--shadow-sm)]">
               下一步
             </button>
           ) : (
-            <button
-              onClick={() => {
-                finish();
-                if (STEPS[current].action) navigate(STEPS[current].action!.path);
-              }}
-              className="px-4 py-1.5 bg-[var(--deep-indigo)] text-white text-xs font-semibold rounded hover:opacity-90"
-            >
+            <button onClick={() => { finish(); if (STEPS[current].action) navigate(STEPS[current].action!.path); }}
+              className="px-5 py-2 bg-[var(--deep-indigo)] hover:bg-[var(--deep-indigo-hover)] text-white rounded-xl text-xs font-semibold transition-all duration-200 shadow-[var(--shadow-sm)]">
               开始使用
             </button>
           )}
           {STEPS[current].action && (
-            <button
-              onClick={() => { finish(); navigate(STEPS[current].action!.path); }}
-              className="text-xs text-[var(--soft-violet)] hover:underline"
-            >
+            <button onClick={() => { finish(); navigate(STEPS[current].action!.path); }}
+              className="px-4 py-2 text-xs text-[var(--soft-violet)] hover:text-[var(--deep-indigo)] font-medium transition-colors">
               直接前往 →
             </button>
           )}

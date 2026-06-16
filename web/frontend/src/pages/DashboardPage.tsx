@@ -1,101 +1,198 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
+import { useAuthStore } from "../stores/authStore";
 import { OnboardingWizard } from "../components/common/OnboardingWizard";
 
 export function DashboardPage() {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ pathways: 0, documents: 0, cards: 0, annotations: 0 });
+  const { user } = useAuthStore();
+  const [stats, setStats] = useState({ pathways: 0, documents: 0, cards: 0 });
   const [recentPathways, setRecentPathways] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load stats in parallel
     Promise.all([
       api.pathways.list(),
       api.documents.list(),
       api.cards.list(),
-      fetch("/api/annotations", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }).then(r => r.json()),
-    ]).then(([pw, docs, cards, anns]) => {
+    ]).then(([pw, docs, cards]) => {
       setStats({
-        pathways: pw.pathways?.length || 0,
-        documents: docs.documents?.length || 0,
+        pathways: pw.pagination?.total || pw.pathways?.length || 0,
+        documents: docs.pagination?.total || docs.documents?.length || 0,
         cards: cards.cards?.length || 0,
-        annotations: anns.annotations?.length || 0,
       });
-      setRecentPathways((pw.pathways || []).slice(0, 3));
-    }).catch(() => {});
+      setRecentPathways((pw.pathways || []).slice(0, 4));
+    }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
-  return (
-    <div className="p-8 max-w-5xl">
-      <h2 className="text-2xl font-semibold text-[var(--deep-indigo)] mb-1">欢迎使用知径 Knowvia</h2>
-      <p className="text-sm text-[var(--secondary-text)] mb-6">
-        把资料变成可理解、可追溯、可复习、可输出的知识路径
-      </p>
+  const statCards = [
+    { label: "知识路径", value: stats.pathways, icon: "🔗", color: "from-[var(--deep-indigo)] to-[var(--slate-blue)]", bg: "bg-[var(--pale-lavender)]", path: "/pathways" },
+    { label: "学习资料", value: stats.documents, icon: "📚", color: "from-[var(--path-teal)] to-[#5DB8A8]", bg: "bg-[var(--pale-mint)]", path: "/library" },
+    { label: "知识卡片", value: stats.cards, icon: "◈", color: "from-[var(--soft-violet)] to-[var(--soft-violet-light)]", bg: "bg-[var(--pale-lavender)]", path: "/cards" },
+  ];
 
+  return (
+    <div className="p-6 md:p-10 max-w-5xl mx-auto">
+      {/* Header */}
+      <div className="mb-10">
+        <h2 className="text-2xl font-bold text-[var(--primary-text)] tracking-tight">
+          {user?.username ? `你好，${user.username}` : "欢迎使用知径"}
+        </h2>
+        <p className="text-sm text-[var(--tertiary-text)] mt-1.5">
+          把资料变成可理解、可追溯、可复习、可输出的知识路径
+        </p>
+      </div>
+
+      {/* Onboarding for new users */}
       <OnboardingWizard />
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-3 mb-8">
-        {[
-          { label: "知识路径", value: stats.pathways, icon: "🔗", color: "border-[var(--deep-indigo)]" },
-          { label: "学习资料", value: stats.documents, icon: "📚", color: "border-[var(--path-teal)]" },
-          { label: "知识卡片", value: stats.cards, icon: "◈", color: "border-[var(--soft-violet)]" },
-          { label: "阅读批注", value: stats.annotations, icon: "💬", color: "border-[var(--slate-blue)]" },
-        ].map((s) => (
-          <div key={s.label} className={`bg-white p-4 rounded-xl border-l-4 ${s.color} border border-[var(--cool-gray)]`}>
-            <p className="text-[10px] text-[var(--tertiary-text)]">{s.label}</p>
-            <p className="text-2xl font-bold text-[var(--primary-text)]">{s.value}</p>
-            <span className="text-lg">{s.icon}</span>
-          </div>
-        ))}
-      </div>
+      {!loading && (
+        <div className="grid grid-cols-3 gap-4 mb-10">
+          {statCards.map((s) => (
+            <button
+              key={s.label}
+              onClick={() => navigate(s.path)}
+              className="group bg-white rounded-2xl p-5 border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--cool-gray)] transition-all duration-200 text-left"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <span className="text-2xl">{s.icon}</span>
+                <span className="text-3xl font-bold text-[var(--primary-text)] tabular-nums">
+                  {s.value}
+                </span>
+              </div>
+              <p className="text-sm font-medium text-[var(--secondary-text)] group-hover:text-[var(--primary-text)] transition-colors">
+                {s.label}
+              </p>
+            </button>
+          ))}
+        </div>
+      )}
 
-      {/* Quick Start */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        {[
-          { title: "新建知识路径", desc: "设定目标 + 上传资料 + AI 提取节点", icon: "🔗", path: "/init" },
-          { title: "管理资料库", desc: "上传 PDF、Word、PPT、Markdown", icon: "📚", path: "/library" },
-          { title: "配置 AI 服务", desc: "设置 API Key 启用真实 AI 分析", icon: "⚡", path: "/settings" },
-        ].map((card) => (
+      {/* Quick Actions */}
+      <div className="mb-10">
+        <h3 className="text-sm font-semibold text-[var(--secondary-text)] uppercase tracking-wider mb-4">
+          快速开始
+        </h3>
+        <div className="grid grid-cols-2 gap-3">
           <button
-            key={card.path}
-            onClick={() => navigate(card.path)}
-            className="bg-white p-5 rounded-xl border border-[var(--cool-gray)] hover:border-[var(--soft-violet)] transition-colors text-left"
+            onClick={() => navigate("/init")}
+            className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--soft-violet)]/30 transition-all duration-200 group"
           >
-            <div className="text-2xl mb-2">{card.icon}</div>
-            <h3 className="font-semibold text-sm text-[var(--primary-text)]">{card.title}</h3>
-            <p className="text-xs text-[var(--tertiary-text)] mt-1">{card.desc}</p>
+            <div className="w-10 h-10 rounded-xl bg-[var(--pale-lavender)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              🎯
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-semibold text-[var(--primary-text)]">新建知识路径</p>
+              <p className="text-xs text-[var(--tertiary-text)] mt-0.5">设定目标，让 AI 帮你提取和组织知识</p>
+            </div>
           </button>
-        ))}
+
+          <button
+            onClick={() => navigate("/library")}
+            className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--path-teal)]/30 transition-all duration-200 group"
+          >
+            <div className="w-10 h-10 rounded-xl bg-[var(--pale-mint)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              📚
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-semibold text-[var(--primary-text)]">管理资料库</p>
+              <p className="text-xs text-[var(--tertiary-text)] mt-0.5">上传 PDF、Word、网页，自动转换为结构化内容</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => navigate("/recall")}
+            className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--soft-violet)]/30 transition-all duration-200 group"
+          >
+            <div className="w-10 h-10 rounded-xl bg-[var(--pale-amber)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              🧠
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-semibold text-[var(--primary-text)]">主动回忆练习</p>
+              <p className="text-xs text-[var(--tertiary-text)] mt-0.5">用科学方法检验你的学习效果</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => navigate("/settings")}
+            className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--slate-blue)]/30 transition-all duration-200 group"
+          >
+            <div className="w-10 h-10 rounded-xl bg-[var(--cool-gray-light)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              ⚡
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-semibold text-[var(--primary-text)]">配置 AI 服务</p>
+              <p className="text-xs text-[var(--tertiary-text)] mt-0.5">设置 API Key，启用真实 AI 分析能力</p>
+            </div>
+          </button>
+        </div>
       </div>
 
       {/* Recent Pathways */}
       {recentPathways.length > 0 && (
-        <div className="bg-white p-5 rounded-xl border border-[var(--cool-gray)] mb-8">
-          <h3 className="font-semibold text-sm text-[var(--deep-indigo)] mb-3">最近的路径</h3>
-          <div className="space-y-1">
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-[var(--secondary-text)] uppercase tracking-wider">
+              最近的路径
+            </h3>
+            <button
+              onClick={() => navigate("/pathways")}
+              className="text-xs text-[var(--soft-violet)] hover:text-[var(--deep-indigo)] font-medium transition-colors"
+            >
+              查看全部 →
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
             {recentPathways.map((p: any) => (
-              <div key={p.id} className="flex items-center justify-between py-2 border-b border-[var(--cool-gray)] last:border-0">
-                <div>
-                  <p className="text-sm font-medium text-[var(--primary-text)]">{p.title}</p>
-                  <p className="text-[10px] text-[var(--tertiary-text)]">{p.goal?.slice(0, 50) || "未设定目标"}</p>
+              <button
+                key={p.id}
+                onClick={() => navigate(`/pathway/${p.id}`)}
+                className="flex items-center gap-4 bg-white rounded-2xl p-4 border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] transition-all duration-200 text-left group"
+              >
+                <div className="w-9 h-9 rounded-xl bg-[var(--pale-lavender)] flex items-center justify-center text-sm flex-shrink-0">
+                  🔗
                 </div>
-                <button onClick={() => navigate(`/pathway/${p.id}`)} className="text-xs text-[var(--soft-violet)] hover:underline">打开</button>
-              </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-[var(--primary-text)] truncate group-hover:text-[var(--deep-indigo)] transition-colors">
+                    {p.title}
+                  </p>
+                  <p className="text-xs text-[var(--tertiary-text)] mt-0.5 truncate">
+                    {p.goal?.slice(0, 40) || "未设定目标"}
+                  </p>
+                </div>
+                <span className="text-[var(--tertiary-text)] text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                  →
+                </span>
+              </button>
             ))}
           </div>
         </div>
       )}
 
-      {/* About */}
-      <div className="bg-[var(--pale-lavender)] p-5 rounded-xl">
-        <h3 className="font-semibold text-sm text-[var(--deep-indigo)] mb-2">关于知径 Knowvia</h3>
-        <div className="text-xs text-[var(--secondary-text)] space-y-1.5 leading-relaxed">
-          <p><strong>AI 支持型有效笔记与知识路径建构系统。</strong>融合有效笔记策略、知识路径可视化、来源追溯与主动回忆机制。</p>
-          <p>核心理念：<strong>AI 不替你学习，而是帮你完成选择、转述、连接、组织、复习与迁移。</strong></p>
-          <p className="text-[10px] text-[var(--tertiary-text)] mt-2">研究原型 v0.2 · 知径 Knowvia · 让知识成为路径。</p>
+      {/* Empty State */}
+      {!loading && stats.pathways === 0 && stats.documents === 0 && (
+        <div className="text-center py-16">
+          <div className="text-5xl mb-5">📚</div>
+          <h3 className="text-lg font-semibold text-[var(--primary-text)] mb-2">开始你的知识之旅</h3>
+          <p className="text-sm text-[var(--tertiary-text)] max-w-md mx-auto leading-relaxed">
+            创建你的第一个知识路径，上传学习资料，让 AI 帮你提取和组织关键概念。
+          </p>
+          <button
+            onClick={() => navigate("/init")}
+            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-[var(--deep-indigo)] text-white rounded-xl text-sm font-semibold hover:bg-[var(--deep-indigo-hover)] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] transition-all duration-200"
+          >
+            🎯 创建第一条路径
+          </button>
         </div>
+      )}
+
+      {/* Footer */}
+      <div className="mt-16 pt-8 border-t border-[var(--border-subtle)] text-center">
+        <p className="text-[11px] text-[var(--tertiary-text)]">
+          知径 Knowvia · 让知识成为路径 · 研究原型
+        </p>
       </div>
     </div>
   );

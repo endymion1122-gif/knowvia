@@ -40,34 +40,44 @@ export function MainLayout() {
 
   const sidebarContent = (
     <>
-      <div className="p-5">
-        <h1 className="text-lg font-semibold text-[var(--deep-indigo)]">知径 Knowvia</h1>
-        <p className="text-[10px] text-[var(--path-teal)] mt-0.5 hidden sm:block">Knowledge Pathway 研究原型</p>
+      <div className="px-5 pt-7 pb-5">
+        <div className="flex items-center gap-3 mb-1">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[var(--deep-indigo)] to-[var(--soft-violet)] flex items-center justify-center text-white text-[10px] font-bold">知</div>
+          <div>
+            <h1 className="text-sm font-bold text-[var(--primary-text)] tracking-tight leading-none">知径</h1>
+            <p className="text-[10px] text-[var(--tertiary-text)] leading-none mt-1">Knowvia</p>
+          </div>
+        </div>
       </div>
-      <nav className="flex-1 px-2 sm:px-3 space-y-0.5 sm:space-y-1">
+      <nav className="flex-1 px-3 space-y-0.5">
         {NAV_ITEMS.map((item) => {
           const active = item.path === "/" ? location.pathname === "/" : location.pathname.startsWith(item.path);
           return (
             <button
               key={item.path}
               onClick={() => { navigate(item.path); closeSidebar(); }}
-              className={`w-full text-left px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm transition-colors ${
+              className={`w-full text-left px-3 py-2.5 rounded-xl text-[13px] transition-all duration-150 flex items-center gap-3 ${
                 active
-                  ? "bg-[var(--pale-lavender)] text-[var(--deep-indigo)] font-semibold"
-                  : "text-[var(--secondary-text)] hover:bg-[var(--page-bg)]"
+                  ? "bg-[var(--pale-lavender)] text-[var(--deep-indigo)] font-semibold shadow-[var(--shadow-xs)]"
+                  : "text-[var(--secondary-text)] hover:bg-[var(--page-bg)] hover:text-[var(--primary-text)]"
               }`}
             >
-              <span className="mr-1 sm:mr-2">{item.icon}</span>
-              <span className="hidden sm:inline">{item.label}</span>
+              <span className="text-base flex-shrink-0 w-5 text-center">{item.icon}</span>
+              <span className="hidden sm:inline truncate">{item.label}</span>
             </button>
           );
         })}
       </nav>
-      <div className="p-3 sm:p-4 border-t border-[var(--cool-gray)]">
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] sm:text-xs font-medium text-[var(--primary-text)] truncate">{user?.username}</span>
-          <button onClick={logout} className="text-[10px] text-[var(--tertiary-text)] hover:text-red-500 flex-shrink-0 ml-1">
-            退出
+      <div className="p-4 mx-2 mb-2 mt-2 rounded-xl bg-[var(--page-bg)]">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[var(--soft-violet)] to-[var(--slate-blue)] flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+            {(user?.username || "?")[0].toUpperCase()}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-[var(--primary-text)] truncate">{user?.username}</p>
+          </div>
+          <button onClick={logout} className="text-[10px] text-[var(--tertiary-text)] hover:text-[var(--danger-red)] transition-colors flex-shrink-0" title="退出登录">
+            ⏻
           </button>
         </div>
       </div>
