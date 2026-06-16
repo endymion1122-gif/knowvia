@@ -49,14 +49,14 @@ function PathwayNode({ data, selected }: NodeProps) {
       <Handle type="target" position={Position.Left} style={{ background: color }} />
       <div className="flex items-center gap-1.5 mb-1">
         <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-        <span className="font-semibold text-[var(--primary-text)] truncate">{title}</span>
+        <span className="font-semibold text-[var(--text-primary)] truncate">{title}</span>
       </div>
-      <p className="text-[10px] text-[var(--secondary-text)] line-clamp-2 leading-relaxed">{summary}</p>
+      <p className="text-[10px] text-[var(--text-secondary)] line-clamp-2 leading-relaxed">{summary}</p>
       <div className="flex items-center gap-1 mt-2">
         <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden">
           <div className="h-1 rounded-full transition-all" style={{ width: `${Math.round(confidence * 100)}%`, backgroundColor: color }} />
         </div>
-        <span className="text-[9px] tabular-nums text-[var(--tertiary-text)]">{Math.round(confidence * 100)}%</span>
+        <span className="text-[9px] tabular-nums text-[var(--text-tertiary)]">{Math.round(confidence * 100)}%</span>
       </div>
       <Handle type="source" position={Position.Right} style={{ background: color }} />
     </div>
@@ -122,14 +122,14 @@ export function PathwayGraph({ nodes, relations, onNodeClick }: PathwayGraphProp
 
   if (nodes.length === 0) {
     return (
-      <div className="h-96 flex items-center justify-center bg-[var(--page-bg)] rounded-lg border border-dashed border-[var(--cool-gray)]">
-        <p className="text-sm text-[var(--tertiary-text)]">暂无节点数据。上传资料并提取节点后可查看知识路径图。</p>
+      <div className="h-96 flex items-center justify-center bg-[var(--page-bg)] rounded-lg border border-dashed border-[var(--border-default)]">
+        <p className="text-sm text-[var(--text-tertiary)]">暂无节点数据。上传资料并提取节点后可查看知识路径图。</p>
       </div>
     );
   }
 
   return (
-    <div className="h-[600px] w-full rounded-lg border border-[var(--cool-gray)] overflow-hidden bg-[var(--page-bg)]">
+    <div className="h-[600px] w-full rounded-lg border border-[var(--border-default)] overflow-hidden bg-[var(--page-bg)]">
       <ReactFlow
         nodes={flowNodes}
         edges={flowEdges}

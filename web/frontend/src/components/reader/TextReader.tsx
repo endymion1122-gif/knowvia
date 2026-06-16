@@ -42,7 +42,7 @@ export function TextReader({ document: doc, onTextSelect }: TextReaderProps) {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center bg-[var(--page-bg)]">
-        <p className="text-sm text-[var(--tertiary-text)]">加载文件中...</p>
+        <p className="text-sm text-[var(--text-tertiary)]">加载文件中...</p>
       </div>
     );
   }
@@ -66,10 +66,10 @@ export function TextReader({ document: doc, onTextSelect }: TextReaderProps) {
           className="p-8 max-w-3xl mx-auto bg-white min-h-full"
           onMouseUp={handleTextSelection}
         >
-          <h1 className="text-xl font-semibold text-[var(--deep-indigo)] mb-6 pb-3 border-b border-[var(--cool-gray)]">
+          <h1 className="text-xl font-semibold text-[var(--brand-navy)] mb-6 pb-3 border-b border-[var(--border-default)]">
             {doc.title}
           </h1>
-          <pre className="text-sm text-[var(--primary-text)] whitespace-pre-wrap font-sans leading-relaxed select-text">
+          <pre className="text-sm text-[var(--text-primary)] whitespace-pre-wrap font-sans leading-relaxed select-text">
             {content}
           </pre>
         </div>
@@ -93,7 +93,7 @@ function MarkdownContent({
       onMouseUp={onMouseUp}
     >
       <div
-        className="prose prose-sm prose-stone max-w-none [&_h1]:text-xl [&_h1]:font-semibold [&_h1]:text-[var(--deep-indigo)] [&_h1]:mb-4 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-[var(--slate-blue)] [&_h2]:mt-6 [&_h2]:mb-3 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-[var(--primary-text)] [&_h3]:mt-4 [&_h3]:mb-2 [&_p]:text-sm [&_p]:text-[var(--primary-text)] [&_p]:leading-relaxed [&_p]:my-2 [&_strong]:font-semibold [&_em]:italic [&_code]:bg-[var(--pale-lavender)] [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_pre]:bg-[var(--cool-gray)] [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:overflow-auto [&_pre]:text-xs [&_blockquote]:border-l-2 [&_blockquote]:border-[var(--soft-violet)] [&_blockquote]:pl-4 [&_blockquote]:text-[var(--secondary-text)] [&_blockquote]:text-sm [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:text-sm [&_li]:text-[var(--primary-text)] [&_li]:my-1 [&_hr]:border-[var(--cool-gray)] [&_hr]:my-6 [&_a]:text-[var(--soft-violet)] [&_a]:underline"
+        className="prose prose-sm prose-stone max-w-none [&_h1]:text-xl [&_h1]:font-semibold [&_h1]:text-[var(--brand-navy)] [&_h1]:mb-4 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-[var(--text-secondary)] [&_h2]:mt-6 [&_h2]:mb-3 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-[var(--text-primary)] [&_h3]:mt-4 [&_h3]:mb-2 [&_p]:text-sm [&_p]:text-[var(--text-primary)] [&_p]:leading-relaxed [&_p]:my-2 [&_strong]:font-semibold [&_em]:italic [&_code]:bg-[var(--surface-lavender)] [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_pre]:bg-[var(--border-default)] [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:overflow-auto [&_pre]:text-xs [&_blockquote]:border-l-2 [&_blockquote]:border-[var(--brand-violet)] [&_blockquote]:pl-4 [&_blockquote]:text-[var(--text-secondary)] [&_blockquote]:text-sm [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:text-sm [&_li]:text-[var(--text-primary)] [&_li]:my-1 [&_hr]:border-[var(--border-default)] [&_hr]:my-6 [&_a]:text-[var(--brand-violet)] [&_a]:underline"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>

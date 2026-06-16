@@ -45,8 +45,8 @@ export function EvidenceChain({ nodes, relations, evidences = [] }: EvidenceChai
 
   if (claims.length === 0) {
     return (
-      <div className="h-96 flex items-center justify-center bg-[var(--page-bg)] rounded-lg border border-dashed border-[var(--cool-gray)]">
-        <p className="text-sm text-[var(--tertiary-text)]">暂无观点节点，无法生成证据链。请先提取节点并标记观点和证据类型。</p>
+      <div className="h-96 flex items-center justify-center bg-[var(--page-bg)] rounded-lg border border-dashed border-[var(--border-default)]">
+        <p className="text-sm text-[var(--text-tertiary)]">暂无观点节点，无法生成证据链。请先提取节点并标记观点和证据类型。</p>
       </div>
     );
   }
@@ -58,8 +58,8 @@ export function EvidenceChain({ nodes, relations, evidences = [] }: EvidenceChai
           key={claim.id}
           className={`bg-white rounded-xl border-2 transition-all ${
             selectedClaim === claim.id
-              ? "border-[var(--deep-indigo)] shadow-md"
-              : "border-[var(--cool-gray)]"
+              ? "border-[var(--brand-navy)] shadow-md"
+              : "border-[var(--border-default)]"
           }`}
           onClick={() => setSelectedClaim(selectedClaim === claim.id ? null : claim.id)}
         >
@@ -67,16 +67,16 @@ export function EvidenceChain({ nodes, relations, evidences = [] }: EvidenceChai
           <div className="p-4 cursor-pointer flex items-start gap-3">
             <span className="text-lg flex-shrink-0">{TYPE_ICONS[claim.card_type] || "◈"}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-[var(--primary-text)]">{claim.title}</p>
-              <p className="text-xs text-[var(--secondary-text)] mt-0.5 line-clamp-2">
+              <p className="text-sm font-semibold text-[var(--text-primary)]">{claim.title}</p>
+              <p className="text-xs text-[var(--text-secondary)] mt-0.5 line-clamp-2">
                 {claim.user_summary || claim.ai_generated_text || claim.content}
               </p>
               {claim.source_citation && (
-                <span className="text-[10px] text-[var(--tertiary-text)]">来源: {claim.source_citation}</span>
+                <span className="text-[10px] text-[var(--text-tertiary)]">来源: {claim.source_citation}</span>
               )}
             </div>
             <div className="flex items-center gap-1 flex-shrink-0">
-              <span className="text-[10px] text-[var(--tertiary-text)]">
+              <span className="text-[10px] text-[var(--text-tertiary)]">
                 {links.length} 条证据
               </span>
               <span className={`text-xs transition-transform ${selectedClaim === claim.id ? "rotate-90" : ""}`}>▶</span>
@@ -85,27 +85,27 @@ export function EvidenceChain({ nodes, relations, evidences = [] }: EvidenceChai
 
           {/* Evidence items (expanded) */}
           {selectedClaim === claim.id && (
-            <div className="border-t border-[var(--cool-gray)] p-4 space-y-3 bg-[var(--page-bg)] rounded-b-xl">
+            <div className="border-t border-[var(--border-default)] p-4 space-y-3 bg-[var(--page-bg)] rounded-b-xl">
               {links.length === 0 ? (
-                <p className="text-xs text-[var(--tertiary-text)]">暂无关联证据。在节点编辑器中为此观点添加证据。</p>
+                <p className="text-xs text-[var(--text-tertiary)]">暂无关联证据。在节点编辑器中为此观点添加证据。</p>
               ) : (
                 links.map((link, i) => (
-                  <div key={i} className="flex items-start gap-3 bg-white p-3 rounded-lg border border-[var(--cool-gray)]">
+                  <div key={i} className="flex items-start gap-3 bg-white p-3 rounded-lg border border-[var(--border-default)]">
                     {/* Mini flow: claim → relation → evidence */}
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <div className="w-2 h-2 rounded-full bg-[var(--soft-violet)]" />
-                      <div className="w-8 h-0.5 bg-[var(--cool-gray)]" />
-                      <span className="text-[9px] px-1 py-0.5 bg-[var(--pale-lavender)] rounded text-[var(--deep-indigo)]">
+                      <div className="w-2 h-2 rounded-full bg-[var(--brand-violet)]" />
+                      <div className="w-8 h-0.5 bg-[var(--border-default)]" />
+                      <span className="text-[9px] px-1 py-0.5 bg-[var(--surface-lavender)] rounded text-[var(--brand-navy)]">
                         {link.relation.relation_type}
                       </span>
-                      <div className="w-8 h-0.5 bg-[var(--cool-gray)]" />
+                      <div className="w-8 h-0.5 bg-[var(--border-default)]" />
                       <div className="w-2 h-2 rounded-full bg-green-400" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-[var(--primary-text)]">
+                      <p className="text-xs font-medium text-[var(--text-primary)]">
                         {link.evidenceNode?.title || "证据"}
                       </p>
-                      <p className="text-[10px] text-[var(--secondary-text)] mt-0.5">
+                      <p className="text-[10px] text-[var(--text-secondary)] mt-0.5">
                         {link.evidenceNode?.content || link.evidenceNode?.ai_generated_text}
                       </p>
                       {(link.evidenceData).map((ev: any, j: number) => (
@@ -113,8 +113,8 @@ export function EvidenceChain({ nodes, relations, evidences = [] }: EvidenceChai
                           <span className={`text-[9px] px-1 py-0.5 rounded border ${STRENGTH_COLORS[ev.evidence_strength] || "bg-gray-100"}`}>
                             {ev.evidence_strength === "strong" ? "强证据" : ev.evidence_strength === "medium" ? "中证据" : "弱证据"}
                           </span>
-                          {ev.source_location && <span className="text-[9px] text-[var(--tertiary-text)]">{ev.source_location}</span>}
-                          <span className="text-[9px] text-[var(--tertiary-text)]">{ev.evidence_type}</span>
+                          {ev.source_location && <span className="text-[9px] text-[var(--text-tertiary)]">{ev.source_location}</span>}
+                          <span className="text-[9px] text-[var(--text-tertiary)]">{ev.evidence_type}</span>
                         </div>
                       ))}
                     </div>

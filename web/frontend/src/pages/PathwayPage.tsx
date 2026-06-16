@@ -182,7 +182,7 @@ export function PathwayPage() {
     finally { setExporting(false); }
   };
 
-  if (loading) return <div className="p-8 text-sm text-[var(--tertiary-text)]">加载中...</div>;
+  if (loading) return <div className="p-8 text-sm text-[var(--text-tertiary)]">加载中...</div>;
   if (!pathway) return <div className="p-8 text-sm text-red-500">路径不存在</div>;
 
   // List view (no id param)
@@ -194,8 +194,8 @@ export function PathwayPage() {
     <div className="p-8 max-w-6xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <button onClick={() => navigate("/pathways")} className="text-xs text-[var(--soft-violet)] hover:underline mb-1 block">← 路径列表</button>
-          <h2 className="text-2xl font-semibold text-[var(--deep-indigo)]">{pathway.title}</h2>
+          <button onClick={() => navigate("/pathways")} className="text-xs text-[var(--brand-violet)] hover:underline mb-1 block">← 路径列表</button>
+          <h2 className="text-2xl font-semibold text-[var(--brand-navy)]">{pathway.title}</h2>
           <span className={`text-[10px] px-1.5 py-0.5 rounded ${pathway.status === "draft" ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700"}`}>
             {pathway.status === "draft" ? "草稿" : "已完成"}
           </span>
@@ -211,21 +211,21 @@ export function PathwayPage() {
             ] as const).map(([key, label]) => (
               <button key={key}
                 onClick={() => setViewMode(key)}
-                className={`px-2 py-1 rounded-md text-xs font-semibold transition-colors ${viewMode === key ? "bg-white text-[var(--deep-indigo)] shadow-sm" : "text-[var(--tertiary-text)]"}`}>
+                className={`px-2 py-1 rounded-md text-xs font-semibold transition-colors ${viewMode === key ? "bg-white text-[var(--brand-navy)] shadow-sm" : "text-[var(--text-tertiary)]"}`}>
                 {label}
               </button>
             ))}
           </div>
           <button onClick={() => handleExport("markdown_report")} disabled={exporting || nodes.length === 0}
-            className="px-3 py-1.5 bg-[var(--path-teal)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
+            className="px-3 py-1.5 bg-[var(--brand-cyan)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
             导出报告
           </button>
           <button onClick={() => handleExport("summary_outline")} disabled={exporting || nodes.length === 0}
-            className="px-3 py-1.5 bg-[var(--slate-blue)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
+            className="px-3 py-1.5 bg-[var(--text-secondary)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
             导出提纲
           </button>
           <button onClick={handleShare} disabled={sharing}
-            className={`px-3 py-1.5 text-xs font-semibold rounded ${shareUrl ? "bg-green-100 text-green-700" : "bg-[var(--pale-mint)] text-[var(--path-teal)] hover:opacity-90"} disabled:opacity-40`}>
+            className={`px-3 py-1.5 text-xs font-semibold rounded ${shareUrl ? "bg-green-100 text-green-700" : "bg-[var(--surface-mint)] text-[var(--brand-cyan)] hover:opacity-90"} disabled:opacity-40`}>
             {sharing ? "..." : shareUrl ? "✓ 已分享" : "分享"}
           </button>
         </div>
@@ -235,9 +235,9 @@ export function PathwayPage() {
 
       <div className="grid grid-cols-3 gap-4 mb-6">
         {[ { label: "学习目标", value: pathway.goal }, { label: "已有知识", value: pathway.existing_knowledge }, { label: "预期输出", value: pathway.output_target } ].map((item) => (
-          <div key={item.label} className="bg-[var(--pale-lavender)] p-4 rounded-lg">
-            <p className="text-[10px] font-semibold text-[var(--slate-blue)] mb-1">{item.label}</p>
-            <p className="text-xs text-[var(--secondary-text)]">{item.value || "未填写"}</p>
+          <div key={item.label} className="bg-[var(--surface-lavender)] p-4 rounded-lg">
+            <p className="text-[10px] font-semibold text-[var(--text-secondary)] mb-1">{item.label}</p>
+            <p className="text-xs text-[var(--text-secondary)]">{item.value || "未填写"}</p>
           </div>
         ))}
       </div>
@@ -291,31 +291,31 @@ export function PathwayPage() {
       <div className="grid grid-cols-3 gap-6">
         {/* Left: Documents */}
         <div className="space-y-4">
-          <div className="bg-white p-4 rounded-lg border border-[var(--cool-gray)]">
-            <h3 className="text-sm font-semibold text-[var(--primary-text)] mb-3">📄 学习资料</h3>
+          <div className="bg-white p-4 rounded-lg border border-[var(--border-default)]">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3">📄 学习资料</h3>
             {documents.length === 0 ? (
-              <p className="text-xs text-[var(--tertiary-text)] mb-3">还没有添加资料</p>
+              <p className="text-xs text-[var(--text-tertiary)] mb-3">还没有添加资料</p>
             ) : (
               <div className="space-y-1 mb-3">
                 {documents.map((d: any) => (
                   <div key={d.id} className="text-xs p-2 bg-[var(--page-bg)] rounded flex items-center justify-between">
                     <span className="truncate">{d.title}</span>
-                    <button onClick={() => navigate(`/reader/${d.id}`)} className="text-[10px] text-[var(--soft-violet)] hover:underline ml-1 flex-shrink-0">查看</button>
+                    <button onClick={() => navigate(`/reader/${d.id}`)} className="text-[10px] text-[var(--brand-violet)] hover:underline ml-1 flex-shrink-0">查看</button>
                   </div>
                 ))}
               </div>
             )}
-            <label className={`block w-full py-1.5 text-center text-xs font-semibold rounded cursor-pointer ${uploading ? "bg-gray-200 text-gray-400" : "bg-[var(--deep-indigo)] text-white hover:opacity-90"}`}>
+            <label className={`block w-full py-1.5 text-center text-xs font-semibold rounded cursor-pointer ${uploading ? "bg-gray-200 text-gray-400" : "bg-[var(--brand-navy)] text-white hover:opacity-90"}`}>
               {uploading ? "上传中..." : "上传资料"}
               <input type="file" accept=".pdf,.txt,.md,.docx,.pptx" onChange={handleUpload} className="hidden" disabled={uploading} />
             </label>
           </div>
           <button onClick={handleExtract} disabled={extracting || documents.length === 0}
-            className="w-full py-2 bg-[var(--soft-violet)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
+            className="w-full py-2 bg-[var(--brand-violet)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
             {extracting ? "AI 提取中..." : "🤖 AI 提取知识节点"}
           </button>
           {extractResult && (
-            <p className="text-[10px] text-[var(--tertiary-text)]">
+            <p className="text-[10px] text-[var(--text-tertiary)]">
               提取了 {extractResult.nodes?.length || 0} 个节点和 {extractResult.suggested_relations?.length || 0} 个关系
               {extractResult.mode === "demo" ? " (Demo)" : ""}
             </p>
@@ -324,15 +324,15 @@ export function PathwayPage() {
 
         {/* Center: Nodes */}
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-[var(--primary-text)]">🧩 知识节点 ({nodes.length})</h3>
+          <h3 className="text-sm font-semibold text-[var(--text-primary)]">🧩 知识节点 ({nodes.length})</h3>
           {nodes.length === 0 ? (
-            <p className="text-xs text-[var(--tertiary-text)]">上传资料后点击「AI 提取知识节点」</p>
+            <p className="text-xs text-[var(--text-tertiary)]">上传资料后点击「AI 提取知识节点」</p>
           ) : (
             nodes.map((node) => (
-              <div key={node.id} className="bg-white p-3 rounded-lg border border-[var(--cool-gray)] text-xs">
+              <div key={node.id} className="bg-white p-3 rounded-lg border border-[var(--border-default)] text-xs">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--pale-lavender)] text-[var(--deep-indigo)] font-semibold">{node.card_type}</span>
-                  <span className="text-[10px] text-[var(--tertiary-text)]">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--surface-lavender)] text-[var(--brand-navy)] font-semibold">{node.card_type}</span>
+                  <span className="text-[10px] text-[var(--text-tertiary)]">
                     {node.user_confirmed ? "✓ 已确认" : "待确认"} · 置信度 {Math.round((node.confidence_score || 0.8) * 100)}%
                   </span>
                 </div>
@@ -344,19 +344,19 @@ export function PathwayPage() {
                     </select>
                     <textarea value={editSummary} onChange={(e) => setEditSummary(e.target.value)} placeholder="用你自己的话转述..." className="w-full px-2 py-1 border rounded text-xs h-14 resize-none" />
                     <div className="flex gap-1">
-                      <button onClick={() => handleSaveNode(node.id)} className="flex-1 py-1 bg-[var(--deep-indigo)] text-white rounded text-xs">保存</button>
-                      <button onClick={() => setEditingNode(null)} className="px-2 py-1 text-xs text-[var(--tertiary-text)]">取消</button>
+                      <button onClick={() => handleSaveNode(node.id)} className="flex-1 py-1 bg-[var(--brand-navy)] text-white rounded text-xs">保存</button>
+                      <button onClick={() => setEditingNode(null)} className="px-2 py-1 text-xs text-[var(--text-tertiary)]">取消</button>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <p className="font-medium text-[var(--primary-text)]">{node.title}</p>
-                    <p className="text-[var(--secondary-text)] mt-0.5 line-clamp-2">{node.ai_generated_text || node.content}</p>
-                    {node.user_summary && <p className="text-[var(--soft-violet)] mt-1 italic">💬 {node.user_summary}</p>}
+                    <p className="font-medium text-[var(--text-primary)]">{node.title}</p>
+                    <p className="text-[var(--text-secondary)] mt-0.5 line-clamp-2">{node.ai_generated_text || node.content}</p>
+                    {node.user_summary && <p className="text-[var(--brand-violet)] mt-1 italic">💬 {node.user_summary}</p>}
                     <div className="flex items-center justify-between mt-2">
-                      <span className="text-[10px] text-[var(--tertiary-text)]">{node.source_citation || `p.${node.page_number || "?"}`}</span>
+                      <span className="text-[10px] text-[var(--text-tertiary)]">{node.source_citation || `p.${node.page_number || "?"}`}</span>
                       <button onClick={() => { setEditingNode(node.id); setEditTitle(node.title); setEditType(node.card_type); setEditSummary(node.user_summary || ""); }}
-                        className="text-[10px] text-[var(--path-teal)] hover:underline">编辑转述</button>
+                        className="text-[10px] text-[var(--brand-cyan)] hover:underline">编辑转述</button>
                     </div>
                   </>
                 )}
@@ -368,11 +368,11 @@ export function PathwayPage() {
         {/* Right: Relations */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-[var(--primary-text)]">🔗 知识关系 ({relations.length})</h3>
-            <button onClick={() => setShowAddRelation(!showAddRelation)} className="text-[10px] text-[var(--path-teal)] hover:underline">+ 添加</button>
+            <h3 className="text-sm font-semibold text-[var(--text-primary)]">🔗 知识关系 ({relations.length})</h3>
+            <button onClick={() => setShowAddRelation(!showAddRelation)} className="text-[10px] text-[var(--brand-cyan)] hover:underline">+ 添加</button>
           </div>
           {showAddRelation && (
-            <div className="bg-white p-3 rounded-lg border border-[var(--path-teal)] text-xs space-y-1.5">
+            <div className="bg-white p-3 rounded-lg border border-[var(--brand-cyan)] text-xs space-y-1.5">
               <select value={relSource} onChange={(e) => setRelSource(e.target.value)} className="w-full px-2 py-1 border rounded text-xs">
                 <option value="">源节点</option>
                 {nodes.map((n) => <option key={n.id} value={n.id}>{n.title}</option>)}
@@ -385,24 +385,24 @@ export function PathwayPage() {
                 {nodes.map((n) => <option key={n.id} value={n.id}>{n.title}</option>)}
               </select>
               <button onClick={handleAddRelation} disabled={!relSource || !relTarget}
-                className="w-full py-1 bg-[var(--path-teal)] text-white rounded text-xs disabled:opacity-40">创建关系</button>
+                className="w-full py-1 bg-[var(--brand-cyan)] text-white rounded text-xs disabled:opacity-40">创建关系</button>
             </div>
           )}
           {relations.length === 0 ? (
-            <p className="text-xs text-[var(--tertiary-text)]">AI 提取后会自动建议关系，也可以手动添加</p>
+            <p className="text-xs text-[var(--text-tertiary)]">AI 提取后会自动建议关系，也可以手动添加</p>
           ) : (
             relations.map((rel) => {
               const src = nodes.find((n) => n.id === rel.source_card_id);
               const tgt = nodes.find((n) => n.id === rel.target_card_id);
               return (
-                <div key={rel.id} className="bg-white p-2 rounded-lg border border-[var(--cool-gray)] text-xs flex items-center justify-between">
+                <div key={rel.id} className="bg-white p-2 rounded-lg border border-[var(--border-default)] text-xs flex items-center justify-between">
                   <div className="flex items-center gap-1.5 flex-1 min-w-0">
                     <span className="font-medium truncate">{src?.title || "?"}</span>
-                    <span className="text-[10px] px-1 py-0.5 bg-[var(--pale-mint)] rounded text-[var(--path-teal)] flex-shrink-0">{RELATION_LABELS[rel.relation_type] || rel.relation_type}</span>
+                    <span className="text-[10px] px-1 py-0.5 bg-[var(--surface-mint)] rounded text-[var(--brand-cyan)] flex-shrink-0">{RELATION_LABELS[rel.relation_type] || rel.relation_type}</span>
                     <span className="font-medium truncate">{tgt?.title || "?"}</span>
                   </div>
                   <button onClick={async () => { await api.relations.delete(rel.id); await loadData(); }}
-                    className="text-[10px] text-[var(--tertiary-text)] hover:text-red-500 ml-1 flex-shrink-0">✕</button>
+                    className="text-[10px] text-[var(--text-tertiary)] hover:text-red-500 ml-1 flex-shrink-0">✕</button>
                 </div>
               );
             })
@@ -424,37 +424,37 @@ function PathwayListView() {
     api.pathways.list().then(({ pathways }) => { setPathways(pathways); setLoading(false); });
   }, []);
 
-  if (loading) return <div className="p-8 text-sm text-[var(--tertiary-text)]">加载中...</div>;
+  if (loading) return <div className="p-8 text-sm text-[var(--text-tertiary)]">加载中...</div>;
 
   return (
     <div className="p-8 max-w-5xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-[var(--deep-indigo)] mb-1">专题路径</h2>
-          <p className="text-xs text-[var(--tertiary-text)]">Knowledge Pathway — 围绕主题的结构化知识脉络</p>
+          <h2 className="text-2xl font-semibold text-[var(--brand-navy)] mb-1">专题路径</h2>
+          <p className="text-xs text-[var(--text-tertiary)]">Knowledge Pathway — 围绕主题的结构化知识脉络</p>
         </div>
         <button onClick={() => navigate("/init")}
-          className="px-4 py-2 bg-[var(--deep-indigo)] text-white rounded-lg text-sm font-semibold hover:opacity-90">
+          className="px-4 py-2 bg-[var(--brand-navy)] text-white rounded-lg text-sm font-semibold hover:opacity-90">
           + 新建路径
         </button>
       </div>
       {pathways.length === 0 ? (
-        <div className="bg-white p-10 rounded-xl border border-dashed border-[var(--cool-gray)] text-center">
-          <p className="text-sm text-[var(--secondary-text)]">还没有知识路径。</p>
-          <p className="text-xs text-[var(--tertiary-text)] mt-2">创建你的第一条学习路径，上传资料并让 AI 帮你提取知识节点。</p>
+        <div className="bg-white p-10 rounded-xl border border-dashed border-[var(--border-default)] text-center">
+          <p className="text-sm text-[var(--text-secondary)]">还没有知识路径。</p>
+          <p className="text-xs text-[var(--text-tertiary)] mt-2">创建你的第一条学习路径，上传资料并让 AI 帮你提取知识节点。</p>
         </div>
       ) : (
         <div className="space-y-2">
           {pathways.map((p: any) => (
-            <div key={p.id} className="flex items-center gap-4 bg-white p-4 rounded-lg border border-[var(--cool-gray)]">
+            <div key={p.id} className="flex items-center gap-4 bg-white p-4 rounded-lg border border-[var(--border-default)]">
               <span className="text-lg">🔗</span>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-[var(--primary-text)] truncate">{p.title}</p>
-                <p className="text-[10px] text-[var(--tertiary-text)]">
+                <p className="text-sm font-medium text-[var(--text-primary)] truncate">{p.title}</p>
+                <p className="text-[10px] text-[var(--text-tertiary)]">
                   {p.status === "draft" ? "草稿" : "已完成"} · {p.goal?.slice(0, 40) || "未设定目标"}
                 </p>
               </div>
-              <button onClick={() => navigate(`/pathway/${p.id}`)} className="text-xs text-[var(--deep-indigo)] hover:underline">打开</button>
+              <button onClick={() => navigate(`/pathway/${p.id}`)} className="text-xs text-[var(--brand-navy)] hover:underline">打开</button>
               <button onClick={async () => { if (confirm("删除此路径？")) { await api.pathways.delete(p.id); setPathways(prev => prev.filter(x => x.id !== p.id)); } }}
                 className="text-xs text-red-400 hover:text-red-600">删除</button>
             </div>

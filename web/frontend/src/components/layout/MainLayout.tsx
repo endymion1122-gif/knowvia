@@ -17,7 +17,7 @@ const RecallPage = lazy(() => import("../../pages/RecallPage").then(m => ({ defa
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-full">
-    <div className="text-sm text-[var(--tertiary-text)] animate-pulse">加载中...</div>
+    <div className="text-sm text-[var(--text-tertiary)] animate-pulse">加载中...</div>
   </div>
 );
 
@@ -41,11 +41,12 @@ export function MainLayout() {
   const sidebarContent = (
     <>
       <div className="px-5 pt-7 pb-5">
-        <div className="flex items-center gap-3 mb-1">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[var(--deep-indigo)] to-[var(--soft-violet)] flex items-center justify-center text-white text-[10px] font-bold">知</div>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-bold"
+            style={{ background: "linear-gradient(135deg, #0EC2C7, #3B6CF8)" }}>知</div>
           <div>
-            <h1 className="text-sm font-bold text-[var(--primary-text)] tracking-tight leading-none">知径</h1>
-            <p className="text-[10px] text-[var(--tertiary-text)] leading-none mt-1">Knowvia</p>
+            <h1 className="text-sm font-bold text-[var(--text-primary)] tracking-tight leading-none">知径</h1>
+            <p className="text-[10px] text-[var(--text-tertiary)] leading-none mt-0.5">Knowvia</p>
           </div>
         </div>
       </div>
@@ -56,10 +57,10 @@ export function MainLayout() {
             <button
               key={item.path}
               onClick={() => { navigate(item.path); closeSidebar(); }}
-              className={`w-full text-left px-3 py-2.5 rounded-xl text-[13px] transition-all duration-150 flex items-center gap-3 ${
+              className={`w-full text-left px-3 py-2.5 rounded-xl text-[13px] transition-all duration-200 flex items-center gap-3 ${
                 active
-                  ? "bg-[var(--pale-lavender)] text-[var(--deep-indigo)] font-semibold shadow-[var(--shadow-xs)]"
-                  : "text-[var(--secondary-text)] hover:bg-[var(--page-bg)] hover:text-[var(--primary-text)]"
+                  ? "bg-[var(--surface-lavender)] text-[var(--brand-navy)] font-semibold"
+                  : "text-[var(--text-secondary)] hover:bg-[var(--input-bg)] hover:text-[var(--text-primary)]"
               }`}
             >
               <span className="text-base flex-shrink-0 w-5 text-center">{item.icon}</span>
@@ -68,17 +69,16 @@ export function MainLayout() {
           );
         })}
       </nav>
-      <div className="p-4 mx-2 mb-2 mt-2 rounded-xl bg-[var(--page-bg)]">
+      <div className="p-3 mx-3 mb-3 mt-2 rounded-xl bg-[var(--input-bg)]">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[var(--soft-violet)] to-[var(--slate-blue)] flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+          <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0"
+            style={{ background: "linear-gradient(135deg, #3B6CF8, #6B4EF8)" }}>
             {(user?.username || "?")[0].toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-[var(--primary-text)] truncate">{user?.username}</p>
+            <p className="text-xs font-medium text-[var(--text-primary)] truncate">{user?.username}</p>
           </div>
-          <button onClick={logout} className="text-[10px] text-[var(--tertiary-text)] hover:text-[var(--danger-red)] transition-colors flex-shrink-0" title="退出登录">
-            ⏻
-          </button>
+          <button onClick={logout} className="text-[10px] text-[var(--text-tertiary)] hover:text-[var(--danger)] transition-colors flex-shrink-0" title="退出登录">⏻</button>
         </div>
       </div>
     </>
@@ -87,7 +87,7 @@ export function MainLayout() {
   return (
     <div className="flex h-screen bg-[var(--page-bg)]">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-56 flex-shrink-0 bg-[var(--warm-white)] border-r border-[var(--cool-gray)] flex-col">
+      <aside className="hidden md:flex w-56 flex-shrink-0 bg-[var(--sidebar-bg)] border-r border-[var(--border-light)] flex-col">
         {sidebarContent}
       </aside>
 
@@ -95,16 +95,16 @@ export function MainLayout() {
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black/30" onClick={closeSidebar} />
-          <aside className="absolute left-0 top-0 bottom-0 w-56 bg-[var(--warm-white)] flex flex-col z-10 shadow-xl">
+          <aside className="absolute left-0 top-0 bottom-0 w-56 bg-[var(--sidebar-bg)] flex flex-col z-10 shadow-xl">
             {sidebarContent}
           </aside>
         </div>
       )}
 
       {/* Mobile header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[var(--warm-white)] border-b border-[var(--cool-gray)] px-3 py-2 flex items-center gap-3">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[var(--sidebar-bg)] border-b border-[var(--border-light)] px-3 py-2 flex items-center gap-3">
         <button onClick={() => setSidebarOpen(true)} className="text-lg">☰</button>
-        <h1 className="text-sm font-semibold text-[var(--deep-indigo)]">知径 Knowvia</h1>
+        <h1 className="text-sm font-semibold text-[var(--brand-navy)]">知径 Knowvia</h1>
       </div>
 
       <main className="flex-1 overflow-auto pt-10 md:pt-0">

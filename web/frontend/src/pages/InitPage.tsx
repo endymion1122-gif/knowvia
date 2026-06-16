@@ -33,16 +33,16 @@ export function InitPage() {
   return (
     <div className="p-8 max-w-2xl mx-auto">
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-[var(--deep-indigo)] mb-1">开启知识路径</h2>
-        <p className="text-xs text-[var(--tertiary-text)]">
+        <h2 className="text-2xl font-semibold text-[var(--brand-navy)] mb-1">开启知识路径</h2>
+        <p className="text-xs text-[var(--text-tertiary)]">
           回答以下问题，帮助 AI 更好地理解你的学习目标
         </p>
       </div>
 
-      <div className="bg-white p-6 rounded-xl border border-[var(--cool-gray)] space-y-5">
+      <div className="bg-white p-6 rounded-xl border border-[var(--border-default)] space-y-5">
         {/* Title */}
         <div>
-          <label className="block text-sm font-semibold text-[var(--primary-text)] mb-1">
+          <label className="block text-sm font-semibold text-[var(--text-primary)] mb-1">
             路径主题 <span className="text-red-400">*</span>
           </label>
           <input
@@ -50,46 +50,46 @@ export function InitPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="例如：认知负荷理论学习路径"
-            className="w-full px-4 py-2.5 border border-[var(--cool-gray)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--deep-indigo)]"
+            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]"
           />
         </div>
 
         {/* Q1 */}
         <div>
-          <label className="block text-sm font-semibold text-[var(--primary-text)] mb-1">
+          <label className="block text-sm font-semibold text-[var(--text-primary)] mb-1">
             Q1: 我为什么学这个？
           </label>
           <textarea
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
             placeholder="说明你的学习动机和目标..."
-            className="w-full px-4 py-2.5 border border-[var(--cool-gray)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--deep-indigo)]"
+            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]"
           />
         </div>
 
         {/* Q2 */}
         <div>
-          <label className="block text-sm font-semibold text-[var(--primary-text)] mb-1">
+          <label className="block text-sm font-semibold text-[var(--text-primary)] mb-1">
             Q2: 我已经知道什么？
           </label>
           <textarea
             value={existingKnowledge}
             onChange={(e) => setExistingKnowledge(e.target.value)}
             placeholder="你目前对这个主题的了解..."
-            className="w-full px-4 py-2.5 border border-[var(--cool-gray)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--deep-indigo)]"
+            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]"
           />
         </div>
 
         {/* Q3 */}
         <div>
-          <label className="block text-sm font-semibold text-[var(--primary-text)] mb-1">
+          <label className="block text-sm font-semibold text-[var(--text-primary)] mb-1">
             Q3: 我最后要输出什么？
           </label>
           <textarea
             value={outputTarget}
             onChange={(e) => setOutputTarget(e.target.value)}
             placeholder="例如：完成3000字综述、准备课堂汇报、撰写研究计划..."
-            className="w-full px-4 py-2.5 border border-[var(--cool-gray)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--deep-indigo)]"
+            className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm h-20 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]"
           />
         </div>
 
@@ -99,13 +99,13 @@ export function InitPage() {
           <button
             onClick={handleCreate}
             disabled={creating || !title.trim()}
-            className="flex-1 py-2.5 bg-[var(--deep-indigo)] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
+            className="flex-1 py-2.5 bg-[var(--brand-navy)] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
           >
             {creating ? "创建中..." : "创建路径，开始学习"}
           </button>
           <button
             onClick={() => navigate("/pathways")}
-            className="px-6 py-2.5 text-sm text-[var(--secondary-text)] hover:text-[var(--primary-text)] transition-colors"
+            className="px-6 py-2.5 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
           >
             取消
           </button>
@@ -113,8 +113,8 @@ export function InitPage() {
       </div>
 
       {/* Hint */}
-      <div className="mt-4 bg-[var(--pale-lavender)] p-4 rounded-lg">
-        <p className="text-[11px] text-[var(--secondary-text)]">
+      <div className="mt-4 bg-[var(--surface-lavender)] p-4 rounded-lg">
+        <p className="text-[11px] text-[var(--text-secondary)]">
           这些信息将帮助 AI 更精准地从资料中提取与你的学习目标相关的概念、观点和证据。
           你也可以跳过详细填写，直接创建路径后上传资料。
         </p>

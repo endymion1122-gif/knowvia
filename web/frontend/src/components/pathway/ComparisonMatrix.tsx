@@ -23,8 +23,8 @@ export function ComparisonMatrix({ nodes, relations }: ComparisonMatrixProps) {
   const allNodes = [...concepts, ...claims, ...evidence];
   if (allNodes.length < 2) {
     return (
-      <div className="h-96 flex items-center justify-center bg-[var(--page-bg)] rounded-lg border border-dashed border-[var(--cool-gray)]">
-        <p className="text-sm text-[var(--tertiary-text)]">节点数量不足。需要至少 2 个节点才能生成比较矩阵。</p>
+      <div className="h-96 flex items-center justify-center bg-[var(--page-bg)] rounded-lg border border-dashed border-[var(--border-default)]">
+        <p className="text-sm text-[var(--text-tertiary)]">节点数量不足。需要至少 2 个节点才能生成比较矩阵。</p>
       </div>
     );
   }
@@ -45,18 +45,18 @@ export function ComparisonMatrix({ nodes, relations }: ComparisonMatrixProps) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-xs border-collapse bg-white rounded-lg overflow-hidden border border-[var(--cool-gray)]">
+      <table className="w-full text-xs border-collapse bg-white rounded-lg overflow-hidden border border-[var(--border-default)]">
         <thead>
-          <tr className="bg-[var(--pale-lavender)]">
-            <th className="text-left p-3 font-semibold text-[var(--deep-indigo)] border-b border-[var(--cool-gray)] sticky left-0 bg-[var(--pale-lavender)]">
+          <tr className="bg-[var(--surface-lavender)]">
+            <th className="text-left p-3 font-semibold text-[var(--brand-navy)] border-b border-[var(--border-default)] sticky left-0 bg-[var(--surface-lavender)]">
               节点
             </th>
             {dimensions.map((dim) => (
-              <th key={dim} className="text-left p-3 font-semibold text-[var(--slate-blue)] border-b border-[var(--cool-gray)]">
+              <th key={dim} className="text-left p-3 font-semibold text-[var(--text-secondary)] border-b border-[var(--border-default)]">
                 {dim}
               </th>
             ))}
-            <th className="text-left p-3 font-semibold text-[var(--slate-blue)] border-b border-[var(--cool-gray)]">
+            <th className="text-left p-3 font-semibold text-[var(--text-secondary)] border-b border-[var(--border-default)]">
               关联
             </th>
           </tr>
@@ -65,19 +65,19 @@ export function ComparisonMatrix({ nodes, relations }: ComparisonMatrixProps) {
           {allNodes.map((node) => {
             const rels = nodeRelations[node.id] || [];
             return (
-              <tr key={node.id} className="border-b border-[var(--cool-gray)] hover:bg-[var(--page-bg)] transition-colors">
-                <td className="p-3 sticky left-0 bg-white border-r border-[var(--cool-gray)]">
+              <tr key={node.id} className="border-b border-[var(--border-default)] hover:bg-[var(--page-bg)] transition-colors">
+                <td className="p-3 sticky left-0 bg-white border-r border-[var(--border-default)]">
                   <div className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0"
                       style={{ backgroundColor: node.card_type === "concept" ? "#6366f1" : node.card_type === "evidence" ? "#10b981" : "#f59e0b" }} />
                     <div>
-                      <p className="font-medium text-[var(--primary-text)]">{node.title}</p>
-                      <p className="text-[10px] text-[var(--tertiary-text)]">{node.card_type}</p>
+                      <p className="font-medium text-[var(--text-primary)]">{node.title}</p>
+                      <p className="text-[10px] text-[var(--text-tertiary)]">{node.card_type}</p>
                     </div>
                   </div>
                 </td>
                 {dimensions.includes("主要观点") && (
-                  <td className="p-3 text-[var(--secondary-text)]">
+                  <td className="p-3 text-[var(--text-secondary)]">
                     {node.card_type === "claim" || node.card_type === "viewpoint"
                       ? node.user_summary || node.ai_generated_text?.slice(0, 60) || node.content?.slice(0, 60)
                       : node.card_type === "concept" ? "基础概念" : "—"}
@@ -86,8 +86,8 @@ export function ComparisonMatrix({ nodes, relations }: ComparisonMatrixProps) {
                 {dimensions.includes("证据支持") && (
                   <td className="p-3">
                     {node.card_type === "evidence"
-                      ? <span className="text-[10px] text-[var(--path-teal)]">✓ 证据节点</span>
-                      : <span className="text-[10px] text-[var(--tertiary-text)]">—</span>}
+                      ? <span className="text-[10px] text-[var(--brand-cyan)]">✓ 证据节点</span>
+                      : <span className="text-[10px] text-[var(--text-tertiary)]">—</span>}
                   </td>
                 )}
                 <td className="p-3">
@@ -98,14 +98,14 @@ export function ComparisonMatrix({ nodes, relations }: ComparisonMatrixProps) {
                         backgroundColor: node.card_type === "concept" ? "#6366f1" : node.card_type === "evidence" ? "#10b981" : "#f59e0b",
                       }} />
                   </div>
-                  <span className="text-[9px] text-[var(--tertiary-text)]">{Math.round((node.confidence_score || 0.8) * 100)}%</span>
+                  <span className="text-[9px] text-[var(--text-tertiary)]">{Math.round((node.confidence_score || 0.8) * 100)}%</span>
                 </td>
                 <td className="p-3">
                   {node.user_confirmed
                     ? <span className="text-[10px] text-green-600">✓ 已确认</span>
                     : <span className="text-[10px] text-amber-600">待确认</span>}
                 </td>
-                <td className="p-3 text-[10px] text-[var(--tertiary-text)]">
+                <td className="p-3 text-[10px] text-[var(--text-tertiary)]">
                   {rels.length > 0 ? rels.join(", ") : "—"}
                 </td>
               </tr>

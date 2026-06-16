@@ -89,8 +89,8 @@ export function CardsPage() {
     <div className="p-8 max-w-5xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-[var(--deep-indigo)]">知识节点</h2>
-          <p className="text-xs text-[var(--tertiary-text)] mt-1">
+          <h2 className="text-2xl font-semibold text-[var(--brand-navy)]">知识节点</h2>
+          <p className="text-xs text-[var(--text-tertiary)] mt-1">
             概念 · 观点 · 证据 · 反思 — 知识路径的基本构成单元
           </p>
         </div>
@@ -100,7 +100,7 @@ export function CardsPage() {
       <div className="flex gap-1.5 mb-4 flex-wrap">
         <button
           onClick={() => setFilter("")}
-          className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${!filter ? "bg-[var(--deep-indigo)] text-white" : "bg-white text-[var(--secondary-text)] border"}`}
+          className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${!filter ? "bg-[var(--brand-navy)] text-white" : "bg-white text-[var(--text-secondary)] border"}`}
         >
           全部
         </button>
@@ -108,7 +108,7 @@ export function CardsPage() {
           <button
             key={t}
             onClick={() => setFilter(t === filter ? "" : t)}
-            className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${filter === t ? "bg-[var(--deep-indigo)] text-white" : "bg-white text-[var(--secondary-text)] border"}`}
+            className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${filter === t ? "bg-[var(--brand-navy)] text-white" : "bg-white text-[var(--text-secondary)] border"}`}
           >
             {TYPE_LABELS[t] || t}
           </button>
@@ -118,20 +118,20 @@ export function CardsPage() {
       {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
 
       {selected.size > 0 && (
-        <div className="flex items-center gap-2 mb-3 bg-[var(--pale-lavender)] p-2 rounded-lg">
-          <span className="text-xs text-[var(--deep-indigo)]">已选 {selected.size} 张</span>
-          <button onClick={handleBatchExport} className="px-2 py-1 bg-[var(--path-teal)] text-white text-xs rounded">导出</button>
+        <div className="flex items-center gap-2 mb-3 bg-[var(--surface-lavender)] p-2 rounded-lg">
+          <span className="text-xs text-[var(--brand-navy)]">已选 {selected.size} 张</span>
+          <button onClick={handleBatchExport} className="px-2 py-1 bg-[var(--brand-cyan)] text-white text-xs rounded">导出</button>
           <button onClick={handleBatchDelete} className="px-2 py-1 bg-red-500 text-white text-xs rounded">删除</button>
-          <button onClick={() => setSelected(new Set())} className="px-2 py-1 text-xs text-[var(--tertiary-text)]">取消选择</button>
+          <button onClick={() => setSelected(new Set())} className="px-2 py-1 text-xs text-[var(--text-tertiary)]">取消选择</button>
         </div>
       )}
 
       {loading ? (
-        <p className="text-sm text-[var(--tertiary-text)]">加载中...</p>
+        <p className="text-sm text-[var(--text-tertiary)]">加载中...</p>
       ) : cards.length === 0 ? (
-        <div className="bg-white p-10 rounded-xl border border-dashed border-[var(--cool-gray)] text-center">
-          <p className="text-sm text-[var(--secondary-text)]">还没有知识卡片。</p>
-          <p className="text-xs text-[var(--tertiary-text)] mt-2">
+        <div className="bg-white p-10 rounded-xl border border-dashed border-[var(--border-default)] text-center">
+          <p className="text-sm text-[var(--text-secondary)]">还没有知识卡片。</p>
+          <p className="text-xs text-[var(--text-tertiary)] mt-2">
             在阅读器中选中文本 → 添加批注 → 转为知识卡片。
           </p>
         </div>
@@ -139,10 +139,10 @@ export function CardsPage() {
         <div className="space-y-2">
           <div className="flex items-center gap-2 mb-1">
             <input type="checkbox" checked={selected.size === cards.length && cards.length > 0} onChange={toggleAll} className="w-3.5 h-3.5" />
-            <span className="text-[10px] text-[var(--tertiary-text)]">全选</span>
+            <span className="text-[10px] text-[var(--text-tertiary)]">全选</span>
           </div>
           {cards.map((card) => (
-            <div key={card.id} className="bg-white p-4 rounded-lg border border-[var(--cool-gray)]">
+            <div key={card.id} className="bg-white p-4 rounded-lg border border-[var(--border-default)]">
               <div className="flex items-start gap-3">
                 <input type="checkbox" checked={selected.has(card.id)} onChange={() => toggleSelect(card.id)} className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
@@ -154,15 +154,15 @@ export function CardsPage() {
                       {STATUS_LABELS[card.calibration_status] || card.calibration_status}
                     </span>
                   </div>
-                  <h4 className="text-sm font-medium text-[var(--primary-text)] truncate">{card.title}</h4>
-                  <p className="text-xs text-[var(--secondary-text)] mt-1 line-clamp-2">{card.content}</p>
+                  <h4 className="text-sm font-medium text-[var(--text-primary)] truncate">{card.title}</h4>
+                  <p className="text-xs text-[var(--text-secondary)] mt-1 line-clamp-2">{card.content}</p>
                   {card.calibration_note && (
-                    <p className="text-xs text-[var(--soft-violet)] mt-1 italic">💬 {card.calibration_note}</p>
+                    <p className="text-xs text-[var(--brand-violet)] mt-1 italic">💬 {card.calibration_note}</p>
                   )}
                   {card.source_document_title && (
                     <button
                       onClick={() => card.source_document_id && navigate(`/reader/${card.source_document_id}`)}
-                      className="text-[10px] text-[var(--path-teal)] hover:underline mt-1 block"
+                      className="text-[10px] text-[var(--brand-cyan)] hover:underline mt-1 block"
                     >
                       📄 {card.source_document_title} {card.page_number ? `p.${card.page_number}` : ""}
                     </button>
@@ -187,7 +187,7 @@ export function CardsPage() {
                   )}
                   <button
                     onClick={() => handleDelete(card.id)}
-                    className="text-[10px] text-[var(--tertiary-text)] hover:text-red-500 ml-1"
+                    className="text-[10px] text-[var(--text-tertiary)] hover:text-red-500 ml-1"
                   >
                     ✕
                   </button>

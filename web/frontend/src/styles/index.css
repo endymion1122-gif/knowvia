@@ -1,90 +1,92 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════
-   Knowvia Design System v2 — macOS-inspired
+   Knowvia Design System v3 — macOS Brand
+   Colors extracted from official brand guide
    ═══════════════════════════════════════════ */
 
 :root {
-  /* ── Primary palette ── */
-  --deep-indigo: #2D3A8C;
-  --deep-indigo-hover: #252F73;
-  --soft-violet: #7C6EB0;
-  --soft-violet-light: #9B8EC8;
-  --slate-blue: #5B6E9C;
-  --path-teal: #4A9C8C;
-  --path-teal-hover: #3E8577;
+  /* ── Brand Core (from 品牌指南.png) ── */
+  --brand-navy: #0B1A5E;
+  --brand-blue: #3B6CF8;
+  --brand-cyan: #0EC2C7;
+  --brand-violet: #6B4EF8;
+  --brand-navy-dark: #060E3A;
 
-  /* ── Neutrals ── */
-  --warm-white: #FAF8F5;
-  --page-bg: #F5F2EE;
+  /* ── Surfaces ── */
+  --page-bg: #F5F6FA;
   --card-bg: #FFFFFF;
-  --cool-gray: #E2DFD9;
-  --cool-gray-light: #EDEAE5;
-  --border-subtle: #E8E5E0;
+  --sidebar-bg: #FAFBFF;
+  --input-bg: #F1F3F8;
+
+  /* ── Borders ── */
+  --border-light: #E8EAF2;
+  --border-default: #DDE0EA;
 
   /* ── Text ── */
-  --primary-text: #1E1E1E;
-  --secondary-text: #5C5C5C;
-  --tertiary-text: #949494;
-  --placeholder-text: #B8B8B8;
+  --text-primary: #131633;
+  --text-secondary: #5B5F7B;
+  --text-tertiary: #9094AE;
+  --text-placeholder: #B8BBD0;
+  --text-inverse: #FFFFFF;
 
   /* ── Semantic ── */
-  --pale-lavender: #F1EEF8;
-  --pale-mint: #EDF5F3;
-  --pale-amber: #FFF8ED;
-  --pale-rose: #FFF0F0;
-  --success-green: #3B8C6B;
-  --warning-amber: #C4862E;
-  --danger-red: #C84848;
+  --surface-lavender: #F3F1FF;
+  --surface-mint: #EDFAFA;
+  --surface-amber: #FFF9F0;
+  --surface-rose: #FFF4F4;
+  --success: #0FA87A;
+  --warning: #E5982C;
+  --danger: #E04848;
 
   /* ── Shadows ── */
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
-  --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+  --shadow-xs: 0 1px 2px rgba(11,26,94,0.04);
+  --shadow-sm: 0 2px 8px rgba(11,26,94,0.06);
+  --shadow-md: 0 4px 16px rgba(11,26,94,0.08);
+  --shadow-lg: 0 8px 32px rgba(11,26,94,0.10);
+  --shadow-xl: 0 16px 48px rgba(11,26,94,0.12);
 
   /* ── Radius ── */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-xl: 20px;
+  --radius-xl: 24px;
 
   /* ── Transitions ── */
-  --transition-fast: 150ms ease;
-  --transition-normal: 200ms ease;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
 }
 
 /* ── Base ── */
 body {
   font-family: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", sans-serif;
   background: var(--page-bg);
-  color: var(--primary-text);
+  color: var(--text-primary);
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   letter-spacing: -0.01em;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-#root {
-  min-height: 100vh;
-}
+#root { min-height: 100vh; }
 
 /* ── Scrollbar ── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--cool-gray); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--tertiary-text); }
+::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 
 /* ── Focus ── */
 *:focus-visible {
-  outline: 2px solid var(--soft-violet);
+  outline: 2px solid var(--brand-blue);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 /* ── Selection ── */
-::selection {
-  background: var(--pale-lavender);
-  color: var(--deep-indigo);
-}
+::selection { background: rgba(59,108,248,0.15); color: var(--text-primary); }

@@ -45,7 +45,7 @@ export function WritingChecklist({ pathwayId, nodes, documents, onNavigateToNode
     });
   };
 
-  if (loading) return <p className="text-xs text-[var(--tertiary-text)] animate-pulse">分析中...</p>;
+  if (loading) return <p className="text-xs text-[var(--text-tertiary)] animate-pulse">分析中...</p>;
   if (!data) return <p className="text-xs text-red-500">加载失败</p>;
 
   const checks = Object.entries(data.checks);
@@ -73,9 +73,9 @@ export function WritingChecklist({ pathwayId, nodes, documents, onNavigateToNode
   return (
     <div className="space-y-4">
       {/* Score card */}
-      <div className="bg-white p-4 rounded-xl border border-[var(--cool-gray)]">
+      <div className="bg-white p-4 rounded-xl border border-[var(--border-default)]">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-[var(--primary-text)]">写作准备度</h3>
+          <h3 className="text-sm font-semibold text-[var(--text-primary)]">写作准备度</h3>
           <span className={`text-lg font-bold ${data.readiness_score >= 75 ? "text-green-600" : data.readiness_score >= 50 ? "text-amber-600" : "text-red-600"}`}>
             {data.readiness_score}%
           </span>
@@ -86,13 +86,13 @@ export function WritingChecklist({ pathwayId, nodes, documents, onNavigateToNode
             style={{ width: `${data.readiness_score}%` }}
           />
         </div>
-        <div className="grid grid-cols-2 gap-1.5 text-[10px] text-[var(--secondary-text)]">
+        <div className="grid grid-cols-2 gap-1.5 text-[10px] text-[var(--text-secondary)]">
           <span>{data.total_cards} 节点</span>
           <span>{data.total_claims} 观点</span>
           <span>{data.total_evidence} 证据</span>
           <span>{data.total_sources} 来源</span>
         </div>
-        <p className="text-[10px] text-[var(--tertiary-text)] mt-2 italic">{data.summary}</p>
+        <p className="text-[10px] text-[var(--text-tertiary)] mt-2 italic">{data.summary}</p>
       </div>
 
       {/* Checklist */}
@@ -111,11 +111,11 @@ export function WritingChecklist({ pathwayId, nodes, documents, onNavigateToNode
               checked={check.passed || doneItems.has(key)}
               onChange={() => !check.passed && toggleDone(key)}
               disabled={check.passed}
-              className="w-3.5 h-3.5 accent-[var(--path-teal)]"
+              className="w-3.5 h-3.5 accent-[var(--brand-cyan)]"
             />
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-[var(--primary-text)]">{check.label}</p>
-              <p className="text-[10px] text-[var(--secondary-text)]">{check.detail}</p>
+              <p className="font-medium text-[var(--text-primary)]">{check.label}</p>
+              <p className="text-[10px] text-[var(--text-secondary)]">{check.detail}</p>
             </div>
             {check.passed ? (
               <span className="text-green-600 text-xs">✓</span>
@@ -129,7 +129,7 @@ export function WritingChecklist({ pathwayId, nodes, documents, onNavigateToNode
       {/* Action items */}
       {actionItems.length > 0 && (
         <div>
-          <h4 className="text-[11px] font-semibold text-[var(--slate-blue)] mb-2">
+          <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] mb-2">
             行动清单 ({actionItems.filter(a => !a.done).length} 项待处理)
           </h4>
           <div className="space-y-1">
@@ -137,28 +137,28 @@ export function WritingChecklist({ pathwayId, nodes, documents, onNavigateToNode
               <div
                 key={item.key}
                 className={`flex items-center gap-2 p-2 rounded text-xs border ${
-                  item.done ? "bg-gray-50 border-gray-200 opacity-50" : "bg-white border-[var(--cool-gray)]"
+                  item.done ? "bg-gray-50 border-gray-200 opacity-50" : "bg-white border-[var(--border-default)]"
                 }`}
               >
                 <input
                   type="checkbox"
                   checked={item.done}
                   onChange={() => toggleDone(item.key)}
-                  className="w-3 h-3 accent-[var(--soft-violet)] flex-shrink-0"
+                  className="w-3 h-3 accent-[var(--brand-violet)] flex-shrink-0"
                 />
-                <span className="text-[10px] text-[var(--tertiary-text)] flex-shrink-0">{item.label}:</span>
+                <span className="text-[10px] text-[var(--text-tertiary)] flex-shrink-0">{item.label}:</span>
                 <button
                   onClick={() => {
                     if (item.targetType === "node") onNavigateToNode?.(item.targetId);
                   }}
-                  className="text-[var(--soft-violet)] hover:underline truncate text-left"
+                  className="text-[var(--brand-violet)] hover:underline truncate text-left"
                 >
                   {item.detail}
                 </button>
               </div>
             ))}
           </div>
-          <p className="text-[9px] text-[var(--tertiary-text)] mt-1">
+          <p className="text-[9px] text-[var(--text-tertiary)] mt-1">
             完成 {totalDone}/{checks.length} 项检查 · {actionItems.filter(a => !a.done).length} 项待处理
           </p>
         </div>
