@@ -45,15 +45,21 @@ export function LoginPage({ isRegister }: { isRegister?: boolean }) {
             </div>
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">◈</div>
+                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
                 <p className="text-sm text-white/80 leading-relaxed">AI 提取概念、观点、证据<br />你来做判断、校准和补充</p>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">🔗</div>
+                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7.5 7.5 10.5 16"/><path d="M16.5 8.5 13.5 16"/></svg>
+                </div>
                 <p className="text-sm text-white/80 leading-relaxed">建立知识之间的关系<br />形成可追溯的知识路径</p>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">🧠</div>
+                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 2a3 3 0 0 0-3 3v1a6 6 0 0 0-5 5.5V14h16v-2.5A6 6 0 0 0 15 6V5a3 3 0 0 0-3-3z"/><path d="M9 18c.5 2 2 3 3 3s2.5-1 3-3"/></svg>
+                </div>
                 <p className="text-sm text-white/80 leading-relaxed">主动回忆 + 输出迁移<br />让知识真正内化留存</p>
               </div>
             </div>
@@ -107,7 +113,8 @@ export function LoginPage({ isRegister }: { isRegister?: boolean }) {
 
               {error && (
                 <div className="bg-[var(--error-bg)] text-[var(--error)] text-xs px-4 py-3 rounded-xl flex items-center gap-2 font-medium">
-                  <span className="text-base">⚠</span> {error}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="flex-shrink-0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  {error}
                 </div>
               )}
 

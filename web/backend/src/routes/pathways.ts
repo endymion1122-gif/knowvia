@@ -117,11 +117,15 @@ router.post("/:id/link-document", (req: AuthRequest, res: Response) => {
   const pathway = db.prepare("SELECT id FROM knowledge_pathways WHERE id = ? AND user_id = ?")
     .get(req.params.id, req.userId);
   if (!pathway) { res.status(404).json({ error: "路径不存在" }); return; }
-  db.prepare("INSERT OR IGNORE INTO pathway_documents (pathway_id, document_id) VALUES (?, ?)")
-    .run(req.params.id, document_id);
-  // Copy markdown if available
-  const doc = db.prepare("SELECT markdown_content FROM documents WHERE id = ?").get(document_id) as any;
-  if (doc?.markdown_content) {
+  // Verify document exists and belongs to user
+  const doc = db.prepare("SELECT id, markdown_content FROM documents WHERE id = ? AND user_id = ?")
+    .get(document_id, req.userId) as any;
+  if (!doc) { res.status(400).json({ error: "文档不存在" }); return; }
+  try {
+    db.prepare("INSERT OR IGNORE INTO pathway_documents (pathway_id, document_id) VALUES (?, ?)")
+      .run(req.params.id, document_id);
+  } catch { /* already linked */ }
+  if (doc.markdown_content) {
     db.prepare("UPDATE knowledge_pathways SET source_markdown = COALESCE(NULLIF(source_markdown,''), ?) || ? WHERE id = ?")
       .run(doc.markdown_content, doc.markdown_content, req.params.id);
   }
