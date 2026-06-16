@@ -412,6 +412,20 @@ export function PathwayPage() {
         </div>
       </div>
       )}
+      <RightInspector
+        score={nodes.length > 0 ? Math.min(100, Math.round((nodes.filter((n: any) => n.user_confirmed).length / Math.max(1, nodes.length)) * 85 + 15)) : undefined}
+        scoreLabel="节点校准率"
+        metrics={[
+          { label: "资料完整性", value: documents.length > 0 ? 80 : 0 },
+          { label: "节点确认率", value: nodes.length > 0 ? Math.round((nodes.filter((n: any) => n.user_confirmed).length / nodes.length) * 100) : 0 },
+          { label: "关系密度", value: nodes.length > 0 ? Math.min(100, Math.round((relations.length / nodes.length) * 100)) : 0 },
+        ]}
+        aiSuggestions={documents.length === 0 ? ["上传资料以开始构建知识路径", "添加至少 2 份文档效果最佳"] : nodes.length === 0 ? ["点击「AI 提取知识节点」开始分析"] : nodes.filter((n: any) => !n.user_confirmed).length > 0 ? [`还有 ${nodes.filter((n: any) => !n.user_confirmed).length} 个节点待确认`, "建议用自己的话转述每个概念"] : ["所有节点已确认，干得好！", "可以尝试建立更多节点间关系"]}
+        exportActions={[
+          { label: "导出 Markdown 报告", onClick: () => handleExport("markdown_report"), primary: true },
+          { label: "导出综述提纲", onClick: () => handleExport("summary_outline") },
+        ]}
+      />
     </div>
   );
 }
