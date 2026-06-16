@@ -75,8 +75,8 @@ export function RecallPage() {
   if (!started) {
     return (
       <div className="p-8 max-w-2xl mx-auto">
-        <h2 className="text-2xl font-semibold text-[var(--brand-indigo)] mb-1">主动回忆练习</h2>
-        <p className="text-xs text-[var(--text-tertiary)] mb-6">
+        <h2 className="text-[28px] font-bold text-[var(--text-primary)] tracking-tight mb-1">主动回忆练习</h2>
+        <p className="text-[13px] text-[var(--text-tertiary)] mb-6">
           选择一个知识路径，尝试用自己的话回忆每个节点的内容。这是最有效的学习策略之一。
         </p>
         <div className="bg-white p-6 rounded-xl border border-[var(--border-default)] space-y-4">
@@ -116,8 +116,8 @@ export function RecallPage() {
     <div className="p-8 max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-[var(--brand-indigo)]">主动回忆</h2>
-          <p className="text-xs text-[var(--text-tertiary)]">
+          <h2 className="text-[28px] font-bold text-[var(--text-primary)] tracking-tight">主动回忆</h2>
+          <p className="text-[13px] text-[var(--text-tertiary)]">
             进度：{items.filter((i) => i.revealed).length}/{items.length} · 正确：{score}
           </p>
         </div>
@@ -159,7 +159,7 @@ export function RecallPage() {
                     检查答案
                   </button>
                   <button onClick={() => reveal(idx)}
-                    className="px-3 py-1.5 text-xs text-[var(--text-tertiary)] hover:text-[var(--text-primary)]">
+                    className="px-3 py-1.5 text-[13px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)]">
                     跳过（直接查看）
                   </button>
                 </div>

@@ -6,6 +6,8 @@ import { EvidenceChain } from "../components/pathway/EvidenceChain";
 import { ComparisonMatrix } from "../components/pathway/ComparisonMatrix";
 import { WritingChecklist } from "../components/pathway/WritingChecklist";
 import { SourceQuality } from "../components/pathway/SourceQuality";
+import { RightInspector } from "../components/common/RightInspector";
+import { Card } from "../components/common/Card";
 
 const RELATION_LABELS: Record<string, string> = {
   definition: "定义", support: "支撑", oppose: "反对", cause: "因果",
@@ -195,7 +197,7 @@ export function PathwayPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <button onClick={() => navigate("/pathways")} className="text-xs text-[var(--brand-violet)] hover:underline mb-1 block">← 路径列表</button>
-          <h2 className="text-2xl font-semibold text-[var(--brand-indigo)]">{pathway.title}</h2>
+          <h2 className="text-[28px] font-bold text-[var(--text-primary)] tracking-tight">{pathway.title}</h2>
           <span className={`text-[10px] px-1.5 py-0.5 rounded ${pathway.status === "draft" ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700"}`}>
             {pathway.status === "draft" ? "草稿" : "已完成"}
           </span>
@@ -430,7 +432,7 @@ function PathwayListView() {
     <div className="p-8 max-w-5xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-[var(--brand-indigo)] mb-1">专题路径</h2>
+          <h2 className="text-[28px] font-bold text-[var(--text-primary)] tracking-tight mb-1">专题路径</h2>
           <p className="text-xs text-[var(--text-tertiary)]">Knowledge Pathway — 围绕主题的结构化知识脉络</p>
         </div>
         <button onClick={() => navigate("/init")}

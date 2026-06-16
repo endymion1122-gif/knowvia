@@ -33,7 +33,7 @@ export function InitPage() {
   return (
     <div className="p-8 max-w-2xl mx-auto">
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-[var(--brand-indigo)] mb-1">开启知识路径</h2>
+        <h2 className="text-[28px] font-bold text-[var(--text-primary)] tracking-tight mb-1">开启知识路径</h2>
         <p className="text-xs text-[var(--text-tertiary)]">
           回答以下问题，帮助 AI 更好地理解你的学习目标
         </p>

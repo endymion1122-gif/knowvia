@@ -37,7 +37,7 @@ export function SettingsPage() {
 
   return (
     <div className="p-8 max-w-3xl">
-      <h2 className="text-2xl font-semibold text-[var(--brand-indigo)] mb-1">设置</h2>
+      <h2 className="text-[28px] font-bold text-[var(--text-primary)] tracking-tight mb-1">设置</h2>
       <p className="text-xs text-[var(--text-tertiary)] mb-8">配置 AI 服务和账户信息</p>
 
       {/* AI Configuration */}
