@@ -186,162 +186,100 @@ export function ReaderPage() {
       </div>
 
       {/* Inspector Sidebar */}
-      <aside className="w-80 flex-shrink-0 bg-[var(--bg-sidebar)] border-l border-[var(--border-default)] overflow-auto">
-        <div className="p-4 space-y-4">
+      <aside className="w-[288px] flex-shrink-0 bg-[var(--bg-sidebar)] border-l border-[var(--border-default)] overflow-auto">
+        <div className="p-4 space-y-3">
           {selectedText ? (
             <>
-              <div>
-                <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] mb-2">已选文本 {selectedPage > 0 && `（第 ${selectedPage} 页）`}</h4>
-                <p className="text-xs text-[var(--text-secondary)] bg-[var(--bg-page)] p-2 rounded border max-h-24 overflow-auto">{selectedText}</p>
+              <div className="bg-white rounded-2xl border border-[var(--border-default)] p-4">
+                <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide mb-2">已选文本 {selectedPage > 0 && `(p.${selectedPage})`}</h4>
+                <p className="text-[13px] text-[var(--text-primary)] bg-[var(--bg-page)] p-2.5 rounded-xl max-h-24 overflow-auto leading-relaxed">{selectedText}</p>
               </div>
 
-              <div>
-                <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] mb-2">添加批注</h4>
+              <div className="bg-white rounded-2xl border border-[var(--border-default)] p-4">
+                <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide mb-2">添加批注</h4>
                 <textarea value={note} onChange={(e) => setNote(e.target.value)}
-                  className="w-full text-xs p-2 border rounded h-16 resize-none focus:outline-none focus:ring-1 focus:ring-[var(--brand-violet)]"
-                  placeholder="你的理解..." />
+                  className="w-full h-16 p-2.5 bg-[var(--bg-page)] border border-[var(--border-default)] rounded-xl text-[13px] placeholder:text-[var(--text-placeholder)] focus:outline-none focus:border-[var(--brand-violet)] resize-none transition-colors"
+                  placeholder="用你自己的话理解这段文本..." />
                 <button onClick={handleAddAnnotation}
-                  className="mt-2 w-full py-1.5 bg-[var(--brand-violet)] text-white text-xs font-semibold rounded hover:opacity-90">
+                  className="mt-2 w-full h-9 bg-[var(--brand-violet)] text-white rounded-xl text-xs font-semibold hover:bg-[var(--primary-400)] transition-colors">
                   保存批注
                 </button>
               </div>
 
-              <div>
-                <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] mb-2">AI 概念解释</h4>
+              <div className="bg-white rounded-2xl border border-[var(--border-default)] p-4">
+                <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide mb-2">AI 解释</h4>
                 <button onClick={handleAIAnalyze} disabled={aiLoading}
-                  className="w-full py-1.5 bg-[var(--brand-indigo)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-50">
+                  className="w-full h-9 bg-[var(--brand-indigo)] text-white rounded-xl text-xs font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity">
                   {aiLoading ? "分析中..." : "解释选中概念"}
                 </button>
                 {aiResult && (
-                  <div className="mt-2 text-xs text-[var(--text-secondary)] bg-[var(--primary-100)] p-2 rounded max-h-40 overflow-auto whitespace-pre-wrap">
-                    {aiResult}
-                  </div>
+                  <div className="mt-2 text-[13px] text-[var(--text-secondary)] bg-[var(--primary-50)] p-3 rounded-xl max-h-40 overflow-auto whitespace-pre-wrap leading-relaxed">{aiResult}</div>
                 )}
               </div>
             </>
           ) : (
-            <p className="text-[10px] text-[var(--text-tertiary)]">选中文本后可以添加批注或让 AI 解释</p>
+            <div className="bg-white rounded-2xl border border-[var(--border-default)] p-5 text-center">
+              <p className="text-sm text-[var(--text-tertiary)]">选中文本后可以添加批注或让 AI 解释</p>
+            </div>
           )}
 
-          <hr className="border-[var(--border-default)]" />
-
           {/* Document AI Analysis */}
-          <div>
-            <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] mb-2">AI 文档分析</h4>
-            <button
-              onClick={handleSummarize}
-              disabled={summaryLoading}
-              className="w-full py-1.5 bg-[var(--brand-teal)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-50"
-            >
-              {summaryLoading ? "分析中..." : "分析本文档"}
+          <div className="bg-white rounded-2xl border border-[var(--border-default)] p-4">
+            <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide mb-2">文档分析</h4>
+            <button onClick={handleSummarize} disabled={summaryLoading}
+              className="w-full h-9 bg-[var(--brand-teal)] text-white rounded-xl text-xs font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity">
+              {summaryLoading ? "分析中..." : "🤖 AI 分析本文档"}
             </button>
             {docSummary && !docSummary.error && (
-              <div className="mt-2 text-xs space-y-2 bg-[var(--bg-page)] p-3 rounded border max-h-64 overflow-auto">
+              <div className="mt-2 text-[13px] space-y-2 bg-[var(--bg-page)] p-3 rounded-xl max-h-64 overflow-auto">
                 <p className="text-[var(--text-primary)] leading-relaxed">{docSummary.summary}</p>
                 <div className="flex gap-1 flex-wrap">
-                  <span className="text-[10px] px-1.5 py-0.5 bg-[var(--primary-100)] rounded text-[var(--brand-indigo)]">
-                    结构：{docSummary.structure_type}
-                  </span>
-                  <span className="text-[10px] px-1.5 py-0.5 bg-[var(--teal-100)] rounded text-[var(--brand-teal)]">
-                    推荐视图：{docSummary.recommended_view}
-                  </span>
-                  {docSummary.mode === "demo" && (
-                    <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 rounded text-amber-700">Demo</span>
-                  )}
+                  <span className="text-[10px] px-1.5 py-0.5 bg-[var(--primary-100)] rounded-lg text-[var(--brand-indigo)] font-medium">{docSummary.structure_type}</span>
+                  <span className="text-[10px] px-1.5 py-0.5 bg-[var(--teal-100)] rounded-lg text-[var(--teal-600)] font-medium">{docSummary.recommended_view}</span>
+                  {docSummary.mode === "demo" && <span className="text-[10px] px-1.5 py-0.5 bg-[var(--warning-bg)] rounded-lg text-[var(--warning)] font-medium">Demo</span>}
                 </div>
-                {docSummary.reading_goal && (
-                  <p className="text-[10px] text-[var(--text-tertiary)]">🎯 {docSummary.reading_goal}</p>
-                )}
                 {docSummary.key_items?.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mt-1">
-                      <p className="text-[10px] font-semibold text-[var(--text-secondary)]">关键条目：</p>
-                      <button
-                        onClick={async () => {
-                          for (const item of docSummary.key_items) {
-                            try {
-                              await api.cards.create({
-                                title: item.title,
-                                content: item.content,
-                                card_type: item.type,
-                                source_document_id: doc?.id,
-                                source_document_title: doc?.title || "",
-                                calibration_note: "",
-                              });
-                            } catch {}
-                          }
-                          alert("已全部转为知识卡片，可在「知识节点」页面查看。");
-                        }}
-                        className="text-[10px] text-[var(--brand-teal)] hover:underline"
-                      >
-                        全部转为卡片
-                      </button>
+                      <span className="text-[10px] font-semibold text-[var(--text-secondary)]">关键条目</span>
+                      <button onClick={async () => { for (const item of docSummary.key_items) { try { await api.cards.create({ title: item.title, content: item.content, card_type: item.type, source_document_id: doc?.id, source_document_title: doc?.title || "", calibration_note: "" }); } catch {} } alert("已全部转为知识卡片"); }}
+                        className="text-[10px] text-[var(--brand-teal)] hover:underline font-medium">全部转为卡片</button>
                     </div>
                     {docSummary.key_items.map((item: any, i: number) => (
-                      <div key={i} className="text-[10px] mt-0.5 flex items-start gap-1 group/item">
-                        <span className={`flex-shrink-0 w-1 h-1 rounded-full mt-1 ${item.importance === "high" ? "bg-red-400" : item.importance === "medium" ? "bg-amber-400" : "bg-gray-300"}`} />
-                        <span className="text-[var(--text-secondary)] flex-1">[{item.type}] {item.title}: {item.content}</span>
-                        <button
-                          onClick={async () => {
-                            try {
-                              await api.cards.create({
-                                title: item.title,
-                                content: item.content,
-                                card_type: item.type,
-                                source_document_id: doc?.id,
-                                source_document_title: doc?.title || "",
-                                calibration_note: "",
-                              });
-                              alert("已转为知识卡片");
-                            } catch (e: any) { alert("创建失败: " + e.message); }
-                          }}
-                          className="text-[10px] text-[var(--brand-teal)] hover:underline opacity-0 group-hover/item:opacity-100 flex-shrink-0"
-                        >
-                          +卡片
-                        </button>
+                      <div key={i} className="text-[11px] mt-1 flex items-start gap-1.5 group/item">
+                        <span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full mt-1 ${item.importance === "high" ? "bg-[var(--error)]" : item.importance === "medium" ? "bg-[var(--warning)]" : "bg-[var(--text-muted)]"}`} />
+                        <span className="text-[var(--text-secondary)] flex-1">[{item.type}] {item.title}</span>
+                        <button onClick={async () => { try { await api.cards.create({ title: item.title, content: item.content, card_type: item.type, source_document_id: doc?.id, source_document_title: doc?.title || "", calibration_note: "" }); alert("已转为卡片"); } catch (e: any) { alert(e.message); } }}
+                          className="text-[10px] text-[var(--brand-teal)] hover:underline opacity-0 group-hover/item:opacity-100 flex-shrink-0">+卡片</button>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
             )}
-            {docSummary?.error && (
-              <p className="mt-2 text-xs text-red-500">{docSummary.error}</p>
-            )}
+            {docSummary?.error && <p className="mt-2 text-xs text-red-500">{docSummary.error}</p>}
           </div>
 
-          <hr className="border-[var(--border-default)]" />
-
-          <div>
-            <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] mb-2">批注列表 ({annotations.length})</h4>
+          {/* Annotations List */}
+          <div className="bg-white rounded-2xl border border-[var(--border-default)] p-4">
+            <h4 className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide mb-2">批注 ({annotations.length})</h4>
             {annotations.length === 0 ? (
-              <p className="text-[10px] text-[var(--text-tertiary)]">暂无批注</p>
+              <p className="text-xs text-[var(--text-tertiary)] text-center py-3">暂无批注</p>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {annotations.map((a) => (
                   <div key={a.id}>
-                    <div className="text-xs p-2 bg-[var(--bg-page)] rounded border group">
+                    <div className="bg-[var(--bg-page)] rounded-xl p-2.5 group">
                       <div className="flex items-start justify-between gap-1">
-                        <p className="text-[var(--text-secondary)] line-clamp-2 flex-1">"{a.selected_text}"</p>
-                        <button
-                          onClick={() => handleDeleteAnnotation(a.id)}
-                          className="text-[10px] text-[var(--text-tertiary)] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
-                          title="删除批注"
-                        >
-                          ✕
-                        </button>
+                        <p className="text-[12px] text-[var(--text-primary)] line-clamp-2 flex-1 leading-relaxed">"{a.selected_text}"</p>
+                        <button onClick={() => handleDeleteAnnotation(a.id)}
+                          className="text-[10px] text-[var(--text-tertiary)] hover:text-[var(--error)] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">✕</button>
                       </div>
-                      {a.note && <p className="text-[var(--brand-violet)] mt-1">💬 {a.note}</p>}
-                      <div className="flex items-center justify-between mt-1">
-                        {a.page_number ? (
-                          <span className="text-[10px] text-[var(--text-tertiary)]">p.{a.page_number}</span>
-                        ) : <span />}
-                        <button
-                          onClick={() => handleStartCard(a)}
-                          className="text-[10px] text-[var(--brand-teal)] hover:text-[var(--brand-indigo)] opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          + 转为卡片
-                        </button>
+                      {a.note && <p className="text-[12px] text-[var(--brand-violet)] mt-1">💬 {a.note}</p>}
+                      <div className="flex items-center justify-between mt-1.5">
+                        {a.page_number ? <span className="text-[10px] text-[var(--text-tertiary)]">p.{a.page_number}</span> : <span />}
+                        <button onClick={() => handleStartCard(a)}
+                          className="text-[10px] text-[var(--brand-teal)] hover:text-[var(--brand-indigo)] opacity-0 group-hover:opacity-100 transition-opacity font-medium">+ 转为卡片</button>
                       </div>
                     </div>
 

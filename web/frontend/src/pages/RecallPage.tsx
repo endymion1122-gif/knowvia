@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
+import { Card } from "../components/common/Card";
 
 interface RecallItem {
   card: any;
@@ -79,7 +80,7 @@ export function RecallPage() {
         <p className="text-[13px] text-[var(--text-tertiary)] mb-6">
           选择一个知识路径，尝试用自己的话回忆每个节点的内容。这是最有效的学习策略之一。
         </p>
-        <div className="bg-white p-6 rounded-xl border border-[var(--border-default)] space-y-4">
+        <div className="bg-white rounded-2xl border border-[var(--border-default)] shadow-[var(--shadow-card)] p-6 border-[var(--border-default)] space-y-4">
           {pathways.length === 0 ? (
             <p className="text-sm text-[var(--text-tertiary)]">还没有知识路径。请先创建路径并提取节点。</p>
           ) : (
@@ -87,7 +88,7 @@ export function RecallPage() {
               <select
                 value={selectedPathway}
                 onChange={(e) => setSelectedPathway(e.target.value)}
-                className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-lg text-sm"
+                className="w-full px-4 py-2.5 border border-[var(--border-default)] rounded-xl text-sm"
               >
                 <option value="">选择知识路径...</option>
                 {pathways.map((p) => (
@@ -97,7 +98,7 @@ export function RecallPage() {
               <button
                 onClick={startRecall}
                 disabled={!selectedPathway || loading}
-                className="w-full py-2.5 bg-[var(--brand-indigo)] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40"
+                className="w-full h-10 bg-[var(--brand-violet)] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40"
               >
                 {loading ? "加载中..." : "开始回忆练习"}
               </button>
@@ -127,7 +128,7 @@ export function RecallPage() {
 
       <div className="space-y-4">
         {items.map((item, idx) => (
-          <div key={item.card.id} className="bg-white p-4 rounded-xl border border-[var(--border-default)]">
+          <div key={item.card.id} className="bg-white rounded-2xl border border-[var(--border-default)] shadow-[var(--shadow-card)] p-4 border-[var(--border-default)]">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--primary-100)] text-[var(--brand-indigo)] font-semibold">
                 {item.card.card_type}
@@ -150,12 +151,12 @@ export function RecallPage() {
                   value={item.userAnswer}
                   onChange={(e) => setItems((prev) => prev.map((it, i) => i === idx ? { ...it, userAnswer: e.target.value } : it))}
                   placeholder="用你自己的话回忆这个节点的内容..."
-                  className="w-full px-3 py-2 border rounded-lg text-xs h-16 resize-none focus:outline-none focus:ring-1 focus:ring-[var(--brand-violet)]"
+                  className="w-full px-3 py-2 border-[var(--border-default)] rounded-xl text-xs h-16 resize-none focus:outline-none focus:border-[var(--brand-violet)]"
                 />
                 <div className="flex gap-2">
                   <button onClick={() => { checkAnswer(idx); reveal(idx); }}
                     disabled={!item.userAnswer.trim()}
-                    className="px-3 py-1.5 bg-[var(--brand-violet)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
+                    className="px-3 h-9 bg-[var(--brand-violet)] text-white text-xs font-semibold rounded hover:opacity-90 disabled:opacity-40">
                     检查答案
                   </button>
                   <button onClick={() => reveal(idx)}
@@ -198,7 +199,7 @@ export function RecallPage() {
           </p>
           <div className="flex gap-2 justify-center mt-3">
             <button onClick={() => startRecall()}
-              className="px-4 py-1.5 bg-[var(--brand-teal)] text-white text-xs font-semibold rounded hover:opacity-90">
+              className="px-4 h-9 bg-[var(--brand-teal)] text-white text-xs font-semibold rounded hover:opacity-90">
               再来一轮
             </button>
             <button onClick={() => { setStarted(false); setItems([]); }}

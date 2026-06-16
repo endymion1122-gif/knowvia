@@ -64,7 +64,7 @@ export function DashboardPage() {
             className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--brand-violet)]/30 transition-all duration-200 group"
           >
             <div className="w-10 h-10 rounded-xl bg-[var(--primary-100)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
-              🎯
+              <Icon name="path" size={20} />
             </div>
             <div className="text-left">
               <p className="text-sm font-semibold text-[var(--text-primary)]">新建知识路径</p>
@@ -77,7 +77,7 @@ export function DashboardPage() {
             className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--brand-teal)]/30 transition-all duration-200 group"
           >
             <div className="w-10 h-10 rounded-xl bg-[var(--teal-100)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
-              📚
+              <Icon name="library" size={20} />
             </div>
             <div className="text-left">
               <p className="text-sm font-semibold text-[var(--text-primary)]">管理资料库</p>
@@ -90,7 +90,7 @@ export function DashboardPage() {
             className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--brand-violet)]/30 transition-all duration-200 group"
           >
             <div className="w-10 h-10 rounded-xl bg-[var(--warning-bg)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
-              🧠
+              <Icon name="recall" size={20} />
             </div>
             <div className="text-left">
               <p className="text-sm font-semibold text-[var(--text-primary)]">主动回忆练习</p>
@@ -103,7 +103,7 @@ export function DashboardPage() {
             className="flex items-center gap-4 bg-white rounded-2xl p-5 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] hover:border-[var(--text-secondary)]/30 transition-all duration-200 group"
           >
             <div className="w-10 h-10 rounded-xl bg-[var(--bg-input)] flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
-              ⚡
+              <Icon name="settings" size={20} />
             </div>
             <div className="text-left">
               <p className="text-sm font-semibold text-[var(--text-primary)]">配置 AI 服务</p>
@@ -135,7 +135,7 @@ export function DashboardPage() {
                 className="flex items-center gap-4 bg-white rounded-2xl p-4 border border-[var(--border-light)] shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] transition-all duration-200 text-left group"
               >
                 <div className="w-9 h-9 rounded-xl bg-[var(--primary-100)] flex items-center justify-center text-sm flex-shrink-0">
-                  🔗
+                  <Icon name="path" size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--brand-indigo)] transition-colors">
@@ -157,7 +157,7 @@ export function DashboardPage() {
       {/* Empty State */}
       {!loading && stats.pathways === 0 && stats.documents === 0 && (
         <div className="text-center py-16">
-          <div className="text-5xl mb-5">📚</div>
+          <div className="text-5xl mb-5"><Icon name="library" size={20} /></div>
           <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">开始你的知识之旅</h3>
           <p className="text-sm text-[var(--text-tertiary)] max-w-md mx-auto leading-relaxed">
             创建你的第一个知识路径，上传学习资料，让 AI 帮你提取和组织关键概念。
@@ -166,7 +166,7 @@ export function DashboardPage() {
             onClick={() => navigate("/init")}
             className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-[var(--brand-indigo)] text-white rounded-xl text-sm font-semibold hover:bg-[var(--primary-700)] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] transition-all duration-200"
           >
-            🎯 创建第一条路径
+            <Icon name="path" size={20} /> 创建第一条路径
           </button>
         </div>
       )}
