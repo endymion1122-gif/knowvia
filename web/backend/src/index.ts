@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import { authMiddleware } from "./middleware/auth.js";
 import { apiRateLimit, authRateLimit } from "./middleware/rateLimit.js";
@@ -121,14 +122,17 @@ app.use((err: any, _req: any, res: any, _next: any) => {
   res.status(500).json({ error: "服务器内部错误" });
 });
 
-// Serve frontend in production
-const frontendDist = path.join(__dirname, "..", "..", "frontend", "dist");
-app.use(express.static(frontendDist));
-app.get("/{*splat}", (_req, res) => {
-  if (!_req.path.startsWith("/api")) {
-    res.sendFile(path.join(frontendDist, "index.html"));
-  }
-});
+// Serve frontend in production (supports Docker, Railway, and local dev)
+const frontendDist = process.env.FRONTEND_DIST ||
+  path.join(__dirname, "..", "frontend-dist");
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get("/{*splat}", (_req, res) => {
+    if (!_req.path.startsWith("/api")) {
+      res.sendFile(path.join(frontendDist, "index.html"));
+    }
+  });
+}
 
 getDb();
 app.listen(PORT, () => console.log(`Knowvia API running on http://localhost:${PORT}`));
