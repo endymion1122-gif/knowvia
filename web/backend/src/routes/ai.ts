@@ -1,6 +1,7 @@
 import { Router, Response } from "express";
 import { AuthRequest } from "../middleware/auth.js";
 import { callAI } from "../utils/ai-provider.js";
+import { DEFAULT_AI_CONFIG } from "../config.js";
 
 const router = Router();
 
@@ -12,13 +13,10 @@ router.post("/explain", async (req: AuthRequest, res: Response) => {
     return;
   }
 
-  // Use provided AI config or fall back to built-in demo mode
-  if (!apiKey || !endpoint || !model) {
-    // Demo mode — returns a structured placeholder
-    const demo = buildDemoExplanation(text, context);
-    res.json({ result: demo, mode: "demo" });
-    return;
-  }
+  // Use provided AI config or fall back to default DeepSeek
+  const effectiveKey = apiKey || DEFAULT_AI_CONFIG.apiKey;
+  const effectiveEndpoint = endpoint || DEFAULT_AI_CONFIG.apiEndpoint;
+  const effectiveModel = model || DEFAULT_AI_CONFIG.modelName;
 
   try {
     const prompt = `你是一个学术知识助手。请用中文简要解释下面这段话的核心概念，并说明它在上下文中的作用。
@@ -33,13 +31,13 @@ ${text.trim()}
 2. 在上下文中的作用
 3. 是否需要用户进一步核验（标注"AI 初稿，请结合原文确认"）`;
 
-    const aiRes = await callAI(apiKey, endpoint, {
-      model,
+    const aiRes = await callAI(effectiveKey, effectiveEndpoint, {
+      model: effectiveModel,
       messages: [{ role: "user", content: prompt }],
       maxTokens: 500,
       temperature: 0.3,
     });
-    res.json({ result: aiRes.content || "AI 未返回有效结果", mode: "api" });
+    res.json({ result: aiRes.content || "AI 未返回有效结果", mode: effectiveKey !== DEFAULT_AI_CONFIG.apiKey ? "custom" : "default" });
   } catch (e: any) {
     res.status(502).json({ error: `AI 请求异常: ${e.message}` });
   }
@@ -53,10 +51,9 @@ router.post("/extract-concepts", async (req: AuthRequest, res: Response) => {
     return;
   }
 
-  if (!apiKey || !endpoint || !model) {
-    res.json({ concepts: buildDemoConcepts(content, title), mode: "demo" });
-    return;
-  }
+  const effectiveKey = apiKey || DEFAULT_AI_CONFIG.apiKey;
+  const effectiveEndpoint = endpoint || DEFAULT_AI_CONFIG.apiEndpoint;
+  const effectiveModel = model || DEFAULT_AI_CONFIG.modelName;
 
   try {
     const excerpt = content.slice(0, 8000);
@@ -76,12 +73,12 @@ ${excerpt}
 
 只返回 JSON 数组，不要其他文字。`;
 
-    const aiRes = await callAI(apiKey, endpoint, {
-      model,
+    const aiRes = await callAI(effectiveKey, effectiveEndpoint, {
+      model: effectiveModel,
       messages: [{ role: "user", content: prompt }],
       maxTokens: 2000,
       temperature: 0.3,
-      responseFormat: model.includes("gpt") ? "json_object" : "text",
+      responseFormat: "json_object",
     });
     const raw = aiRes.content || "[]";
     try {
@@ -103,11 +100,9 @@ router.post("/extract-nodes", async (req: AuthRequest, res: Response) => {
     return;
   }
 
-  if (!apiKey || !endpoint || !model) {
-    const demo = buildDemoExtraction(markdown_content);
-    res.json({ ...demo, mode: "demo" });
-    return;
-  }
+  const effectiveKey = apiKey || DEFAULT_AI_CONFIG.apiKey;
+  const effectiveEndpoint = endpoint || DEFAULT_AI_CONFIG.apiEndpoint;
+  const effectiveModel = model || DEFAULT_AI_CONFIG.modelName;
 
   try {
     const excerpt = markdown_content.slice(0, 12000);
@@ -159,13 +154,13 @@ ${excerpt}
 }
 只返回 JSON，不要其他文字。`;
 
-    const aiRes = await callAI(apiKey, endpoint, {
-      model,
+    const aiRes = await callAI(effectiveKey, effectiveEndpoint, {
+      model: effectiveModel,
       system: systemPrompt,
       messages: [{ role: "user", content: userPrompt }],
       maxTokens: 3000,
       temperature: 0.3,
-      responseFormat: model.includes("gpt") ? "json_object" : "text",
+      responseFormat: "json_object",
     });
 
     if (!aiRes.content) {
@@ -197,10 +192,9 @@ router.post("/summarize-document", async (req: AuthRequest, res: Response) => {
     return;
   }
 
-  if (!apiKey || !endpoint || !model) {
-    res.json({ ...buildDemoSummary(content, title), mode: "demo" });
-    return;
-  }
+  const effectiveKey = apiKey || DEFAULT_AI_CONFIG.apiKey;
+  const effectiveEndpoint = endpoint || DEFAULT_AI_CONFIG.apiEndpoint;
+  const effectiveModel = model || DEFAULT_AI_CONFIG.modelName;
 
   try {
     const excerpt = content.slice(0, 10000);
@@ -222,12 +216,12 @@ ${excerpt}
 
 只返回 JSON，不要其他文字。`;
 
-    const aiRes = await callAI(apiKey, endpoint, {
-      model,
+    const aiRes = await callAI(effectiveKey, effectiveEndpoint, {
+      model: effectiveModel,
       messages: [{ role: "user", content: prompt }],
       maxTokens: 2000,
       temperature: 0.3,
-      responseFormat: model.includes("gpt") ? "json_object" : "text",
+      responseFormat: "text",
     });
 
     const raw = aiRes.content || "{}";

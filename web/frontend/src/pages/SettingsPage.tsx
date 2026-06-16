@@ -4,13 +4,13 @@ import { Card } from "../components/common/Card";
 interface AISettings { providerName: string; apiEndpoint: string; modelName: string; apiKey: string }
 
 const PRESETS: { name: string; settings: Omit<AISettings, "apiKey"> }[] = [
+  { name: "DeepSeek (默认)", settings: { providerName: "DeepSeek", apiEndpoint: "https://api.deepseek.com/chat/completions", modelName: "deepseek-chat" } },
   { name: "OpenAI", settings: { providerName: "OpenAI", apiEndpoint: "https://api.openai.com/v1/chat/completions", modelName: "gpt-4o-mini" } },
-  { name: "DeepSeek", settings: { providerName: "DeepSeek", apiEndpoint: "https://api.deepseek.com/chat/completions", modelName: "deepseek-chat" } },
   { name: "Claude Sonnet", settings: { providerName: "Anthropic", apiEndpoint: "https://api.anthropic.com/v1/messages", modelName: "claude-sonnet-4-20250514" } },
   { name: "Claude Opus", settings: { providerName: "Anthropic", apiEndpoint: "https://api.anthropic.com/v1/messages", modelName: "claude-opus-4-20250514" } },
   { name: "Claude Haiku", settings: { providerName: "Anthropic", apiEndpoint: "https://api.anthropic.com/v1/messages", modelName: "claude-haiku-4-5-20251001" } },
   { name: "Gemini", settings: { providerName: "Google", apiEndpoint: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", modelName: "gemini-2.5-flash" } },
-  { name: "Ollama", settings: { providerName: "Ollama", apiEndpoint: "http://localhost:11434/v1/chat/completions", modelName: "llama3" } },
+  { name: "Ollama (本地)", settings: { providerName: "Ollama", apiEndpoint: "http://localhost:11434/v1/chat/completions", modelName: "llama3" } },
 ];
 
 const inputClass = "w-full h-9 px-3 bg-white border border-[var(--border-default)] rounded-xl text-[13px] placeholder:text-[var(--text-placeholder)] focus:outline-none focus:border-[var(--brand-violet)] focus:shadow-[var(--shadow-glow-violet)] transition-all";
@@ -18,7 +18,7 @@ const inputClass = "w-full h-9 px-3 bg-white border border-[var(--border-default
 export function SettingsPage() {
   const [settings, setSettings] = useState<AISettings>(() => {
     const saved = localStorage.getItem("ai_settings");
-    return saved ? JSON.parse(saved) : { providerName: "OpenAI", apiEndpoint: "https://api.openai.com/v1/chat/completions", modelName: "gpt-4o-mini", apiKey: "" };
+    return saved ? JSON.parse(saved) : { providerName: "DeepSeek", apiEndpoint: "https://api.deepseek.com/chat/completions", modelName: "deepseek-chat", apiKey: "" };
   });
   const [saved, setSaved] = useState(false);
 
@@ -65,7 +65,7 @@ export function SettingsPage() {
           </div>
           <div>
             <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">API Key</label>
-            <input type="password" value={settings.apiKey} onChange={e => update({ apiKey: e.target.value })} className={inputClass} placeholder="sk-... 或留空使用 Demo 模式" />
+            <input type="password" value={settings.apiKey} onChange={e => update({ apiKey: e.target.value })} className={inputClass} placeholder="留空使用默认 DeepSeek，或输入你自己的 API Key" />
           </div>
           {saved && <p className="text-xs text-[var(--brand-teal)] font-medium">✓ 已自动保存</p>}
         </div>

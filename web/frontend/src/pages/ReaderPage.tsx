@@ -132,7 +132,7 @@ export function ReaderPage() {
         text: selectedText, context: doc?.title || "",
         apiKey: ai.apiKey, endpoint: ai.apiEndpoint, model: ai.modelName,
       });
-      setAiResult(data.mode === "demo" ? `[Demo AI] ${data.result}` : data.result);
+      setAiResult(data.result);
     } catch (e: any) {
       setAiResult("AI 请求失败: " + e.message);
     } finally { setAiLoading(false); }
@@ -236,7 +236,7 @@ export function ReaderPage() {
                 <div className="flex gap-1 flex-wrap">
                   <span className="text-[10px] px-1.5 py-0.5 bg-[var(--primary-100)] rounded-lg text-[var(--brand-indigo)] font-medium">{docSummary.structure_type}</span>
                   <span className="text-[10px] px-1.5 py-0.5 bg-[var(--teal-100)] rounded-lg text-[var(--teal-600)] font-medium">{docSummary.recommended_view}</span>
-                  {docSummary.mode === "demo" && <span className="text-[10px] px-1.5 py-0.5 bg-[var(--warning-bg)] rounded-lg text-[var(--warning)] font-medium">Demo</span>}
+                  {docSummary.mode === "default" && <span className="text-[10px] px-1.5 py-0.5 bg-[var(--border-light)] rounded-lg text-[var(--text-muted)] font-medium">默认</span>}
                 </div>
                 {docSummary.key_items?.length > 0 && (
                   <div>
