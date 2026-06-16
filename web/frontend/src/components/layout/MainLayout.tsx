@@ -4,6 +4,7 @@ import { useAuthStore } from "../../stores/authStore";
 import { api } from "../../services/api";
 
 // Static import for the home page (eager load)
+import { Icon } from "../common/Icon";
 import { DashboardPage } from "../../pages/DashboardPage";
 
 // Lazy-loaded pages for code splitting
@@ -22,12 +23,12 @@ const PageLoader = () => (
 );
 
 const NAV_ITEMS = [
-  { path: "/", label: "首页", icon: "🏠" },
-  { path: "/pathways", label: "学习路径", icon: "🔗" },
-  { path: "/library", label: "资料库", icon: "📚" },
-  { path: "/cards", label: "卡片库", icon: "◈" },
-  { path: "/recall", label: "复习计划", icon: "🧠" },
-  { path: "/settings", label: "设置", icon: "⚙" },
+  { path: "/", label: "首页", icon: "home" },
+  { path: "/pathways", label: "学习路径", icon: "path" },
+  { path: "/library", label: "资料库", icon: "library" },
+  { path: "/cards", label: "卡片库", icon: "cards" },
+  { path: "/recall", label: "复习计划", icon: "recall" },
+  { path: "/settings", label: "设置", icon: "settings" },
 ];
 
 export function MainLayout() {
@@ -62,7 +63,7 @@ export function MainLayout() {
                   : "text-[var(--text-secondary)] hover:bg-[var(--bg-input)] hover:text-[var(--text-primary)]"
               }`}
             >
-              <span className="text-base flex-shrink-0 w-5 text-center">{item.icon}</span>
+              <Icon name={item.icon} size={18} className="flex-shrink-0" />
               <span className="hidden sm:inline truncate">{item.label}</span>
             </button>
           );

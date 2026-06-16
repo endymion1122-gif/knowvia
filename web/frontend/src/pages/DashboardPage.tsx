@@ -4,6 +4,7 @@ import { api } from "../services/api";
 import { useAuthStore } from "../stores/authStore";
 import { OnboardingWizard } from "../components/common/OnboardingWizard";
 import { StatCard } from "../components/common/Card";
+import { Icon } from "../components/common/Icon";
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -46,9 +47,9 @@ export function DashboardPage() {
       {/* Stats */}
       {!loading && (
         <div className="grid grid-cols-3 gap-4 mb-10">
-          <StatCard label="学习路径" value={stats.pathways} icon="🔗" variant="indigo" onClick={() => navigate("/pathways")} />
-          <StatCard label="资料库" value={stats.documents} icon="📚" variant="teal" onClick={() => navigate("/library")} />
-          <StatCard label="知识卡片" value={stats.cards} icon="◈" variant="violet" onClick={() => navigate("/cards")} />
+          <StatCard label="学习路径" value={stats.pathways} icon={<Icon name="path" size={24} />} variant="indigo" onClick={() => navigate("/pathways")} />
+          <StatCard label="资料库" value={stats.documents} icon={<Icon name="library" size={24} />} variant="teal" onClick={() => navigate("/library")} />
+          <StatCard label="知识卡片" value={stats.cards} icon={<Icon name="cards" size={24} />} variant="violet" onClick={() => navigate("/cards")} />
         </div>
       )}
 
