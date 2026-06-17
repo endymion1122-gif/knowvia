@@ -19,26 +19,18 @@ RUN npm run build
 FROM node:22-slim
 WORKDIR /app
 
-# Build tools for native modules (better-sqlite3) + Python for doc conversion
+# Minimal: just Python3 for basic text extraction, skip heavy doc conversion
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 python3-pip build-essential \
+    python3 build-essential \
     && rm -rf /var/lib/apt/lists/* \
-    && npm install -g node-gyp \
-    && pip3 install --no-cache-dir 'markitdown[all]' PyMuPDF --break-system-packages
+    && pip3 install --no-cache-dir markitdown --break-system-packages
 
-# Copy backend deps and compile native modules
 COPY web/backend/package.json web/backend/package-lock.json ./
 RUN npm ci --omit=dev
 
-# Copy backend build output
 COPY --from=backend-build /app/web/backend/dist ./dist
-
-# Copy backend scripts
 COPY web/backend/scripts/ ./scripts/
-
-# Copy frontend build
 COPY --from=frontend-build /app/web/frontend/dist ./frontend-dist
-
 RUN mkdir -p uploads
 
 EXPOSE 3001
