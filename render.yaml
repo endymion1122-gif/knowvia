@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: knowvia
+    env: node
+    plan: free
+    buildCommand: |
+      cd web/frontend && npm ci && npm run build && cd ../backend && npm ci && npm run build
+    startCommand: cd web/backend && node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: FRONTEND_DIST
+        value: ../../frontend/dist
