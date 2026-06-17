@@ -15,17 +15,18 @@ COPY web/backend/tsconfig.json ./
 COPY web/backend/src/ ./src/
 RUN npm run build
 
-# ── Stage 3: Production (Debian for Python compatibility) ──
+# ── Stage 3: Production ──
 FROM node:22-slim
 WORKDIR /app
 
-# Install Python + document conversion tools
+# Build tools for native modules (better-sqlite3) + Python for doc conversion
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 python3-pip python3-venv \
+    python3 python3-pip build-essential \
     && rm -rf /var/lib/apt/lists/* \
+    && npm install -g node-gyp \
     && pip3 install --no-cache-dir 'markitdown[all]' PyMuPDF --break-system-packages
 
-# Copy backend production deps
+# Copy backend deps and compile native modules
 COPY web/backend/package.json web/backend/package-lock.json ./
 RUN npm ci --omit=dev
 
