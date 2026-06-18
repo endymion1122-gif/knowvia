@@ -4,12 +4,13 @@ services:
     env: node
     plan: free
     buildCommand: |
-      cd web/frontend && npm ci && npm run build && cd ../backend && npm ci && npm run build
-    startCommand: cd web/backend && node dist/index.js
+      cd web/frontend && npm ci && npm run build
+      cd ../backend && npm ci && npm run build
+    startCommand: cd web/backend && JWT_SECRET=${JWT_SECRET:-knowvia-prod-2024} node dist/index.js
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 3001
       - key: FRONTEND_DIST
-        value: ../../frontend/dist
+        value: /opt/render/project/src/web/frontend/dist
